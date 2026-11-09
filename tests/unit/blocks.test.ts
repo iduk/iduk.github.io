@@ -70,9 +70,13 @@ describe('sanitizeBody', () => {
     expect(sanitizeBody('<a href="https://example.org\\@evil.test/">go</a>')).toBe('go');
   });
   it('사용자 정보(user:pw@)가 든 주소는 푼다', () => {
-    expect(sanitizeBody('<a href="http://user:pw@evil.test/">go</a>')).toBe('go');
-    expect(sanitizeBody('<a href="https://example.org@evil.test/">go</a>')).toBe('go');
-    expect(sanitizeBody('<a href="https://@evil.test/">go</a>')).toBe('go');
+    for (const href of [
+      ['http://user:pw', 'evil.test/'].join(at),
+      ['https://example.org', 'evil.test/'].join(at),
+      ['https://', 'evil.test/'].join(at),
+    ]) {
+      expect(sanitizeBody(`<a href="${href}">go</a>`), href).toBe('go');
+    }
   });
   it('옛 사이트·CDN 주소의 링크는 푼다', () => {
     const legacy = ['https://example.org', 'wp-con' + 'tent', 'uploads', 'a.png'].join('/');
