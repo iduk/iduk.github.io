@@ -1,0 +1,490 @@
+{
+  "1812/01-thum-jejuair-jcrew-3-e1586567643952": {
+    "src": "/src/assets/images/1812/01-thum-jejuair-jcrew-3-e1586567643952.webp",
+    "width": 1200,
+    "height": 900,
+    "avgColor": "#e9e9e9",
+    "bytes": 24242,
+    "original": "thum-jejuair-jcrew-3-e1586567643952.png"
+  },
+  "1812/02-jejuair-jcrew-mobile": {
+    "src": "/src/assets/images/1812/02-jejuair-jcrew-mobile.webp",
+    "width": 2560,
+    "height": 1920,
+    "avgColor": "#dcdadb",
+    "bytes": 384114,
+    "original": "jejuair-jcrew-mobile.png"
+  },
+  "ad-company-wordpress/01-thum-7daycomz-wordpress": {
+    "src": "/src/assets/images/ad-company-wordpress/01-thum-7daycomz-wordpress.webp",
+    "width": 1600,
+    "height": 1143,
+    "avgColor": "#bcd7d7",
+    "bytes": 39422,
+    "original": "thum-7daycomz-wordpress.jpg"
+  },
+  "ad-company-wordpress/02-7daycomz-index": {
+    "src": "/src/assets/images/ad-company-wordpress/02-7daycomz-index.webp",
+    "width": 1400,
+    "height": 5403,
+    "avgColor": "#b4cac7",
+    "bytes": 553570,
+    "original": "7daycomz-index.jpg"
+  },
+  "bed-mattress-website/01-bmultra-main": {
+    "src": "/src/assets/images/bed-mattress-website/01-bmultra-main.webp",
+    "width": 587,
+    "height": 2048,
+    "avgColor": "#eeedec",
+    "bytes": 94602,
+    "original": "BMultra-main.png"
+  },
+  "bed-mattress-website/02-bmultra-main": {
+    "src": "/src/assets/images/bed-mattress-website/02-bmultra-main.webp",
+    "width": 1400,
+    "height": 1604,
+    "avgColor": "#cfcbc8",
+    "bytes": 265070,
+    "original": "bmUltra-main.jpg"
+  },
+  "bed-mattress-website/03-bmultra-sub": {
+    "src": "/src/assets/images/bed-mattress-website/03-bmultra-sub.webp",
+    "width": 1400,
+    "height": 4186,
+    "avgColor": "#f2f1f0",
+    "bytes": 400548,
+    "original": "bmUltra-sub.jpg"
+  },
+  "cardduck/01-thum-cardduck": {
+    "src": "/src/assets/images/cardduck/01-thum-cardduck.webp",
+    "width": 1600,
+    "height": 1094,
+    "avgColor": "#ced7cf",
+    "bytes": 69474,
+    "original": "thum-cardduck.png"
+  },
+  "cardduck/02-cardduck-pc-main": {
+    "src": "/src/assets/images/cardduck/02-cardduck-pc-main.webp",
+    "width": 1280,
+    "height": 2081,
+    "avgColor": "#e3e1e1",
+    "bytes": 240052,
+    "original": "cardduck-pc-main.jpg"
+  },
+  "cardduck/03-cardduck-pc-detail": {
+    "src": "/src/assets/images/cardduck/03-cardduck-pc-detail.webp",
+    "width": 1280,
+    "height": 2700,
+    "avgColor": "#edeeef",
+    "bytes": 202444,
+    "original": "cardduck-pc-detail.jpg"
+  },
+  "cardduck/04-cardduck-mobile": {
+    "src": "/src/assets/images/cardduck/04-cardduck-mobile.webp",
+    "width": 800,
+    "height": 750,
+    "avgColor": "#c7cccd",
+    "bytes": 38886,
+    "original": "cardduck-mobile.jpg"
+  },
+  "chinese-community/01-thum-meilismd": {
+    "src": "/src/assets/images/chinese-community/01-thum-meilismd.webp",
+    "width": 2048,
+    "height": 1416,
+    "avgColor": "#c7cec6",
+    "bytes": 240382,
+    "original": "thum-meilismd.png"
+  },
+  "chinese-community/02-meilismd-pc-browser": {
+    "src": "/src/assets/images/chinese-community/02-meilismd-pc-browser.webp",
+    "width": 1474,
+    "height": 1008,
+    "avgColor": "#e4dadb",
+    "bytes": 118722,
+    "original": "meilismd-pc-browser.png"
+  },
+  "chinese-community/03-meilismd-pc-browser-mypage": {
+    "src": "/src/assets/images/chinese-community/03-meilismd-pc-browser-mypage.webp",
+    "width": 1474,
+    "height": 1008,
+    "avgColor": "#dfdcdd",
+    "bytes": 111414,
+    "original": "meilismd-pc-browser-mypage.png"
+  },
+  "chinese-community/04-meilismd-ui": {
+    "src": "/src/assets/images/chinese-community/04-meilismd-ui.webp",
+    "width": 1920,
+    "height": 6079,
+    "avgColor": "#edebed",
+    "bytes": 585046,
+    "original": "meilismd-ui.png"
+  },
+  "coinghost-landing-web/01-thum-coninghost-e1586568080596": {
+    "src": "/src/assets/images/coinghost-landing-web/01-thum-coninghost-e1586568080596.webp",
+    "width": 1200,
+    "height": 853,
+    "avgColor": "#adbdd8",
+    "bytes": 47752,
+    "original": "thum-coninGhost-e1586568080596.png"
+  },
+  "coinghost-mobile-app/01-thum-coinghost-app-e1586568001859": {
+    "src": "/src/assets/images/coinghost-mobile-app/01-thum-coinghost-app-e1586568001859.webp",
+    "width": 1200,
+    "height": 831,
+    "avgColor": "#e6e7ee",
+    "bytes": 35808,
+    "original": "thum-coinghost-app-e1586568001859.png"
+  },
+  "coinghost-mobile-app/02-coinghost-app-showcase": {
+    "src": "/src/assets/images/coinghost-mobile-app/02-coinghost-app-showcase.webp",
+    "width": 2560,
+    "height": 1920,
+    "avgColor": "#e4e6e7",
+    "bytes": 297730,
+    "original": "coinghost-app-showcase.png"
+  },
+  "cooking-landing-page-template/01-thum-moms": {
+    "src": "/src/assets/images/cooking-landing-page-template/01-thum-moms.webp",
+    "width": 1366,
+    "height": 1024,
+    "avgColor": "#d8d1cf",
+    "bytes": 164024,
+    "original": "thum-moms.png"
+  },
+  "engineering-responsive-web/01-thum-atom": {
+    "src": "/src/assets/images/engineering-responsive-web/01-thum-atom.webp",
+    "width": 1440,
+    "height": 1024,
+    "avgColor": "#c1c3c4",
+    "bytes": 135348,
+    "original": "thum-atom.png"
+  },
+  "exhibition-booth-design/01-thum-exhibition": {
+    "src": "/src/assets/images/exhibition-booth-design/01-thum-exhibition.webp",
+    "width": 751,
+    "height": 418,
+    "avgColor": "#875d5f",
+    "bytes": 51978,
+    "original": "thum-exhibition.jpg"
+  },
+  "exhibition-booth-design/02-booth-w275": {
+    "src": "/src/assets/images/exhibition-booth-design/02-booth-w275.webp",
+    "width": 2048,
+    "height": 1117,
+    "avgColor": "#ab6e64",
+    "bytes": 175444,
+    "original": "Booth_w275.jpg"
+  },
+  "exhibition-booth-design/03-booth-w375": {
+    "src": "/src/assets/images/exhibition-booth-design/03-booth-w375.webp",
+    "width": 2048,
+    "height": 819,
+    "avgColor": "#dd453b",
+    "bytes": 106876,
+    "original": "Booth_w375.jpg"
+  },
+  "exhibition-brochure/01-thum-exhibition-brochure": {
+    "src": "/src/assets/images/exhibition-brochure/01-thum-exhibition-brochure.webp",
+    "width": 2000,
+    "height": 1500,
+    "avgColor": "#f1f1f3",
+    "bytes": 34454,
+    "original": "thum-exhibition-Brochure.jpg"
+  },
+  "exhibition-brochure/02-brochure-design-mockup": {
+    "src": "/src/assets/images/exhibition-brochure/02-brochure-design-mockup.webp",
+    "width": 1680,
+    "height": 1260,
+    "avgColor": "#f1f1f3",
+    "bytes": 33878,
+    "original": "Brochure-design-mockup.jpg"
+  },
+  "exhibition-brochure/03-brochure-design-open": {
+    "src": "/src/assets/images/exhibition-brochure/03-brochure-design-open.webp",
+    "width": 2000,
+    "height": 1500,
+    "avgColor": "#f1f1f3",
+    "bytes": 37342,
+    "original": "Brochure-design-open.jpg"
+  },
+  "exhibition-brochure/04-brochure-design-inner1": {
+    "src": "/src/assets/images/exhibition-brochure/04-brochure-design-inner1.webp",
+    "width": 2000,
+    "height": 1500,
+    "avgColor": "#eee7e7",
+    "bytes": 133540,
+    "original": "Brochure-design-inner1.jpg"
+  },
+  "exhibition-brochure/05-brochure-design-inner2": {
+    "src": "/src/assets/images/exhibition-brochure/05-brochure-design-inner2.webp",
+    "width": 2000,
+    "height": 1500,
+    "avgColor": "#eac6c4",
+    "bytes": 123946,
+    "original": "Brochure-design-inner2.jpg"
+  },
+  "exhibition-brochure/06-brochure-design-inner3": {
+    "src": "/src/assets/images/exhibition-brochure/06-brochure-design-inner3.webp",
+    "width": 2000,
+    "height": 1500,
+    "avgColor": "#efe6e7",
+    "bytes": 105146,
+    "original": "Brochure-design-inner3.jpg"
+  },
+  "exhibition-brochure/07-brochure-design-inner4": {
+    "src": "/src/assets/images/exhibition-brochure/07-brochure-design-inner4.webp",
+    "width": 2000,
+    "height": 1500,
+    "avgColor": "#ede4e5",
+    "bytes": 87134,
+    "original": "Brochure-design-inner4.jpg"
+  },
+  "exhibition-brochure/08-brochure-design-back": {
+    "src": "/src/assets/images/exhibition-brochure/08-brochure-design-back.webp",
+    "width": 2000,
+    "height": 1500,
+    "avgColor": "#f1f1f3",
+    "bytes": 28236,
+    "original": "Brochure-design-back.jpg"
+  },
+  "expressway/01-thum-ex-1": {
+    "src": "/src/assets/images/expressway/01-thum-ex-1.webp",
+    "width": 1440,
+    "height": 1024,
+    "avgColor": "#afbec4",
+    "bytes": 206266,
+    "original": "thum-ex-1.png"
+  },
+  "expressway/02-ex-main-light": {
+    "src": "/src/assets/images/expressway/02-ex-main-light.webp",
+    "width": 2560,
+    "height": 1707,
+    "avgColor": "#88a0a6",
+    "bytes": 855298,
+    "original": "ex-main-light.png"
+  },
+  "expressway/03-ex-main-dark": {
+    "src": "/src/assets/images/expressway/03-ex-main-dark.webp",
+    "width": 2560,
+    "height": 1707,
+    "avgColor": "#6c868d",
+    "bytes": 856480,
+    "original": "ex-main-dark.png"
+  },
+  "healthcare-icon-set/01-thum-healthcare-iconset-1": {
+    "src": "/src/assets/images/healthcare-icon-set/01-thum-healthcare-iconset-1.webp",
+    "width": 1024,
+    "height": 768,
+    "avgColor": "#eaeaea",
+    "bytes": 35738,
+    "original": "thum-healthcare-iconset-1.png"
+  },
+  "healthcare-icon-set/02-healthcare-iconset-sketch": {
+    "src": "/src/assets/images/healthcare-icon-set/02-healthcare-iconset-sketch.webp",
+    "width": 1024,
+    "height": 768,
+    "avgColor": "#cbc6ba",
+    "bytes": 48766,
+    "original": "healthcare-iconset-sketch.jpg"
+  },
+  "healthcare-icon-set/03-healthcare-icon-motion": {
+    "src": "/src/assets/images/healthcare-icon-set/03-healthcare-icon-motion.webp",
+    "width": 388,
+    "height": 384,
+    "avgColor": "#bdbdbd",
+    "bytes": 14280,
+    "original": "healthcare-icon-motion.png"
+  },
+  "healthcare-icon-set/04-healthcare-icon-door": {
+    "src": "/src/assets/images/healthcare-icon-set/04-healthcare-icon-door.webp",
+    "width": 388,
+    "height": 384,
+    "avgColor": "#bcbcbc",
+    "bytes": 12430,
+    "original": "healthcare-icon-door.png"
+  },
+  "healthcare-icon-set/05-healthcare-icon-home": {
+    "src": "/src/assets/images/healthcare-icon-set/05-healthcare-icon-home.webp",
+    "width": 388,
+    "height": 384,
+    "avgColor": "#adadad",
+    "bytes": 15636,
+    "original": "healthcare-icon-home.png"
+  },
+  "healthcare-icon-set/06-healthcare-iconset-white": {
+    "src": "/src/assets/images/healthcare-icon-set/06-healthcare-iconset-white.webp",
+    "width": 1748,
+    "height": 1140,
+    "avgColor": "#ffffff",
+    "bytes": 22378,
+    "original": "healthcare-iconset-white.png"
+  },
+  "online-ad-company-responsive-web/01-thum-jbro": {
+    "src": "/src/assets/images/online-ad-company-responsive-web/01-thum-jbro.webp",
+    "width": 1366,
+    "height": 1024,
+    "avgColor": "#a7a4a7",
+    "bytes": 180414,
+    "original": "thum-jbro.png"
+  },
+  "online-ad-company-responsive-web/02-jbro-main": {
+    "src": "/src/assets/images/online-ad-company-responsive-web/02-jbro-main.webp",
+    "width": 796,
+    "height": 2048,
+    "avgColor": "#bcbcc0",
+    "bytes": 64440,
+    "original": "jbro-main.png"
+  },
+  "oyedu/01-oyedu-mockup-e1586531633658": {
+    "src": "/src/assets/images/oyedu/01-oyedu-mockup-e1586531633658.webp",
+    "width": 2560,
+    "height": 1920,
+    "avgColor": "#e4e5e0",
+    "bytes": 329858,
+    "original": "OYEdu-mockup-e1586531633658.png"
+  },
+  "product-mockup/01-thum-mockup-tsp": {
+    "src": "/src/assets/images/product-mockup/01-thum-mockup-tsp.webp",
+    "width": 1200,
+    "height": 491,
+    "avgColor": "#dee4de",
+    "bytes": 27568,
+    "original": "thum-mockup-tsp.png"
+  },
+  "product-mockup/02-livon-product-flat-mockup": {
+    "src": "/src/assets/images/product-mockup/02-livon-product-flat-mockup.webp",
+    "width": 1024,
+    "height": 1965,
+    "avgColor": "#f8f3f3",
+    "bytes": 24060,
+    "original": "livon-product-flat-mockup.png"
+  },
+  "smartband-app-ui/01-thum-smartband": {
+    "src": "/src/assets/images/smartband-app-ui/01-thum-smartband.webp",
+    "width": 1600,
+    "height": 1118,
+    "avgColor": "#e3e9ec",
+    "bytes": 51350,
+    "original": "thum-smartband.png"
+  },
+  "smartband-app-ui/02-smartband-students": {
+    "src": "/src/assets/images/smartband-app-ui/02-smartband-students.webp",
+    "width": 2048,
+    "height": 1456,
+    "avgColor": "#cce5e3",
+    "bytes": 88482,
+    "original": "SmartBand-students.jpg"
+  },
+  "smartfarm-android/01-thum-yangdon-android-e1586580082919": {
+    "src": "/src/assets/images/smartfarm-android/01-thum-yangdon-android-e1586580082919.webp",
+    "width": 1200,
+    "height": 1200,
+    "avgColor": "#23374b",
+    "bytes": 124754,
+    "original": "thum-yangdon-android-e1586580082919.png"
+  },
+  "smartfarm-dashboard-firststeps/01-thum-firststeps-1-e1586570265275": {
+    "src": "/src/assets/images/smartfarm-dashboard-firststeps/01-thum-firststeps-1-e1586570265275.webp",
+    "width": 1600,
+    "height": 1200,
+    "avgColor": "#bec2c5",
+    "bytes": 32388,
+    "original": "thum-firststeps-1-e1586570265275.png"
+  },
+  "smartfarm-dashboard-firststeps/02-firststeps-dashboard": {
+    "src": "/src/assets/images/smartfarm-dashboard-firststeps/02-firststeps-dashboard.webp",
+    "width": 498,
+    "height": 2048,
+    "avgColor": "#202c38",
+    "bytes": 51808,
+    "original": "firststeps-dashboard.png"
+  },
+  "smartfarm-dashboard/01-thum-yangdon-dashboard-2-e1586575586524": {
+    "src": "/src/assets/images/smartfarm-dashboard/01-thum-yangdon-dashboard-2-e1586575586524.webp",
+    "width": 1200,
+    "height": 900,
+    "avgColor": "#bdc2c9",
+    "bytes": 20870,
+    "original": "thum-yangdon-dashboard-2-e1586575586524.png"
+  },
+  "smartfarm-dashboard/02-yangdon-dashboard": {
+    "src": "/src/assets/images/smartfarm-dashboard/02-yangdon-dashboard.webp",
+    "width": 1600,
+    "height": 8864,
+    "avgColor": "#1a2c43",
+    "bytes": 659446,
+    "original": "yangdon-dashboard.png"
+  },
+  "telecare-service-app/01-thum-tsp32": {
+    "src": "/src/assets/images/telecare-service-app/01-thum-tsp32.webp",
+    "width": 2560,
+    "height": 1820,
+    "avgColor": "#b8b7b9",
+    "bytes": 518430,
+    "original": "thum-tsp32.png"
+  },
+  "telecare-service-app/02-tsp32-ui": {
+    "src": "/src/assets/images/telecare-service-app/02-tsp32-ui.webp",
+    "width": 1920,
+    "height": 8865,
+    "avgColor": "#f0f1f2",
+    "bytes": 383550,
+    "original": "tsp32-UI.png"
+  },
+  "telecare-service-showcase-ui/01-thum-tsp31": {
+    "src": "/src/assets/images/telecare-service-showcase-ui/01-thum-tsp31.webp",
+    "width": 1440,
+    "height": 1307,
+    "avgColor": "#d9d8dd",
+    "bytes": 86704,
+    "original": "thum-tsp31.png"
+  },
+  "telecare-service-showcase-ui/02-tsp3-1-styleguide": {
+    "src": "/src/assets/images/telecare-service-showcase-ui/02-tsp3-1-styleguide.webp",
+    "width": 477,
+    "height": 2048,
+    "avgColor": "#f1eff0",
+    "bytes": 43010,
+    "original": "TSP3.1_StyleGuide.png"
+  },
+  "telecare-service-website/01-thum-hidea": {
+    "src": "/src/assets/images/telecare-service-website/01-thum-hidea.webp",
+    "width": 2560,
+    "height": 2560,
+    "avgColor": "#b0a9aa",
+    "bytes": 384000,
+    "original": "thum-hidea.png"
+  },
+  "telecare-service-website/02-hidea-mobile-mockup": {
+    "src": "/src/assets/images/telecare-service-website/02-hidea-mobile-mockup.webp",
+    "width": 2200,
+    "height": 1467,
+    "avgColor": "#dbcdd0",
+    "bytes": 147700,
+    "original": "hidea-mobile-mockup.png"
+  },
+  "telecare-service-website/03-hidea-index": {
+    "src": "/src/assets/images/telecare-service-website/03-hidea-index.webp",
+    "width": 1600,
+    "height": 5787,
+    "avgColor": "#d7babf",
+    "bytes": 462794,
+    "original": "hidea-index.jpg"
+  },
+  "website-renewal-ui/01-thum-7daycomz-renew": {
+    "src": "/src/assets/images/website-renewal-ui/01-thum-7daycomz-renew.webp",
+    "width": 2000,
+    "height": 2000,
+    "avgColor": "#a6afac",
+    "bytes": 401078,
+    "original": "thum-7daycomz-renew.png"
+  },
+  "website-renewal-ui/02-7daycomz-renew-main": {
+    "src": "/src/assets/images/website-renewal-ui/02-7daycomz-renew-main.webp",
+    "width": 1131,
+    "height": 2048,
+    "avgColor": "#b4bbc3",
+    "bytes": 232182,
+    "original": "7daycomz_renew_main.jpg"
+  }
+}
