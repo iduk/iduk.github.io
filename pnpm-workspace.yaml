@@ -1,0 +1,10 @@
+minimumReleaseAge: 4320
+blockExoticSubdeps: true
+trustPolicy: no-downgrade
+allowBuilds:
+  sharp: true
+  esbuild: true
+# @astrojs/check -> astro2tsx pulls @emnapi/core 1.x but pnpm auto-picks a 2.0 beta
+# runtime for the peer, which crashes at load. Keep runtime and core on the same 1.x line.
+overrides:
+  "@emnapi/runtime": 1.11.3

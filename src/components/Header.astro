@@ -1,0 +1,87 @@
+---
+import type { Locale } from '../lib/i18n';
+import { localizedPath, t } from '../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+<header class="site-header">
+  <a class="logo" href={localizedPath(locale, '/')} aria-label={`iduk, ${t(locale, 'nav.home')}`}>iduk</a>
+  <nav class="nav" aria-label="Primary">
+    <a href={localizedPath(locale, '/work/')}>{t(locale, 'nav.work')}</a>
+    <button type="button" class="theme-toggle" data-theme-toggle hidden aria-label={t(locale, 'theme.toggle')}>
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75">
+        <circle cx="10" cy="10" r="6.5" />
+        <path d="M10 3.5v13" />
+        <path d="M10 3.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" />
+      </svg>
+    </button>
+  </nav>
+</header>
+
+<script>
+  const root = document.documentElement;
+  const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  if (button) {
+    button.hidden = false;
+    button.addEventListener('click', () => {
+      const current =
+        root.getAttribute('data-theme') ??
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme', next);
+      } catch {}
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem var(--gutter);
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    font-size: 1.5rem;
+    font-weight: var(--fw-hero);
+    letter-spacing: var(--ls-sub);
+    text-decoration: none;
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-meta);
+    font-weight: var(--fw-meta);
+    letter-spacing: var(--ls-meta);
+  }
+  .nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding: 0 0.75rem;
+    text-decoration: none;
+  }
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--tap-min);
+    height: var(--tap-min);
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .theme-toggle:hover {
+    color: var(--color-accent);
+  }
+</style>

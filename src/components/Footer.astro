@@ -1,0 +1,58 @@
+---
+import type { Locale } from '../lib/i18n';
+import { localizedPath, t } from '../lib/i18n';
+
+interface Props {
+  locale: Locale;
+  basePath: string;
+}
+const { locale, basePath } = Astro.props;
+---
+<footer class="site-footer">
+  <small class="copy">{t(locale, 'footer.copyright')}</small>
+  <nav class="lang" aria-label={t(locale, 'lang.switch')}>
+    <a
+      href={localizedPath('ko', basePath)}
+      hreflang="ko"
+      lang="ko"
+      aria-current={locale === 'ko' ? 'page' : undefined}>KO</a
+    >
+    <span aria-hidden="true">|</span>
+    <a
+      href={localizedPath('en', basePath)}
+      hreflang="en"
+      lang="en"
+      aria-current={locale === 'en' ? 'page' : undefined}>EN</a
+    >
+  </nav>
+</footer>
+
+<style>
+  .site-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 2rem var(--gutter);
+    color: var(--color-muted);
+    font-size: var(--fs-meta);
+    font-weight: var(--fw-meta);
+    letter-spacing: var(--ls-meta);
+  }
+  .lang {
+    display: flex;
+    align-items: center;
+  }
+  .lang a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--tap-min);
+    min-height: var(--tap-min);
+    text-decoration: none;
+  }
+  .lang a[aria-current='page'] {
+    color: var(--color-text);
+    font-weight: 700;
+  }
+</style>

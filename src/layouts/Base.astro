@@ -1,0 +1,63 @@
+---
+import '../styles/global.css';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import type { Locale } from '../lib/i18n';
+import { localeFromPath, localizedPath, stripLocale, t } from '../lib/i18n';
+
+interface Props {
+  title: string;
+  description?: string;
+  locale?: Locale;
+}
+
+const { title, description } = Astro.props;
+const pathname = Astro.url.pathname;
+const locale: Locale = Astro.props.locale ?? localeFromPath(pathname);
+const basePath = stripLocale(pathname);
+const site = Astro.site ?? new URL('https://iduk.co.kr');
+const abs = (loc: Locale) => new URL(localizedPath(loc, basePath), site).href;
+const ogLocale = { ko: 'ko_KR', en: 'en_US' } as const;
+const other: Locale = locale === 'ko' ? 'en' : 'ko';
+---
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={abs(locale)} />
+    <link rel="alternate" hreflang="ko" href={abs('ko')} />
+    <link rel="alternate" hreflang="en" href={abs('en')} />
+    <link rel="alternate" hreflang="x-default" href={abs('ko')} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:locale" content={ogLocale[locale]} />
+    <meta property="og:locale:alternate" content={ogLocale[other]} />
+    <meta name="color-scheme" content="light dark" />
+    <link
+      rel="preload"
+      href="/fonts/PretendardVariable.subset.91.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <script is:inline>
+      try {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t(locale, 'nav.skip')}</a>
+    <Header locale={locale} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer locale={locale} basePath={basePath} />
+  </body>
+</html>

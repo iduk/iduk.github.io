@@ -1,0 +1,71 @@
+/* Design tokens: docs/01-concept-design.md sections 4-7 */
+:root {
+  color-scheme: light;
+
+  /* color (light) */
+  --color-bg: #fafaf8;
+  --color-text: #111111;
+  --color-muted: #6b6b66;
+  --color-accent: #d93036;
+
+  /* type */
+  --font-sans: "Pretendard Variable", system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --fs-hero: clamp(3.25rem, 1rem + 10vw, 11rem);
+  --fs-title: clamp(2.5rem, 1rem + 6vw, 7rem);
+  --fs-sub: clamp(1.75rem, 1rem + 2.5vw, 3.5rem);
+  --fs-body: clamp(1rem, 0.95rem + 0.25vw, 1.1875rem);
+  --fs-meta: 0.8125rem;
+
+  --fw-hero: 800;
+  --fw-title: 700;
+  --fw-sub: 600;
+  --fw-body: 400;
+  --fw-meta: 500;
+
+  --lh-hero: 0.92;
+  --lh-title: 0.98;
+  --lh-sub: 1.1;
+  --lh-body: 1.7;
+  --lh-meta: 1.4;
+
+  --ls-hero: -0.045em;
+  --ls-title: -0.035em;
+  --ls-sub: -0.025em;
+  --ls-body: 0;
+  --ls-meta: 0.02em;
+
+  --measure: 36em;
+
+  /* space */
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --section-gap: clamp(4rem, 2rem + 8vw, 10rem);
+  --tap-min: 2.75rem; /* 44px */
+
+  /* motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-short: 160ms;
+  --dur-base: 320ms;
+  --dur-long: 640ms;
+}
+
+:root:lang(en) {
+  --ls-hero: -0.04em;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: #0e0e0e;
+    --color-text: #f2f2ee;
+    --color-muted: #9a9a94;
+    --color-accent: #f97272;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #0e0e0e;
+  --color-text: #f2f2ee;
+  --color-muted: #9a9a94;
+  --color-accent: #f97272;
+}
