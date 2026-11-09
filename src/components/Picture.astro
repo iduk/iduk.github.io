@@ -1,6 +1,7 @@
 ---
 import { Picture as AstroPicture } from 'astro:assets';
 import { colorClass, widthClass } from '../lib/imageColors';
+import { intrinsicSize, srcsetWidths } from '../lib/imageWidths';
 import { resolveImage } from '../lib/masters';
 
 interface Props {
@@ -9,22 +10,22 @@ interface Props {
   alt: string;
   sizes: string;
   priority?: boolean;
+  /** srcset에 넣을 가장 큰 폭(px). 긴 캡처가 큰 변형을 미리 받지 않게 막는다. */
+  maxWidth?: number;
 }
 
-const { image, alt, sizes, priority = false } = Astro.props;
+const { image, alt, sizes, priority = false, maxWidth = Number.POSITIVE_INFINITY } = Astro.props;
 
 const { entry, master } = resolveImage(image);
 
-// 원본보다 큰 폭은 만들지 않는다. 목록에 없는 원본 폭(예: 1200)은 마지막 후보로 더한다.
-const WIDTHS = [640, 960, 1280, 1920, 2560];
-const widths = WIDTHS.filter((w) => w <= entry.width);
-if (!widths.includes(entry.width)) widths.push(entry.width);
+const widths = srcsetWidths(entry.width, maxWidth);
+const { width, height } = intrinsicSize(entry, maxWidth);
 ---
 <AstroPicture
   src={master}
   alt={alt}
-  width={entry.width}
-  height={entry.height}
+  width={width}
+  height={height}
   widths={widths}
   sizes={sizes}
   formats={['avif', 'webp']}

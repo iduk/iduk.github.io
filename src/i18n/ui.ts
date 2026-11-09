@@ -26,6 +26,8 @@ const ko = {
   'work.next': '다음 작업',
   'work.nav': '다른 작업',
   'work.demo': '데모 보기',
+  'longshot.label': '긴 화면 캡처, 방향키로 스크롤',
+  'longshot.full': '원본 크기로 보기',
 } as const;
 
 export type UiKey = keyof typeof ko;
@@ -55,6 +57,8 @@ const en: Record<UiKey, string> = {
   'work.next': 'Next project',
   'work.nav': 'More work',
   'work.demo': 'View demo',
+  'longshot.label': 'Long screen capture, scroll with arrow keys',
+  'longshot.full': 'View full size',
 };
 
 export const ui: Record<Locale, Record<UiKey, string>> = { ko, en };

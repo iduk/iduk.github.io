@@ -1,0 +1,10 @@
+---
+import LongShot from '../LongShot.astro';
+
+interface Props {
+  image: string;
+  alt: string;
+}
+const { image, alt } = Astro.props;
+---
+<LongShot image={image} alt={alt} />

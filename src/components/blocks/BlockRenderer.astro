@@ -3,6 +3,7 @@ import type { Locale } from '../../lib/i18n';
 import type { Block } from '../../lib/schema';
 import DemoBlock from './DemoBlock.astro';
 import ImageBlock from './ImageBlock.astro';
+import LongShotBlock from './LongShotBlock.astro';
 import PairBlock from './PairBlock.astro';
 import TextBlock from './TextBlock.astro';
 
@@ -20,7 +21,4 @@ const { block, locale } = Astro.props;
 }
 {block.type === 'text' && <TextBlock html={block.body[locale]} />}
 {block.type === 'demo' && <DemoBlock demo={block.demo} locale={locale} />}
-{
-  /* TODO(Task 6): longshot은 LongShotBlock으로 교체한다. 지금은 일반 이미지로 보여 준다. */
-  block.type === 'longshot' && <ImageBlock image={block.image} alt={block.alt[locale]} />
-}
+{block.type === 'longshot' && <LongShotBlock image={block.image} alt={block.alt[locale]} />}
