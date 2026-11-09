@@ -64,6 +64,16 @@ describe('sanitizeBody', () => {
     expect(sanitizeBody('<a href="//evil.test/x">go</a>')).toBe('go');
     expect(sanitizeBody('<a href="page.html">go</a>')).toBe('go');
   });
+  it('역슬래시가 든 주소는 푼다(브라우저는 //로 해석한다)', () => {
+    expect(sanitizeBody('<a href="/\\evil.test/x">go</a>')).toBe('go');
+    expect(sanitizeBody('<a href="\\\\evil.test/x">go</a>')).toBe('go');
+    expect(sanitizeBody('<a href="https://example.org\\@evil.test/">go</a>')).toBe('go');
+  });
+  it('사용자 정보(user:pw@)가 든 주소는 푼다', () => {
+    expect(sanitizeBody('<a href="http://user:pw@evil.test/">go</a>')).toBe('go');
+    expect(sanitizeBody('<a href="https://example.org@evil.test/">go</a>')).toBe('go');
+    expect(sanitizeBody('<a href="https://@evil.test/">go</a>')).toBe('go');
+  });
   it('옛 사이트·CDN 주소의 링크는 푼다', () => {
     const legacy = ['https://example.org', 'wp-con' + 'tent', 'uploads', 'a.png'].join('/');
     expect(sanitizeBody(`<a href="${legacy}">go</a>`)).toBe('go');
@@ -173,6 +183,55 @@ describe('scanText', () => {
   });
   it('연도·기간·버전 같은 숫자는 전화로 보지 않는다', () => {
     expect(scanText('2019.05 - 2019.07, TSP v3.2, 1024x768, 2016-10-20')).toEqual([]);
+  });
+  it.each([
+    ['공백 구분', '010 1234 5678'],
+    ['점 구분', '010.1234.5678'],
+    ['붙여 쓴 번호', '01012345678'],
+    ['괄호 지역번호', '(02) 3456-7890'],
+    ['070', '070-1234-5678'],
+    ['080', '080 123 4567'],
+    ['0505', '0505-123-4567'],
+    ['전각 숫자', '０１０－１２３４－５６７８'],
+    ['en dash', '010\u20131234\u20135678'],
+    ['비분리 하이픈', '010\u20111234\u20115678'],
+    ['NBSP 구분', '010\u00a01234\u00a05678'],
+    ['국제 표기 (0)', '+82 (0)10-1234-5678'],
+    ['국제 표기', '+82 10 1234 5678'],
+    ['지역번호 031', '031-456-7890'],
+  ])('전화: %s', (_n, text) => {
+    expect(scanText(`연락 ${text} 입니다`).map((h) => h.kind)).toContain('phone');
+  });
+  it.each([
+    '2017.9. 독거노인, 2016. 09. 기업, 2018.7-8, 2018.12 - 2018.12',
+    '1920x1080 2560x2560 1600x8864 0.75 v3.2 ver3.1',
+    '글 번호 1833 1891 915, 이미지 e1586531633658',
+    'PAPS 41 Page, 2020.3 ~ , 3.1 2.5',
+    'oyedu/01-oyedu-mockup-e1586531633658',
+  ])('전화가 아닌 숫자: %s', (text) => {
+    expect(scanText(text)).toEqual([]);
+  });
+  it('난독화한 이메일을 찾는다', () => {
+    expect(scanText('mail: someone (at) example.org').map((h) => h.kind)).toContain('email');
+    expect(scanText('mail: someone[at]example.org').map((h) => h.kind)).toContain('email');
+    expect(scanText(`mail: someone\uff20example.org`).map((h) => h.kind)).toContain('email');
+  });
+  it('Bearer·JWT·PAT·API 키를 찾는다', () => {
+    const jwt = ['eyJhbGciOiJIUzI1NiJ9', 'eyJzdWIiOiJ4eHh4eHh4In0', 'abcdefghijklmnop'].join('.');
+    const cases = [
+      `Authorization: Bearer ${'a1B2'.repeat(6)}`,
+      jwt,
+      `github_pat_${'A1b2C3d4E5'.repeat(3)}`,
+      `AIza${'a1B2c3D4e5'.repeat(3)}12345`,
+    ];
+    for (const c of cases)
+      expect(
+        scanText(`x ${c} y`).some((h) => h.kind === 'secret'),
+        c,
+      ).toBe(true);
+  });
+  it('Bearer라는 단어만으로는 걸리지 않는다', () => {
+    expect(scanText('Bearer token auth, secret sauce')).toEqual([]);
   });
   it('일반 문장은 통과', () => {
     expect(scanText('Mobile UI design for an IoT service')).toEqual([]);

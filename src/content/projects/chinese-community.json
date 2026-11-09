@@ -35,14 +35,14 @@
       "type": "pair",
       "images": [
         {
-          "image": "chinese-community/03-meilismd-pc-browser",
+          "image": "chinese-community/02-meilismd-pc-browser",
           "alt": {
             "ko": "중국 뷰티 플랫폼 – PC 브라우저 메인 화면",
             "en": "Beauty platform service for CHINA – desktop browser main page"
           }
         },
         {
-          "image": "chinese-community/02-meilismd-pc-browser-mypage",
+          "image": "chinese-community/03-meilismd-pc-browser-mypage",
           "alt": {
             "ko": "중국 뷰티 플랫폼 – PC 브라우저 마이페이지 화면",
             "en": "Beauty platform service for CHINA – desktop browser My Page"

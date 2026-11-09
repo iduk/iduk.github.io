@@ -81,9 +81,32 @@ describe('src/content', () => {
     expect(all.filter(hasLegacyUrl)).toEqual([]);
     expect(all.flatMap((s) => scanText(s))).toEqual([]);
   });
-  it('참조하는 변환 이미지 파일이 실제로 있다', () => {
-    for (const k of Object.keys(images)) {
+  it('images.json의 모든 키는 표지나 본문 블록에서 쓰이고, 파일이 있다', () => {
+    const used = new Set<string>();
+    for (const { raw } of projects) {
+      used.add(raw.cover.image);
+      for (const b of raw.blocks) {
+        if (b.type === 'image' || b.type === 'longshot') used.add(b.image);
+        if (b.type === 'pair') for (const i of b.images) used.add(i.image);
+      }
+    }
+    const keys = Object.keys(images);
+    expect(keys.filter((k) => !used.has(k))).toEqual([]);
+    for (const k of keys) {
       expect(existsSync(join(root, 'src/assets/images', `${k}.webp`)), k).toBe(true);
     }
+  });
+  it('src/assets/images의 모든 파일은 images.json에 항목이 있다', () => {
+    const base = join(root, 'src/assets/images');
+    const onDisk: string[] = [];
+    for (const d of readdirSync(base, { withFileTypes: true })) {
+      if (!d.isDirectory()) {
+        onDisk.push(d.name);
+        continue;
+      }
+      for (const f of readdirSync(join(base, d.name))) onDisk.push(`${d.name}/${f}`);
+    }
+    const expected = Object.keys(images).map((k) => `${k}.webp`);
+    expect(onDisk.sort()).toEqual(expected.sort());
   });
 });

@@ -3,10 +3,11 @@
  * 원문은 ../iduk.design/data/posts.json 의 공개 글 24개뿐이다. 모든 글은 draft-translation 상태로 나간다.
  *
  * 규칙
- * - `ko`에는 원문 문장을 그대로 두는 것을 원칙으로 한다(원문이 영어면 영어 그대로). build-content가
- *   dt 이름·dd 줄·링크가 role/summary/text 안에 남아 있는지 검사하므로, 줄을 지우면 빌드가 실패한다.
+ * - `ko`에는 원문 문장을 그대로 두는 것을 원칙으로 한다. 예외로 원문이 영어인 일부 줄(role 등)은 ko를
+ *   한글로 다시 썼고, 그 줄의 원문은 en에 남겼다. build-content가 dt 이름·dd 줄·링크가 ko 또는 en의
+ *   role/summary/text 안에 남아 있는지 검사하므로, 줄을 지우면 빌드가 실패한다.
  * - alt는 "<프로젝트> – <화면 설명>". 파일명과 맥락(일부는 실제 화면)에서 쓴 초안이다.
- * - 키 이름은 images.json 키에서 글 슬러그(`<slug>/`)를 뺀 부분.
+ * - alts·pairs의 키는 images.json 키에서 글 슬러그(`<slug>/`)와 번호(`NN-`)를 뺀 이름이다.
  */
 import type { LText } from '../src/lib/schema';
 
@@ -73,7 +74,7 @@ export const meta: Record<string, ProjectMeta> = {
     featured: false,
     coverAlt: l('COINGHOST 모바일 앱 – 대표 화면', 'COINGHOST Mobile App – cover screen'),
     alts: {
-      '03-coinghost-app-showcase': l(
+      'coinghost-app-showcase': l(
         'COINGHOST 모바일 앱 – 앱 화면 모음',
         'COINGHOST Mobile App – app screens overview',
       ),
@@ -110,7 +111,7 @@ export const meta: Record<string, ProjectMeta> = {
       'JEJUair Mobile – J-CREW app screens on phone mockups',
     ),
     alts: {
-      '04-jejuair-jcrew-mobile': l(
+      'jejuair-jcrew-mobile': l(
         'JEJUair Mobile – J-CREW 로그인과 일정 캘린더 화면',
         'JEJUair Mobile – J-CREW login and schedule calendar screens',
       ),
@@ -130,16 +131,16 @@ export const meta: Record<string, ProjectMeta> = {
       'ExpressWay – live view monitoring screen with four road camera channels',
     ),
     alts: {
-      '03-ex-main-light': l(
+      'ex-main-light': l(
         'ExpressWay – 채널 라이브뷰 모니터링 화면, 라이트 버전',
         'ExpressWay – live view monitoring screen, light version',
       ),
-      '02-ex-main-dark': l(
+      'ex-main-dark': l(
         'ExpressWay – 채널 라이브뷰 모니터링 화면, 다크 버전',
         'ExpressWay – live view monitoring screen, dark version',
       ),
     },
-    pairs: [['03-ex-main-light', '02-ex-main-dark']],
+    pairs: [['ex-main-light', 'ex-main-dark']],
   },
   'engineering-responsive-web': {
     title: l('Engineering Responsive Web', 'Engineering Responsive Web'),
@@ -183,7 +184,7 @@ export const meta: Record<string, ProjectMeta> = {
       'SmartFarm Dashboard – admin dashboard cover screen',
     ),
     alts: {
-      '04-yangdon-dashboard': l(
+      'yangdon-dashboard': l(
         'SmartFarm Dashboard – 관리자 화면 전체 캡처',
         'SmartFarm Dashboard – full-length capture of the admin screens',
       ),
@@ -204,7 +205,7 @@ export const meta: Record<string, ProjectMeta> = {
       'SmartFarm Dashboard "FirstSteps" – desktop admin cover image',
     ),
     alts: {
-      '02-firststeps-dashboard': l(
+      'firststeps-dashboard': l(
         'SmartFarm FirstSteps – 버섯농장 관리자 화면 전체 캡처',
         'SmartFarm Dashboard "FirstSteps" – full-length capture of the mushroom farm admin screens',
       ),
@@ -225,28 +226,28 @@ export const meta: Record<string, ProjectMeta> = {
       'Healthcare Icon Set – service icons cover image',
     ),
     alts: {
-      '05-healthcare-iconset-sketch': l(
+      'healthcare-iconset-sketch': l(
         'Healthcare Icon Set – 아이콘 스케치',
         'Healthcare Icon Set – icon sketches',
       ),
-      '04-healthcare-icon-motion': l(
+      'healthcare-icon-motion': l(
         'Healthcare Icon Set – 모션 감지 센서 아이콘',
         'Healthcare Icon Set – motion detection sensor icon',
       ),
-      '02-healthcare-icon-door': l(
+      'healthcare-icon-door': l(
         'Healthcare Icon Set – 도어 센서 아이콘',
         'Healthcare Icon Set – door sensor icon',
       ),
-      '03-healthcare-icon-home': l(
+      'healthcare-icon-home': l(
         'Healthcare Icon Set – 홈 IoT 아이콘',
         'Healthcare Icon Set – home IoT icon',
       ),
-      '06-healthcare-iconset-white': l(
+      'healthcare-iconset-white': l(
         'Healthcare Icon Set – 흰 배경의 전체 아이콘 세트',
         'Healthcare Icon Set – the complete icon set on a white background',
       ),
     },
-    pairs: [['04-healthcare-icon-motion', '02-healthcare-icon-door']],
+    pairs: [['healthcare-icon-motion', 'healthcare-icon-door']],
   },
   'product-mockup': {
     title: l('Products MockUp', 'Products MockUp'),
@@ -259,7 +260,7 @@ export const meta: Record<string, ProjectMeta> = {
       'Products MockUp – product mockup cover image',
     ),
     alts: {
-      '02-livon-product-flat-mockup': l(
+      'livon-product-flat-mockup': l(
         'Products MockUp – 주요 제품 플랫 목업',
         'Products MockUp – flat mockup of the main products',
       ),
@@ -282,7 +283,7 @@ export const meta: Record<string, ProjectMeta> = {
       'Telecare Service Platform – TSP v3.2 app cover image',
     ),
     alts: {
-      '02-tsp32-ui': l(
+      'tsp32-ui': l(
         'Telecare Service Platform – TSP v3.2 앱 UI 전체 캡처',
         'Telecare Service Platform – full-length capture of the TSP v3.2 app UI',
       ),
@@ -306,7 +307,7 @@ export const meta: Record<string, ProjectMeta> = {
     featured: false,
     coverAlt: l('SmartBand App UI – 앱 화면 대표 이미지', 'SmartBand App UI – app cover image'),
     alts: {
-      '02-smartband-students': l(
+      'smartband-students': l(
         'SmartBand App UI – 학생 체력측정 시스템 앱 화면',
         'SmartBand App UI – student fitness measurement system app screens',
       ),
@@ -330,7 +331,7 @@ export const meta: Record<string, ProjectMeta> = {
       'Telecare Service Showcase UI – TSP ver3.1 concept cover image',
     ),
     alts: {
-      '02-tsp3-1-styleguide': l(
+      'tsp3-1-styleguide': l(
         'Telecare Service Showcase – TSP 3.1 스타일 가이드',
         'Telecare Service Showcase UI – TSP 3.1 style guide',
       ),
@@ -350,38 +351,35 @@ export const meta: Record<string, ProjectMeta> = {
       'Exhibition Brochure – brochure cover image',
     ),
     alts: {
-      '07-brochure-design-mockup': l(
+      'brochure-design-mockup': l(
         'Exhibition Brochure – 브로슈어 목업',
         'Exhibition Brochure – brochure mockup',
       ),
-      '08-brochure-design-open': l(
+      'brochure-design-open': l(
         'Exhibition Brochure – 펼친 브로슈어',
         'Exhibition Brochure – opened brochure',
       ),
-      '03-brochure-design-inner1': l(
+      'brochure-design-inner1': l(
         'Exhibition Brochure – 내지 1',
         'Exhibition Brochure – inner page 1',
       ),
-      '04-brochure-design-inner2': l(
+      'brochure-design-inner2': l(
         'Exhibition Brochure – 내지 2',
         'Exhibition Brochure – inner page 2',
       ),
-      '05-brochure-design-inner3': l(
+      'brochure-design-inner3': l(
         'Exhibition Brochure – 내지 3',
         'Exhibition Brochure – inner page 3',
       ),
-      '06-brochure-design-inner4': l(
+      'brochure-design-inner4': l(
         'Exhibition Brochure – 내지 4',
         'Exhibition Brochure – inner page 4',
       ),
-      '02-brochure-design-back': l(
-        'Exhibition Brochure – 뒷면',
-        'Exhibition Brochure – back cover',
-      ),
+      'brochure-design-back': l('Exhibition Brochure – 뒷면', 'Exhibition Brochure – back cover'),
     },
     pairs: [
-      ['03-brochure-design-inner1', '04-brochure-design-inner2'],
-      ['05-brochure-design-inner3', '06-brochure-design-inner4'],
+      ['brochure-design-inner1', 'brochure-design-inner2'],
+      ['brochure-design-inner3', 'brochure-design-inner4'],
     ],
   },
   'exhibition-booth-design': {
@@ -398,11 +396,11 @@ export const meta: Record<string, ProjectMeta> = {
       'Exhibition Booth Design – booth cover image',
     ),
     alts: {
-      '02-booth-w275': l(
+      'booth-w275': l(
         'Exhibition Booth Design – 판넬 디자인, w275 버전',
         'Exhibition Booth Design – panel design, w275 version',
       ),
-      '03-booth-w375': l(
+      'booth-w375': l(
         'Exhibition Booth Design – 판넬 디자인, w375 버전',
         'Exhibition Booth Design – panel design, w375 version',
       ),
@@ -422,11 +420,11 @@ export const meta: Record<string, ProjectMeta> = {
       'Telecare Service Website – responsive website cover image',
     ),
     alts: {
-      '04-hidea-mobile-mockup': l(
+      'hidea-mobile-mockup': l(
         'Telecare Service Website – 모바일 반응형 화면 목업',
         'Telecare Service Website – responsive mobile screen mockup',
       ),
-      '03-hidea-index': l(
+      'hidea-index': l(
         'Telecare Service Website – 메인 페이지 전체 캡처',
         'Telecare Service Website – full-length capture of the home page',
       ),
@@ -461,7 +459,7 @@ export const meta: Record<string, ProjectMeta> = {
       'AD Website Renewal Design – renewed main page cover image',
     ),
     alts: {
-      '02-7daycomz-renew-main': l(
+      '7daycomz-renew-main': l(
         'AD Website Renewal Design – 리뉴얼한 메인 화면',
         'AD Website Renewal Design – the renewed main page',
       ),
@@ -481,7 +479,7 @@ export const meta: Record<string, ProjectMeta> = {
       'J-bro Company Responsive Website – cover image',
     ),
     alts: {
-      '03-jbro-main': l(
+      'jbro-main': l(
         'J-bro 반응형 웹사이트 – 메인 화면',
         'J-bro Company Responsive Website – main page',
       ),
@@ -504,7 +502,7 @@ export const meta: Record<string, ProjectMeta> = {
       'AD Company WordPress – WordPress site cover image',
     ),
     alts: {
-      '02-7daycomz-index': l(
+      '7daycomz-index': l(
         'AD Company WordPress – 메인 페이지 전체 캡처',
         'AD Company WordPress – full-length capture of the home page',
       ),
@@ -531,20 +529,20 @@ export const meta: Record<string, ProjectMeta> = {
       'Beauty platform service for CHINA – web service cover image',
     ),
     alts: {
-      '03-meilismd-pc-browser': l(
+      'meilismd-pc-browser': l(
         '중국 뷰티 플랫폼 – PC 브라우저 메인 화면',
         'Beauty platform service for CHINA – desktop browser main page',
       ),
-      '02-meilismd-pc-browser-mypage': l(
+      'meilismd-pc-browser-mypage': l(
         '중국 뷰티 플랫폼 – PC 브라우저 마이페이지 화면',
         'Beauty platform service for CHINA – desktop browser My Page',
       ),
-      '04-meilismd-ui': l(
+      'meilismd-ui': l(
         '중국 뷰티 플랫폼 – 웹·모바일 UI 전체 캡처',
         'Beauty platform service for CHINA – full-length capture of the web and mobile UI',
       ),
     },
-    pairs: [['03-meilismd-pc-browser', '02-meilismd-pc-browser-mypage']],
+    pairs: [['meilismd-pc-browser', 'meilismd-pc-browser-mypage']],
     text: l(
       '<p>중국 한류열풍에 가세하여 국내 최고의 성형외과와 의료진 소개하고 한국 뷰티 정보를 제공하는 커뮤니티와 한국 연예 뉴스 등을 제공하는 중국 현지 플랫폼 서비스</p><ul><li>UI 전반 디자인 및 서비스 기획, 프로젝트 총괄 수행</li><li>웹 서비스 + 하이브리드앱 디자인 및 프론트 개발</li><li>그 외 온라인 광고 컨텐츠, 제안서 템플릿 디자인</li></ul><p><a href="http://www.meilismd.com">웹 서비스 바로가기</a></p>',
       '<p>A local platform service for China, riding the Korean Wave: it introduces leading Korean plastic surgery clinics and their medical staff, and offers a community with Korean beauty information plus Korean entertainment news.</p><ul><li>Overall UI design, service planning and project lead</li><li>Web service and hybrid app design, and front-end development</li><li>Online advertising content and proposal template design</li></ul><p><a href="http://www.meilismd.com">Go to the web service</a></p>',
@@ -567,15 +565,15 @@ export const meta: Record<string, ProjectMeta> = {
       'Card Duck – card comparison service cover image',
     ),
     alts: {
-      '04-cardduck-pc-main': l(
+      'cardduck-pc-main': l(
         'Card Duck – 신용카드 비교 사이트 PC 메인 화면',
         'Card Duck – credit card comparison site, desktop main page',
       ),
-      '03-cardduck-pc-detail': l(
+      'cardduck-pc-detail': l(
         'Card Duck – 신용카드 비교 사이트 PC 상세 화면',
         'Card Duck – credit card comparison site, desktop detail page',
       ),
-      '02-cardduck-mobile': l(
+      'cardduck-mobile': l(
         'Card Duck – 신용카드 비교 사이트 모바일 화면',
         'Card Duck – credit card comparison site, mobile screens',
       ),
@@ -599,11 +597,11 @@ export const meta: Record<string, ProjectMeta> = {
       'Bed Mattress Website – BM Ultra main page cover image',
     ),
     alts: {
-      '02-bmultra-main': l(
+      'bmultra-main': l(
         'Bed Mattress Website – BM Ultra 메인 화면',
         'Bed Mattress Website – BM Ultra main page',
       ),
-      '03-bmultra-sub': l(
+      'bmultra-sub': l(
         'Bed Mattress Website – BM Ultra 서브 화면',
         'Bed Mattress Website – BM Ultra sub page',
       ),

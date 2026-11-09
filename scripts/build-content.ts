@@ -88,7 +88,7 @@ function convertPost(
     if (images[key] === undefined) fail(`${post.slug}: image key missing in images.json: ${key}`);
     return key;
   };
-  const suffixOf = (key: string) => key.slice(key.indexOf('/') + 1);
+  const suffixOf = (key: string) => key.slice(key.indexOf('/') + 1).replace(/^\d+-/, '');
 
   const coverSrc = post.featuredImage?.url ?? fail(`${post.slug}: no featured image`);
   const coverKey = lookup(coverSrc);
@@ -240,13 +240,8 @@ function collectStrings(v: unknown, out: string[] = []): string[] {
   return out;
 }
 
-function manualTodo(args: {
-  report: Report;
-  unreferenced: string[];
-  total: number;
-  projects: Project[];
-}): string {
-  const { report, unreferenced, total, projects } = args;
+function manualTodo(args: { report: Report; projects: Project[] }): string {
+  const { report, projects } = args;
   const lines: string[] = [];
   lines.push('# 수동 확인 목록', '');
   lines.push(
@@ -302,18 +297,11 @@ function manualTodo(args: {
     '- 원문의 이미지 설명 글("Light Ver.", "Dark Ver.", 센서 이름)은 해당 이미지의 alt에 합쳤고 별도 글 블록은 만들지 않았다.',
     '',
   );
-  lines.push('## 5. 어느 글에서도 쓰지 않는 변환 이미지', '');
+  lines.push('## 5. 변환하지 않는 이미지', '');
   lines.push(
-    `\`src/content/images.json\` 의 ${total}개 중 표지·본문 블록에서 쓰이지 않는 것이 ${unreferenced.length}개 있다. 원본 글에 첨부만 되어 있고 본문에는 없던 이미지(다른 글의 썸네일 포함)다. 쓰지 않을 이미지는 \`images.json\` 과 \`src/assets/images\` 에서 지울 수 있다(한 번에 정리하면 용량이 줄어든다). 쓰고 싶은 이미지는 \`content-data.ts\` 에서 블록으로 옮긴다.`,
+    '원본 글에 첨부만 되어 있고 본문에는 나오지 않던 이미지(일부는 다른 글의 썸네일)는 변환하지 않는다. 변환 대상은 표지와 본문 이미지뿐이며, `images.json`의 모든 키와 `src/assets/images`의 모든 파일이 글에서 쓰인다(테스트가 검사). 첨부 이미지를 쓰고 싶으면 먼저 원문 본문 규칙(`lib/posts.ts`의 `usedImagePaths`)을 바꿔야 한다.',
     '',
   );
-  const byPost = new Map<string, string[]>();
-  for (const k of unreferenced) {
-    const [s, rest] = k.split('/') as [string, string];
-    byPost.set(s, [...(byPost.get(s) ?? []), rest]);
-  }
-  for (const [s, rest] of byPost) lines.push(`- \`${s}\` (${rest.length}): ${rest.join(', ')}`);
-  lines.push('');
   return `${lines.join('\n')}`;
 }
 
@@ -393,9 +381,9 @@ async function main() {
       ),
     ]),
   );
-  const unreferenced = Object.keys(images)
-    .filter((k) => !referenced.has(k))
-    .sort();
+  const unreferenced = Object.keys(images).filter((k) => !referenced.has(k));
+  if (unreferenced.length > 0)
+    fail(`images.json has unreferenced keys: ${unreferenced.length} (re-run convert-images)`);
 
   await mkdir(projectsDir, { recursive: true });
   for (const f of await readdir(projectsDir)) {
@@ -405,10 +393,7 @@ async function main() {
     await writeFile(join(projectsDir, `${p.slug}.json`), `${JSON.stringify(p, null, 2)}\n`);
   }
   await writeFile(join(root, 'src/content/tags.json'), `${JSON.stringify(tagRows, null, 2)}\n`);
-  await writeFile(
-    join(root, 'docs/manual-todo.md'),
-    manualTodo({ report, unreferenced, total: Object.keys(images).length, projects }),
-  );
+  await writeFile(join(root, 'docs/manual-todo.md'), manualTodo({ report, projects }));
 
   // 보고(stdout)
   const count = (p: Project, type: Block['type']) => p.blocks.filter((b) => b.type === type).length;
@@ -423,7 +408,7 @@ async function main() {
       `${String(p.order).padStart(2)} ${p.slug} ${p.blocks.length} (${count(p, 'image')}/${count(p, 'pair')}/${count(p, 'longshot')}/${count(p, 'text')}/${count(p, 'demo')}) ${imgs} ${p.demo ?? '-'}`,
     );
   }
-  console.log(`unreferenced images: ${unreferenced.length}/${Object.keys(images).length}`);
+  console.log(`images: ${Object.keys(images).length} (all referenced)`);
   console.log(`dropped elements: ${[...report.droppedElements].join(', ')}`);
   console.log(`captions folded into alt: ${report.folded.length}`);
   for (const f of report.folded) console.log(`  ${f}`);

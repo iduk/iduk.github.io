@@ -32,7 +32,7 @@
   "blocks": [
     {
       "type": "image",
-      "image": "telecare-service-website/04-hidea-mobile-mockup",
+      "image": "telecare-service-website/02-hidea-mobile-mockup",
       "alt": {
         "ko": "Telecare Service Website – 모바일 반응형 화면 목업",
         "en": "Telecare Service Website – responsive mobile screen mockup"

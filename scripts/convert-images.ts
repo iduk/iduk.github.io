@@ -1,5 +1,5 @@
 /**
- * 공개 글(24개)이 참조하는 이미지를 WebP 마스터로 변환하고 src/content/images.json을 만든다.
+ * 공개 글(24개)이 쓰는 이미지(대표 + 본문)를 WebP 마스터로 변환하고 src/content/images.json을 만든다.
  * 사이트 번들에는 들어가지 않는 일회성 CLI. 원본(../iduk.design)은 읽기만 한다.
  *
  *   pnpm tsx scripts/convert-images.ts --only oyedu   # 한 글만 시험
@@ -9,7 +9,8 @@
  *
  * images.json 형식: Record<imageKey, { src, width, height, avgColor, bytes, original }>
  *   imageKey  `<글 슬러그>/<NN>-<ASCII 슬러그>`. src/assets/images 아래 경로에서 `.webp`를 뺀 값.
- *             NN은 글 안에서 featuredImage, images, contentImages 순서로 매긴 두 자리 번호(중복 제거 후).
+ *             NN은 글 안에서 대표 이미지, 본문 이미지 순서로 매긴 두 자리 번호(중복 제거 후).
+ *             변환 대상은 사이트에서 실제로 쓰는 이미지(대표 + 본문)뿐이다(lib/posts.ts usedImagePaths).
  *   src       `/src/assets/images/<imageKey>.webp` (import.meta.glob 키와 같은 형태)
  *   original  원본 파일의 이름만(NFC). 경로는 넣지 않는다.
  */
@@ -20,7 +21,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { convertImage } from './lib/convert';
-import { imageFileStem, isPublic, type Post, referencedPaths } from './lib/posts';
+import { imageFileStem, isPublic, type Post, usedImagePaths } from './lib/posts';
 
 type ImageEntry = {
   src: string;
@@ -91,7 +92,7 @@ async function main() {
     await rm(join(outRoot, post.slug), { recursive: true, force: true });
 
     const taken = new Set<string>();
-    const paths = referencedPaths(post);
+    const paths = usedImagePaths(post);
     expected += paths.length;
     let n = 0;
     for (const urlPath of paths) {

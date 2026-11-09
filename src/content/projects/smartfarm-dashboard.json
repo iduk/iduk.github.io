@@ -34,7 +34,7 @@
   "blocks": [
     {
       "type": "longshot",
-      "image": "smartfarm-dashboard/04-yangdon-dashboard",
+      "image": "smartfarm-dashboard/02-yangdon-dashboard",
       "alt": {
         "ko": "SmartFarm Dashboard – 관리자 화면 전체 캡처",
         "en": "SmartFarm Dashboard – full-length capture of the admin screens"

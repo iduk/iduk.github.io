@@ -31,7 +31,7 @@
   "blocks": [
     {
       "type": "image",
-      "image": "exhibition-brochure/07-brochure-design-mockup",
+      "image": "exhibition-brochure/02-brochure-design-mockup",
       "alt": {
         "ko": "Exhibition Brochure – 브로슈어 목업",
         "en": "Exhibition Brochure – brochure mockup"
@@ -39,7 +39,7 @@
     },
     {
       "type": "image",
-      "image": "exhibition-brochure/08-brochure-design-open",
+      "image": "exhibition-brochure/03-brochure-design-open",
       "alt": {
         "ko": "Exhibition Brochure – 펼친 브로슈어",
         "en": "Exhibition Brochure – opened brochure"
@@ -49,14 +49,14 @@
       "type": "pair",
       "images": [
         {
-          "image": "exhibition-brochure/03-brochure-design-inner1",
+          "image": "exhibition-brochure/04-brochure-design-inner1",
           "alt": {
             "ko": "Exhibition Brochure – 내지 1",
             "en": "Exhibition Brochure – inner page 1"
           }
         },
         {
-          "image": "exhibition-brochure/04-brochure-design-inner2",
+          "image": "exhibition-brochure/05-brochure-design-inner2",
           "alt": {
             "ko": "Exhibition Brochure – 내지 2",
             "en": "Exhibition Brochure – inner page 2"
@@ -68,14 +68,14 @@
       "type": "pair",
       "images": [
         {
-          "image": "exhibition-brochure/05-brochure-design-inner3",
+          "image": "exhibition-brochure/06-brochure-design-inner3",
           "alt": {
             "ko": "Exhibition Brochure – 내지 3",
             "en": "Exhibition Brochure – inner page 3"
           }
         },
         {
-          "image": "exhibition-brochure/06-brochure-design-inner4",
+          "image": "exhibition-brochure/07-brochure-design-inner4",
           "alt": {
             "ko": "Exhibition Brochure – 내지 4",
             "en": "Exhibition Brochure – inner page 4"
@@ -85,7 +85,7 @@
     },
     {
       "type": "image",
-      "image": "exhibition-brochure/02-brochure-design-back",
+      "image": "exhibition-brochure/08-brochure-design-back",
       "alt": {
         "ko": "Exhibition Brochure – 뒷면",
         "en": "Exhibition Brochure – back cover"

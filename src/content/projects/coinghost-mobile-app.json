@@ -31,7 +31,7 @@
   "blocks": [
     {
       "type": "image",
-      "image": "coinghost-mobile-app/03-coinghost-app-showcase",
+      "image": "coinghost-mobile-app/02-coinghost-app-showcase",
       "alt": {
         "ko": "COINGHOST 모바일 앱 – 앱 화면 모음",
         "en": "COINGHOST Mobile App – app screens overview"

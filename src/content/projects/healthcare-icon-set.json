@@ -32,7 +32,7 @@
   "blocks": [
     {
       "type": "image",
-      "image": "healthcare-icon-set/05-healthcare-iconset-sketch",
+      "image": "healthcare-icon-set/02-healthcare-iconset-sketch",
       "alt": {
         "ko": "Healthcare Icon Set – 아이콘 스케치",
         "en": "Healthcare Icon Set – icon sketches"
@@ -42,14 +42,14 @@
       "type": "pair",
       "images": [
         {
-          "image": "healthcare-icon-set/04-healthcare-icon-motion",
+          "image": "healthcare-icon-set/03-healthcare-icon-motion",
           "alt": {
             "ko": "Healthcare Icon Set – 모션 감지 센서 아이콘",
             "en": "Healthcare Icon Set – motion detection sensor icon"
           }
         },
         {
-          "image": "healthcare-icon-set/02-healthcare-icon-door",
+          "image": "healthcare-icon-set/04-healthcare-icon-door",
           "alt": {
             "ko": "Healthcare Icon Set – 도어 센서 아이콘",
             "en": "Healthcare Icon Set – door sensor icon"
@@ -59,7 +59,7 @@
     },
     {
       "type": "image",
-      "image": "healthcare-icon-set/03-healthcare-icon-home",
+      "image": "healthcare-icon-set/05-healthcare-icon-home",
       "alt": {
         "ko": "Healthcare Icon Set – 홈 IoT 아이콘",
         "en": "Healthcare Icon Set – home IoT icon"

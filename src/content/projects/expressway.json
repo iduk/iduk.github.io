@@ -36,14 +36,14 @@
       "type": "pair",
       "images": [
         {
-          "image": "expressway/03-ex-main-light",
+          "image": "expressway/02-ex-main-light",
           "alt": {
             "ko": "ExpressWay – 채널 라이브뷰 모니터링 화면, 라이트 버전",
             "en": "ExpressWay – live view monitoring screen, light version"
           }
         },
         {
-          "image": "expressway/02-ex-main-dark",
+          "image": "expressway/03-ex-main-dark",
           "alt": {
             "ko": "ExpressWay – 채널 라이브뷰 모니터링 화면, 다크 버전",
             "en": "ExpressWay – live view monitoring screen, dark version"

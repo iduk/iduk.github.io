@@ -1,5 +1,6 @@
 /** posts.json 해석 공통 규칙. convert-images와 build-content가 같은 이미지 키를 만들도록 한 곳에 둔다. */
 import { basename } from 'node:path';
+import { parseContent } from './blocks';
 import { slugifyFileName, uniqueName } from './names';
 
 export type Post = {
@@ -22,16 +23,17 @@ export function isPublic(p: Pick<Post, 'status' | 'categories'>): boolean {
   return p.status === 'publish' && p.categories.some((c) => c.slug === 'portfolio');
 }
 
-/** 글이 참조하는 원본 경로를 NFC로 정규화하고 중복을 없애 순서대로 돌려준다. */
-export function referencedPaths(p: Post): string[] {
-  const all = [
-    p.featuredImage?.url,
-    ...(p.images ?? []).map((i) => i.url),
-    ...(p.contentImages ?? []),
-  ];
-  const seen = new Set<string>();
-  for (const u of all) if (typeof u === 'string' && u !== '') seen.add(u.normalize('NFC'));
-  return [...seen];
+/**
+ * 사이트에 실제로 쓰는 이미지의 원본 경로(NFC, 중복 제거, 순서대로): 대표 이미지 다음에 본문 이미지.
+ * 이미지 변환(convert-images)과 콘텐츠 변환(build-content)이 같은 목록을 쓴다.
+ * 글에 첨부만 되어 있고 본문에 나오지 않는 이미지는 포함하지 않는다.
+ */
+export function usedImagePaths(p: Post): string[] {
+  const all: string[] = [];
+  if (p.featuredImage?.url) all.push(p.featuredImage.url);
+  for (const t of parseContent(p.contentHtml).tokens)
+    if (t.kind === 'image' && t.src) all.push(t.src);
+  return [...new Set(all.map((u) => u.normalize('NFC')))];
 }
 
 /** `<NN>-<ascii-slug>` 이미지 파일명(확장자 없음). n은 1부터. */
@@ -44,7 +46,7 @@ export function imageKeyMap(p: Post): Map<string, string> {
   const map = new Map<string, string>();
   const taken = new Set<string>();
   let n = 0;
-  for (const urlPath of referencedPaths(p)) {
+  for (const urlPath of usedImagePaths(p)) {
     n += 1;
     const name = imageFileStem(n, urlPath, taken);
     taken.add(name);

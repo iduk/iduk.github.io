@@ -241,9 +241,15 @@ function safeHref(raw: string | undefined): { href: string; external: boolean } 
   // 브라우저는 주소 안의 탭·줄바꿈·앞뒤 공백을 무시한다.
   const href = [...raw].filter((c) => !isIgnoredInUrl(c)).join('');
   if (href === '' || LEGACY_HOST.test(href)) return undefined;
+  // 브라우저는 `\`를 `/`로 보므로 `/\evil.test`가 `//evil.test`가 된다. 역슬래시는 모두 거부한다.
+  if (href.includes('\\')) return undefined;
   if (/^https?:\/\/[^/]/i.test(href)) {
+    // 사용자 정보(`user:pw@host`)가 든 주소는 호스트를 속이는 데 쓰이므로 거부한다.
+    const authority = href.replace(/^https?:\/\//i, '').split(/[/?#]/, 1)[0] ?? '';
+    if (authority.includes('@')) return undefined;
     try {
       const u = new URL(href);
+      if (u.username !== '' || u.password !== '') return undefined;
       if (u.protocol === 'http:' || u.protocol === 'https:')
         return { href: raw.trim(), external: true };
     } catch {
