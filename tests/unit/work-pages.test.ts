@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const root = join(import.meta.dirname, '../..');
-const dist = join(root, 'dist');
+const dist = process.env.DIST_DIR ?? join(root, 'dist');
 const slugs = readdirSync(join(root, 'src/content/projects'))
   .filter((f) => f.endsWith('.json'))
   .map((f) => f.replace(/\.json$/, ''));

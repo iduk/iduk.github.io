@@ -43,8 +43,8 @@
     {
       "type": "text",
       "body": {
-        "ko": "<ul><li>Android/iOS 앱서비스 전반 디자인</li><li>반응형웹 화면 퍼블리싱(MaterializeCSS Customize)</li><li>영어, 일본어, 독일어 등 다국어 대응</li></ul><p><a href=\"http://family.livoncare.com\" target=\"_blank\" rel=\"noopener noreferrer\">Web Service 바로가기</a></p><p><a href=\"https://play.google.com/store/apps/details?id=com.ionicframework.livonapp397686\" target=\"_blank\" rel=\"noopener noreferrer\">Play Store 바로가기</a></p>",
-        "en": "<ul><li>Overall design of the Android/iOS app service</li><li>Responsive web screen publishing (customized MaterializeCSS)</li><li>Multilingual support: English, Japanese, German and more</li></ul><p><a href=\"http://family.livoncare.com\" target=\"_blank\" rel=\"noopener noreferrer\">Go to the web service</a></p><p><a href=\"https://play.google.com/store/apps/details?id=com.ionicframework.livonapp397686\" target=\"_blank\" rel=\"noopener noreferrer\">Go to the Play Store</a></p>"
+        "ko": "<ul><li>Android/iOS 앱서비스 전반 디자인</li><li>반응형웹 화면 퍼블리싱(MaterializeCSS Customize)</li><li>영어, 일본어, 독일어 등 다국어 대응</li></ul><p><a href=\"http://family.livoncare.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Web Service 바로가기</a></p><p><a href=\"https://play.google.com/store/apps/details?id=com.ionicframework.livonapp397686\" target=\"_blank\" rel=\"noopener noreferrer\">Play Store 바로가기</a></p>",
+        "en": "<ul><li>Overall design of the Android/iOS app service</li><li>Responsive web screen publishing (customized MaterializeCSS)</li><li>Multilingual support: English, Japanese, German and more</li></ul><p><a href=\"http://family.livoncare.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Go to the web service</a></p><p><a href=\"https://play.google.com/store/apps/details?id=com.ionicframework.livonapp397686\" target=\"_blank\" rel=\"noopener noreferrer\">Go to the Play Store</a></p>"
       }
     }
   ],

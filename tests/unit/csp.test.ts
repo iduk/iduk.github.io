@@ -3,7 +3,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-const dist = join(import.meta.dirname, '../../dist');
+const dist = process.env.DIST_DIR ?? join(import.meta.dirname, '../../dist');
 
 function htmlFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
@@ -27,6 +27,15 @@ describe.skipIf(!existsSync(dist))('CSP covers every inline script in dist', () 
         if (/\bsrc=/.test(attrs)) continue; // external: covered by 'self'
         const hash = `'sha256-${createHash('sha256').update(body).digest('base64')}'`;
         expect(scriptSrc, `inline script not hashed: ${body.slice(0, 40)}`).toContain(hash);
+      }
+      // Every inline <style> must be hashed in this page's style-src.
+      const styleSrc = csp.split(';').find((d) => d.trim().startsWith('style-src')) ?? '';
+      expect(styleSrc).not.toContain('unsafe-inline');
+      for (const [, attrs, body] of html.matchAll(/<style\b([^>]*)>([\s\S]*?)<\/style>/g)) {
+        const hash = `'sha256-${createHash('sha256').update(body).digest('base64')}'`;
+        expect(styleSrc, `inline style not hashed (${attrs}): ${body.slice(0, 40)}`).toContain(
+          hash,
+        );
       }
       // The CSP meta must precede every inline script so it is enforced for them.
       const cspAt = html.indexOf('content-security-policy');

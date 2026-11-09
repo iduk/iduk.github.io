@@ -1,6 +1,6 @@
 ---
 import { Picture as AstroPicture } from 'astro:assets';
-import { colorClass } from '../lib/imageColors';
+import { colorClass, widthClass } from '../lib/imageColors';
 import { resolveImage } from '../lib/masters';
 
 interface Props {
@@ -32,12 +32,14 @@ if (!widths.includes(entry.width)) widths.push(entry.width);
   loading={priority ? 'eager' : 'lazy'}
   decoding={priority ? undefined : 'async'}
   fetchpriority={priority ? 'high' : undefined}
-  class={`pic ${colorClass(entry.avgColor)}`}
+  class={`pic ${colorClass(entry.avgColor)} ${widthClass(entry.width)}`}
 />
 
 <style is:global>
   .pic {
     display: block;
+    /* 열 폭까지 채우되 .mw-<원본 폭>(ImageColors)이 원본보다 커지는 것을 막는다.
+       srcset의 w 기술자는 sizes 기준으로 본래 크기를 정하므로 width:auto로는 막을 수 없다. */
     width: 100%;
     height: auto;
   }

@@ -4,12 +4,11 @@ import Picture from '../Picture.astro';
 interface Props {
   image: string;
   alt: string;
-  priority?: boolean;
 }
-const { image, alt, priority = false } = Astro.props;
+const { image, alt } = Astro.props;
 ---
 <figure class="image-block">
-  <Picture image={image} alt={alt} sizes="100vw" priority={priority} />
+  <Picture image={image} alt={alt} sizes="100vw" />
 </figure>
 
 <style>

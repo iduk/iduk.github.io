@@ -7,6 +7,7 @@ import Base from '../layouts/Base.astro';
 import type { Locale } from '../lib/i18n';
 import { localizedPath, t } from '../lib/i18n';
 import { resolveImage } from '../lib/masters';
+import { formatPeriod } from '../lib/period';
 import { getPublicProjects, neighbors } from '../lib/projects';
 import type { Project } from '../lib/schema';
 
@@ -20,9 +21,7 @@ const tagNames = new Map((await getCollection('tags')).map((e) => [e.data.id, e.
 const tags = project.tags.map((id) => tagNames.get(id)?.[locale] ?? id);
 const { prev, next } = neighbors(await getPublicProjects(), project.slug);
 
-const fmt = (p: string) => p.replace('-', '.');
-const { start, end } = project.period ?? {};
-const period = start ? (end && end !== start ? `${fmt(start)} – ${fmt(end)}` : fmt(start)) : '';
+const period = project.period ? formatPeriod(project.period, locale) : '';
 
 const og = await getImage({
   src: resolveImage(project.cover.image).master,
