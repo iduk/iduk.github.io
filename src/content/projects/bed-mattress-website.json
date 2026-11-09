@@ -1,0 +1,55 @@
+{
+  "slug": "bed-mattress-website",
+  "year": 2013,
+  "period": {
+    "start": "2013"
+  },
+  "order": 24,
+  "title": {
+    "ko": "Bed Mattress Website",
+    "en": "Bed Mattress Website"
+  },
+  "role": {
+    "ko": "데스크탑 UI 디자인 + 웹 퍼블리싱",
+    "en": "Desktop UI design and web publishing"
+  },
+  "summary": {
+    "ko": "매트리스 수입/병행 기업 \"BM Ultra\" 웹사이트",
+    "en": "Website for BM Ultra, a mattress importer (parallel imports)"
+  },
+  "tags": [
+    "web",
+    "publishing"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "bed-mattress-website/01-bmultra-main",
+    "alt": {
+      "ko": "Bed Mattress Website – BM Ultra 메인 화면 대표 이미지",
+      "en": "Bed Mattress Website – BM Ultra main page cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "image",
+      "image": "bed-mattress-website/02-bmultra-main",
+      "alt": {
+        "ko": "Bed Mattress Website – BM Ultra 메인 화면",
+        "en": "Bed Mattress Website – BM Ultra main page"
+      }
+    },
+    {
+      "type": "longshot",
+      "image": "bed-mattress-website/03-bmultra-sub",
+      "alt": {
+        "ko": "Bed Mattress Website – BM Ultra 서브 화면",
+        "en": "Bed Mattress Website – BM Ultra sub page"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 218,
+    "path": "/portfolio/bed-mattress-website/"
+  },
+  "status": "draft-translation"
+}

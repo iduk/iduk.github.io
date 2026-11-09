@@ -1,0 +1,46 @@
+{
+  "slug": "coinghost-mobile-app",
+  "year": 2020,
+  "period": {
+    "start": "2020-03"
+  },
+  "order": 2,
+  "title": {
+    "ko": "COINGHOST Mobile App",
+    "en": "COINGHOST Mobile App"
+  },
+  "role": {
+    "ko": "앱 UI 디자인",
+    "en": "App UI design"
+  },
+  "summary": {
+    "ko": "코인고스트 모바일앱",
+    "en": "Mobile app for COINGHOST"
+  },
+  "tags": [
+    "app"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "coinghost-mobile-app/01-thum-coinghost-app-e1586568001859",
+    "alt": {
+      "ko": "COINGHOST 모바일 앱 – 대표 화면",
+      "en": "COINGHOST Mobile App – cover screen"
+    }
+  },
+  "blocks": [
+    {
+      "type": "image",
+      "image": "coinghost-mobile-app/03-coinghost-app-showcase",
+      "alt": {
+        "ko": "COINGHOST 모바일 앱 – 앱 화면 모음",
+        "en": "COINGHOST Mobile App – app screens overview"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 1891,
+    "path": "/portfolio/coinghost-mobile-app/"
+  },
+  "status": "draft-translation"
+}

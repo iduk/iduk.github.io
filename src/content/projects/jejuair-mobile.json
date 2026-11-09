@@ -1,0 +1,48 @@
+{
+  "slug": "jejuair-mobile",
+  "year": 2019,
+  "period": {
+    "start": "2019-05",
+    "end": "2019-07"
+  },
+  "order": 4,
+  "title": {
+    "ko": "JEJUair Mobile",
+    "en": "JEJUair Mobile"
+  },
+  "role": {
+    "ko": "UI 디자인",
+    "en": "UI design"
+  },
+  "summary": {
+    "ko": "Jejuair Mobile Crew — 제주항공 모바일 크루 시스템 'J-CREW' UI Design.",
+    "en": "Jejuair Mobile Crew: UI design for 'J-CREW', Jeju Air's mobile crew system"
+  },
+  "tags": [
+    "app"
+  ],
+  "featured": true,
+  "cover": {
+    "image": "1812/01-thum-jejuair-jcrew-3-e1586567643952",
+    "alt": {
+      "ko": "JEJUair Mobile – J-CREW 앱 화면 목업",
+      "en": "JEJUair Mobile – J-CREW app screens on phone mockups"
+    }
+  },
+  "blocks": [
+    {
+      "type": "image",
+      "image": "1812/04-jejuair-jcrew-mobile",
+      "alt": {
+        "ko": "JEJUair Mobile – J-CREW 로그인과 일정 캘린더 화면",
+        "en": "JEJUair Mobile – J-CREW login and schedule calendar screens"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 1812,
+    "path": "/portfolio/1812/",
+    "slug": "1812"
+  },
+  "status": "draft-translation"
+}

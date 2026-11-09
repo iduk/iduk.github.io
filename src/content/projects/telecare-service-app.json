@@ -1,0 +1,56 @@
+{
+  "slug": "telecare-service-app",
+  "year": 2017,
+  "period": {
+    "start": "2017-09"
+  },
+  "order": 11,
+  "title": {
+    "ko": "Telecare Service Platform APP",
+    "en": "Telecare Service Platform APP"
+  },
+  "role": {
+    "ko": "앱 서비스 디자인, 반응형 웹 퍼블리싱, 다국어 대응",
+    "en": "App service design, responsive web publishing and multilingual support"
+  },
+  "summary": {
+    "ko": "독거노인을 위한 텔레케어 서비스 플랫폼 \"TSP v3.2\" 런칭",
+    "en": "Launch of \"TSP v3.2\", a telecare service platform for elderly people living alone"
+  },
+  "tags": [
+    "telecare",
+    "iot",
+    "app",
+    "responsive-web"
+  ],
+  "featured": true,
+  "cover": {
+    "image": "telecare-service-app/01-thum-tsp32",
+    "alt": {
+      "ko": "Telecare Service Platform – TSP v3.2 앱 화면 대표 이미지",
+      "en": "Telecare Service Platform – TSP v3.2 app cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "longshot",
+      "image": "telecare-service-app/02-tsp32-ui",
+      "alt": {
+        "ko": "Telecare Service Platform – TSP v3.2 앱 UI 전체 캡처",
+        "en": "Telecare Service Platform – full-length capture of the TSP v3.2 app UI"
+      }
+    },
+    {
+      "type": "text",
+      "body": {
+        "ko": "<ul><li>Android/iOS 앱서비스 전반 디자인</li><li>반응형웹 화면 퍼블리싱(MaterializeCSS Customize)</li><li>영어, 일본어, 독일어 등 다국어 대응</li></ul><p><a href=\"http://family.livoncare.com\" target=\"_blank\" rel=\"noopener noreferrer\">Web Service 바로가기</a></p><p><a href=\"https://play.google.com/store/apps/details?id=com.ionicframework.livonapp397686\" target=\"_blank\" rel=\"noopener noreferrer\">Play Store 바로가기</a></p>",
+        "en": "<ul><li>Overall design of the Android/iOS app service</li><li>Responsive web screen publishing (customized MaterializeCSS)</li><li>Multilingual support: English, Japanese, German and more</li></ul><p><a href=\"http://family.livoncare.com\" target=\"_blank\" rel=\"noopener noreferrer\">Go to the web service</a></p><p><a href=\"https://play.google.com/store/apps/details?id=com.ionicframework.livonapp397686\" target=\"_blank\" rel=\"noopener noreferrer\">Go to the Play Store</a></p>"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 915,
+    "path": "/portfolio/telecare-service-app/"
+  },
+  "status": "draft-translation"
+}

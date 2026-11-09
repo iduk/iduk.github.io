@@ -1,0 +1,82 @@
+{
+  "slug": "healthcare-icon-set",
+  "year": 2016,
+  "period": {
+    "start": "2016-10"
+  },
+  "order": 15,
+  "title": {
+    "ko": "Healthcare Icon Set",
+    "en": "Healthcare Icon Set"
+  },
+  "role": {
+    "ko": "아이콘 디자인",
+    "en": "Icon design"
+  },
+  "summary": {
+    "ko": "Home IoT + Healthcare 플랫폼 서비스 아이콘",
+    "en": "Service icons for a Home IoT + Healthcare platform"
+  },
+  "tags": [
+    "icon",
+    "iot"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "healthcare-icon-set/01-thum-healthcare-iconset-1",
+    "alt": {
+      "ko": "Healthcare Icon Set – 서비스 아이콘 대표 이미지",
+      "en": "Healthcare Icon Set – service icons cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "image",
+      "image": "healthcare-icon-set/05-healthcare-iconset-sketch",
+      "alt": {
+        "ko": "Healthcare Icon Set – 아이콘 스케치",
+        "en": "Healthcare Icon Set – icon sketches"
+      }
+    },
+    {
+      "type": "pair",
+      "images": [
+        {
+          "image": "healthcare-icon-set/04-healthcare-icon-motion",
+          "alt": {
+            "ko": "Healthcare Icon Set – 모션 감지 센서 아이콘",
+            "en": "Healthcare Icon Set – motion detection sensor icon"
+          }
+        },
+        {
+          "image": "healthcare-icon-set/02-healthcare-icon-door",
+          "alt": {
+            "ko": "Healthcare Icon Set – 도어 센서 아이콘",
+            "en": "Healthcare Icon Set – door sensor icon"
+          }
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "image": "healthcare-icon-set/03-healthcare-icon-home",
+      "alt": {
+        "ko": "Healthcare Icon Set – 홈 IoT 아이콘",
+        "en": "Healthcare Icon Set – home IoT icon"
+      }
+    },
+    {
+      "type": "image",
+      "image": "healthcare-icon-set/06-healthcare-iconset-white",
+      "alt": {
+        "ko": "Healthcare Icon Set – 흰 배경의 전체 아이콘 세트",
+        "en": "Healthcare Icon Set – the complete icon set on a white background"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 843,
+    "path": "/portfolio/healthcare-icon-set/"
+  },
+  "status": "draft-translation"
+}

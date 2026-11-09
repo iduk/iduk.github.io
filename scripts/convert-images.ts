@@ -20,7 +20,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { convertImage } from './lib/convert';
-import { slugifyFileName, uniqueName } from './lib/names';
+import { imageFileStem, isPublic, type Post, referencedPaths } from './lib/posts';
 
 type ImageEntry = {
   src: string;
@@ -31,15 +31,6 @@ type ImageEntry = {
   original: string;
 };
 
-type Post = {
-  slug: string;
-  status: string;
-  categories: { slug: string }[];
-  featuredImage?: { url: string } | null;
-  images?: { url: string }[];
-  contentImages?: string[];
-};
-
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const outRoot = join(root, 'src/assets/images');
 const jsonPath = join(root, 'src/content/images.json');
@@ -48,22 +39,6 @@ const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
 function argValue(name: string): string | undefined {
   const i = process.argv.indexOf(name);
   return i >= 0 ? process.argv[i + 1] : undefined;
-}
-
-function isPublic(p: Post): boolean {
-  return p.status === 'publish' && p.categories.some((c) => c.slug === 'portfolio');
-}
-
-/** 글이 참조하는 원본 경로를 NFC로 정규화하고 중복을 없애 순서대로 돌려준다. */
-function referencedPaths(p: Post): string[] {
-  const all = [
-    p.featuredImage?.url,
-    ...(p.images ?? []).map((i) => i.url),
-    ...(p.contentImages ?? []),
-  ];
-  const seen = new Set<string>();
-  for (const u of all) if (typeof u === 'string' && u !== '') seen.add(u.normalize('NFC'));
-  return [...seen];
 }
 
 /** 디스크 이름이 NFD여도 NFC 경로로 찾는다. 원본 폴더 밖은 거부한다. */
@@ -124,10 +99,7 @@ async function main() {
       const original = basename(urlPath);
       try {
         const file = await resolveSource(originalDir, urlPath);
-        const name = uniqueName(
-          `${String(n).padStart(2, '0')}-${slugifyFileName(original)}`,
-          taken,
-        );
+        const name = imageFileStem(n, urlPath, taken);
         taken.add(name);
         const key = `${post.slug}/${name}`;
         const res = await convertImage(file, join(outRoot, `${key}.webp`));

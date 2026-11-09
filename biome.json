@@ -7,6 +7,7 @@
       "!**/public/fonts",
       "!**/src/styles/fonts.css",
       "!**/pnpm-lock.yaml",
+      "!**/src/content",
       "!**/docs"
     ]
   },

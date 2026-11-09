@@ -1,0 +1,38 @@
+{
+  "slug": "oyedu",
+  "year": 2020,
+  "period": {
+    "start": "2020-03"
+  },
+  "order": 1,
+  "title": {
+    "ko": "OY Education",
+    "en": "OY Education"
+  },
+  "role": {
+    "ko": "Web,App (Mobile First)",
+    "en": "Web and app, mobile first"
+  },
+  "summary": {
+    "ko": "OliveYoung Education & Community — 올리브영 매장 직원들을 위한 '소통' 프로젝트",
+    "en": "OliveYoung Education & Community: a 'communication' project for Olive Young store staff"
+  },
+  "tags": [
+    "web",
+    "app"
+  ],
+  "featured": true,
+  "cover": {
+    "image": "oyedu/01-oyedu-mockup-e1586531633658",
+    "alt": {
+      "ko": "OY Education – 스마트폰 화면에 담은 앱 디자인 목업",
+      "en": "OY Education – app screens shown on smartphone mockups"
+    }
+  },
+  "blocks": [],
+  "legacy": {
+    "id": 1833,
+    "path": "/portfolio/oyedu/"
+  },
+  "status": "draft-translation"
+}

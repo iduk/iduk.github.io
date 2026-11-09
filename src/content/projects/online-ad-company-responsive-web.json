@@ -1,0 +1,46 @@
+{
+  "slug": "online-ad-company-responsive-web",
+  "year": 2017,
+  "period": {
+    "start": "2017-09"
+  },
+  "order": 12,
+  "title": {
+    "ko": "J-bro Company Responsive Website",
+    "en": "J-bro Company Responsive Website"
+  },
+  "role": {
+    "ko": "반응형웹 UI 디자인",
+    "en": "Responsive web UI design"
+  },
+  "summary": {
+    "ko": "온라인 마케팅 기업 Jbro, 반응형 웹사이트",
+    "en": "Responsive website for Jbro, an online marketing company"
+  },
+  "tags": [
+    "responsive-web"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "online-ad-company-responsive-web/01-thum-jbro",
+    "alt": {
+      "ko": "J-bro 반응형 웹사이트 – 대표 이미지",
+      "en": "J-bro Company Responsive Website – cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "longshot",
+      "image": "online-ad-company-responsive-web/03-jbro-main",
+      "alt": {
+        "ko": "J-bro 반응형 웹사이트 – 메인 화면",
+        "en": "J-bro Company Responsive Website – main page"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 800,
+    "path": "/portfolio/online-ad-company-responsive-web/"
+  },
+  "status": "draft-translation"
+}

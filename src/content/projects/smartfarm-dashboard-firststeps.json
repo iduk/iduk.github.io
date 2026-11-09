@@ -1,0 +1,56 @@
+{
+  "slug": "smartfarm-dashboard-firststeps",
+  "year": 2018,
+  "period": {
+    "start": "2018-06",
+    "end": "2018-07"
+  },
+  "order": 9,
+  "title": {
+    "ko": "SmartFarm Dashboard \"FirstSteps\"",
+    "en": "SmartFarm Dashboard \"FirstSteps\""
+  },
+  "role": {
+    "ko": "컨셉 시안 및 화면 UI 디자인",
+    "en": "Concept drafts and screen UI design"
+  },
+  "summary": {
+    "ko": "스마트팜 IoT 버섯농장 프로젝트, \"첫걸음\"",
+    "en": "Smart farm IoT project for a mushroom farm, \"FirstSteps\""
+  },
+  "tags": [
+    "smartfarm",
+    "iot",
+    "dashboard"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "smartfarm-dashboard-firststeps/01-thum-firststeps-1-e1586570265275",
+    "alt": {
+      "ko": "SmartFarm FirstSteps – 데스크탑 관리자 화면 대표 이미지",
+      "en": "SmartFarm Dashboard \"FirstSteps\" – desktop admin cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "longshot",
+      "image": "smartfarm-dashboard-firststeps/02-firststeps-dashboard",
+      "alt": {
+        "ko": "SmartFarm FirstSteps – 버섯농장 관리자 화면 전체 캡처",
+        "en": "SmartFarm Dashboard \"FirstSteps\" – full-length capture of the mushroom farm admin screens"
+      }
+    },
+    {
+      "type": "text",
+      "body": {
+        "ko": "<p>41 Page / Desktop Admin Design.</p>",
+        "en": "<p>41 Page / Desktop Admin Design.</p>"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 1228,
+    "path": "/portfolio/smartfarm-dashboard-firststeps/"
+  },
+  "status": "draft-translation"
+}

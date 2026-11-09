@@ -1,0 +1,46 @@
+{
+  "slug": "website-renewal-ui",
+  "year": 2016,
+  "period": {
+    "start": "2016-05"
+  },
+  "order": 20,
+  "title": {
+    "ko": "AD Website Renewal Design",
+    "en": "AD Website Renewal Design"
+  },
+  "role": {
+    "ko": "웹사이트 UI 디자인",
+    "en": "Website UI design"
+  },
+  "summary": {
+    "ko": "마케팅 전문기업 이레컴즈 웹사이트 메인화면 리뉴얼",
+    "en": "Main page renewal for the website of 7daycomz (이레컴즈), a marketing company"
+  },
+  "tags": [
+    "web"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "website-renewal-ui/01-thum-7daycomz-renew",
+    "alt": {
+      "ko": "AD Website Renewal Design – 리뉴얼 메인 화면 대표 이미지",
+      "en": "AD Website Renewal Design – renewed main page cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "image",
+      "image": "website-renewal-ui/02-7daycomz-renew-main",
+      "alt": {
+        "ko": "AD Website Renewal Design – 리뉴얼한 메인 화면",
+        "en": "AD Website Renewal Design – the renewed main page"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 1173,
+    "path": "/portfolio/website-renewal-ui/"
+  },
+  "status": "draft-translation"
+}

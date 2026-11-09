@@ -1,0 +1,54 @@
+{
+  "slug": "exhibition-booth-design",
+  "year": 2016,
+  "period": {
+    "start": "2016-10"
+  },
+  "order": 17,
+  "title": {
+    "ko": "Exhibition Booth Design",
+    "en": "Exhibition Booth Design"
+  },
+  "role": {
+    "ko": "전시부스 판넬 디자인",
+    "en": "Exhibition booth panel design"
+  },
+  "summary": {
+    "ko": "독일 뒤셀도르프 메디카 박람회 전시부스 판넬 디자인 — MEDICA 2016, World Forum for Medicine",
+    "en": "Booth panel design for MEDICA 2016, the World Forum for Medicine, in Düsseldorf, Germany"
+  },
+  "tags": [
+    "print"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "exhibition-booth-design/01-thum-exhibition",
+    "alt": {
+      "ko": "Exhibition Booth Design – 전시부스 대표 이미지",
+      "en": "Exhibition Booth Design – booth cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "image",
+      "image": "exhibition-booth-design/02-booth-w275",
+      "alt": {
+        "ko": "Exhibition Booth Design – 판넬 디자인, w275 버전",
+        "en": "Exhibition Booth Design – panel design, w275 version"
+      }
+    },
+    {
+      "type": "image",
+      "image": "exhibition-booth-design/03-booth-w375",
+      "alt": {
+        "ko": "Exhibition Booth Design – 판넬 디자인, w375 버전",
+        "en": "Exhibition Booth Design – panel design, w375 version"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 715,
+    "path": "/portfolio/exhibition-booth-design/"
+  },
+  "status": "draft-translation"
+}

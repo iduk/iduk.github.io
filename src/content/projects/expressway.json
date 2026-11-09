@@ -1,0 +1,60 @@
+{
+  "slug": "expressway",
+  "year": 2018,
+  "period": {
+    "start": "2018-12",
+    "end": "2018-12"
+  },
+  "order": 6,
+  "title": {
+    "ko": "ExpressWay",
+    "en": "ExpressWay"
+  },
+  "role": {
+    "ko": "데스크탑 UI 메인,레이아웃 디자인 및 퍼블리싱",
+    "en": "Desktop UI design (main screen and layout) and publishing"
+  },
+  "summary": {
+    "ko": "한국도로공사 VMS 웹시스템",
+    "en": "VMS web system for the Korea Expressway Corporation"
+  },
+  "tags": [
+    "dashboard",
+    "web",
+    "publishing"
+  ],
+  "featured": true,
+  "cover": {
+    "image": "expressway/01-thum-ex-1",
+    "alt": {
+      "ko": "ExpressWay – 도로 CCTV 채널 라이브뷰 모니터링 화면",
+      "en": "ExpressWay – live view monitoring screen with four road camera channels"
+    }
+  },
+  "blocks": [
+    {
+      "type": "pair",
+      "images": [
+        {
+          "image": "expressway/03-ex-main-light",
+          "alt": {
+            "ko": "ExpressWay – 채널 라이브뷰 모니터링 화면, 라이트 버전",
+            "en": "ExpressWay – live view monitoring screen, light version"
+          }
+        },
+        {
+          "image": "expressway/02-ex-main-dark",
+          "alt": {
+            "ko": "ExpressWay – 채널 라이브뷰 모니터링 화면, 다크 버전",
+            "en": "ExpressWay – live view monitoring screen, dark version"
+          }
+        }
+      ]
+    }
+  ],
+  "legacy": {
+    "id": 1770,
+    "path": "/portfolio/expressway/"
+  },
+  "status": "draft-translation"
+}

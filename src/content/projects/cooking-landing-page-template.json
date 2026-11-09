@@ -1,0 +1,38 @@
+{
+  "slug": "cooking-landing-page-template",
+  "year": 2016,
+  "period": {
+    "start": "2016-05"
+  },
+  "order": 19,
+  "title": {
+    "ko": "Cooking Landing Page Template",
+    "en": "Cooking Landing Page Template"
+  },
+  "role": {
+    "ko": "템플릿 습작",
+    "en": "Template design study"
+  },
+  "summary": {
+    "ko": "요식업계 컨셉의 템플릿 디자인 습작",
+    "en": "A template design study with a food business concept"
+  },
+  "tags": [
+    "landing",
+    "web"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "cooking-landing-page-template/01-thum-moms",
+    "alt": {
+      "ko": "Cooking Landing Page Template – 요리 사진이 있는 MOMS RECIPY 랜딩 페이지",
+      "en": "Cooking Landing Page Template – MOMS RECIPY landing page with food photography"
+    }
+  },
+  "blocks": [],
+  "legacy": {
+    "id": 978,
+    "path": "/portfolio/cooking-landing-page-template/"
+  },
+  "status": "draft-translation"
+}

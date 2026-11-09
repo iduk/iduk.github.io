@@ -1,0 +1,45 @@
+{
+  "slug": "engineering-responsive-web",
+  "year": 2019,
+  "period": {
+    "start": "2019-05",
+    "end": "2019-05"
+  },
+  "order": 5,
+  "title": {
+    "ko": "Engineering Responsive Web",
+    "en": "Engineering Responsive Web"
+  },
+  "role": {
+    "ko": "반응형웹 UI 디자인 및 퍼블리싱",
+    "en": "Responsive web UI design and publishing"
+  },
+  "summary": {
+    "ko": "Atom Engineering 건축사무소",
+    "en": "Responsive website for Atom Engineering, an architecture firm"
+  },
+  "tags": [
+    "responsive-web",
+    "publishing"
+  ],
+  "featured": true,
+  "cover": {
+    "image": "engineering-responsive-web/01-thum-atom",
+    "alt": {
+      "ko": "Atom Engineering – \"Are you in a safe building now?\" 문구가 있는 메인 화면",
+      "en": "Atom Engineering – home page with the headline \"Are you in a safe building now?\""
+    }
+  },
+  "blocks": [
+    {
+      "type": "demo",
+      "demo": "atom"
+    }
+  ],
+  "demo": "atom",
+  "legacy": {
+    "id": 1761,
+    "path": "/portfolio/engineering-responsive-web/"
+  },
+  "status": "draft-translation"
+}

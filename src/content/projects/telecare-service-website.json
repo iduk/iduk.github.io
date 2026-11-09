@@ -1,0 +1,60 @@
+{
+  "slug": "telecare-service-website",
+  "year": 2016,
+  "period": {
+    "start": "2016-09"
+  },
+  "order": 18,
+  "title": {
+    "ko": "Telecare Service Website",
+    "en": "Telecare Service Website"
+  },
+  "role": {
+    "ko": "반응형 웹사이트",
+    "en": "Responsive Website"
+  },
+  "summary": {
+    "ko": "기업 반응형웹, 랜딩 페이지 템플릿",
+    "en": "Corporate responsive website and landing page template"
+  },
+  "tags": [
+    "responsive-web",
+    "landing"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "telecare-service-website/01-thum-hidea",
+    "alt": {
+      "ko": "Telecare Service Website – 반응형 웹사이트 대표 이미지",
+      "en": "Telecare Service Website – responsive website cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "image",
+      "image": "telecare-service-website/04-hidea-mobile-mockup",
+      "alt": {
+        "ko": "Telecare Service Website – 모바일 반응형 화면 목업",
+        "en": "Telecare Service Website – responsive mobile screen mockup"
+      }
+    },
+    {
+      "type": "longshot",
+      "image": "telecare-service-website/03-hidea-index",
+      "alt": {
+        "ko": "Telecare Service Website – 메인 페이지 전체 캡처",
+        "en": "Telecare Service Website – full-length capture of the home page"
+      }
+    },
+    {
+      "type": "demo",
+      "demo": "hidea"
+    }
+  ],
+  "demo": "hidea",
+  "legacy": {
+    "id": 659,
+    "path": "/portfolio/telecare-service-website/"
+  },
+  "status": "draft-translation"
+}

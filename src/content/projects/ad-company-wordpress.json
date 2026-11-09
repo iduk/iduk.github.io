@@ -1,0 +1,54 @@
+{
+  "slug": "ad-company-wordpress",
+  "year": 2016,
+  "period": {
+    "start": "2016-04"
+  },
+  "order": 21,
+  "title": {
+    "ko": "AD Company WordPress",
+    "en": "AD Company WordPress"
+  },
+  "role": {
+    "ko": "워드프레스 반응형 웹사이트 제작 (플러그인 기능 + 디자인 커스텀)",
+    "en": "Responsive WordPress website (plugin features and design customization)"
+  },
+  "summary": {
+    "ko": "마케팅 전문기업 \"이레컴즈\", 워드프레스 반응형 웹사이트 제작",
+    "en": "Responsive WordPress website for 7daycomz (이레컴즈), a marketing company"
+  },
+  "tags": [
+    "web",
+    "wordpress"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "ad-company-wordpress/01-thum-7daycomz-wordpress",
+    "alt": {
+      "ko": "AD Company WordPress – 워드프레스 사이트 대표 이미지",
+      "en": "AD Company WordPress – WordPress site cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "longshot",
+      "image": "ad-company-wordpress/02-7daycomz-index",
+      "alt": {
+        "ko": "AD Company WordPress – 메인 페이지 전체 캡처",
+        "en": "AD Company WordPress – full-length capture of the home page"
+      }
+    },
+    {
+      "type": "text",
+      "body": {
+        "ko": "<ul><li>웹 화면 캡쳐본</li><li>기본 스킨에 게시판, 문의하기 등 기능 부분 플러그인 + 디자인 커스텀</li></ul>",
+        "en": "<ul><li>Web screen captures</li><li>Base skin with plugins for features such as a bulletin board and an inquiry form, plus custom design</li></ul>"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 421,
+    "path": "/portfolio/ad-company-wordpress/"
+  },
+  "status": "draft-translation"
+}

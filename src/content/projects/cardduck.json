@@ -1,0 +1,70 @@
+{
+  "slug": "cardduck",
+  "year": 2014,
+  "period": {
+    "start": "2014-08"
+  },
+  "order": 23,
+  "title": {
+    "ko": "Card Duck",
+    "en": "Card Duck"
+  },
+  "role": {
+    "ko": "데스크탑 및 모바일 UI 디자인 + 프론트 코딩",
+    "en": "Desktop and mobile UI design and front-end coding"
+  },
+  "summary": {
+    "ko": "카드 혜택을 비교하여 더 나은 카드를 제공하는 서비스 \"카드덕\"(Card Duck)",
+    "en": "A service that compares credit card benefits to offer better cards: \"Card Duck\""
+  },
+  "tags": [
+    "web",
+    "branding"
+  ],
+  "featured": true,
+  "cover": {
+    "image": "cardduck/01-thum-cardduck",
+    "alt": {
+      "ko": "Card Duck – 카드 비교 서비스 대표 이미지",
+      "en": "Card Duck – card comparison service cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "image",
+      "image": "cardduck/04-cardduck-pc-main",
+      "alt": {
+        "ko": "Card Duck – 신용카드 비교 사이트 PC 메인 화면",
+        "en": "Card Duck – credit card comparison site, desktop main page"
+      }
+    },
+    {
+      "type": "image",
+      "image": "cardduck/03-cardduck-pc-detail",
+      "alt": {
+        "ko": "Card Duck – 신용카드 비교 사이트 PC 상세 화면",
+        "en": "Card Duck – credit card comparison site, desktop detail page"
+      }
+    },
+    {
+      "type": "image",
+      "image": "cardduck/02-cardduck-mobile",
+      "alt": {
+        "ko": "Card Duck – 신용카드 비교 사이트 모바일 화면",
+        "en": "Card Duck – credit card comparison site, mobile screens"
+      }
+    },
+    {
+      "type": "text",
+      "body": {
+        "ko": "<p>플랫폼 전반 브랜딩 디자인 및 서비스 구성 기획 참여</p>",
+        "en": "<p>Took part in overall platform branding design and service structure planning.</p>"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 226,
+    "path": "/portfolio/cardduck/"
+  },
+  "status": "draft-translation"
+}

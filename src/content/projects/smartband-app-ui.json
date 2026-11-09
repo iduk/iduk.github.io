@@ -1,0 +1,54 @@
+{
+  "slug": "smartband-app-ui",
+  "year": 2017,
+  "period": {
+    "start": "2017-03"
+  },
+  "order": 14,
+  "title": {
+    "ko": "SmartBand App UI",
+    "en": "SmartBand App UI"
+  },
+  "role": {
+    "ko": "네이티브앱·반응형웹 UI 디자인, 웹화면 퍼블리싱",
+    "en": "Native app and responsive web UI design, web screen publishing"
+  },
+  "summary": {
+    "ko": "PAPS 체력측정시스템 기술개발 과제 — 학생감성평가 네이티브앱 및 반응형웹 화면 디자인 산출물",
+    "en": "PAPS fitness measurement system R&D project: design deliverables for a student emotion assessment native app and responsive web"
+  },
+  "tags": [
+    "app",
+    "responsive-web"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "smartband-app-ui/01-thum-smartband",
+    "alt": {
+      "ko": "SmartBand App UI – 앱 화면 대표 이미지",
+      "en": "SmartBand App UI – app cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "image",
+      "image": "smartband-app-ui/02-smartband-students",
+      "alt": {
+        "ko": "SmartBand App UI – 학생 체력측정 시스템 앱 화면",
+        "en": "SmartBand App UI – student fitness measurement system app screens"
+      }
+    },
+    {
+      "type": "text",
+      "body": {
+        "ko": "<p><a href=\"https://play.google.com/store/apps/details?id=kr.hidea.smartband\" target=\"_blank\" rel=\"noopener noreferrer\">Google Play 앱서비스 바로가기</a></p>",
+        "en": "<p><a href=\"https://play.google.com/store/apps/details?id=kr.hidea.smartband\" target=\"_blank\" rel=\"noopener noreferrer\">Go to the app on Google Play</a></p>"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 612,
+    "path": "/portfolio/smartband-app-ui/"
+  },
+  "status": "draft-translation"
+}

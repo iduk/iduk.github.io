@@ -1,0 +1,48 @@
+{
+  "slug": "smartfarm-android",
+  "year": 2018,
+  "period": {
+    "start": "2018-07",
+    "end": "2018-08"
+  },
+  "order": 7,
+  "title": {
+    "ko": "Smartfarm UI for Android",
+    "en": "Smartfarm UI for Android"
+  },
+  "role": {
+    "ko": "모바일 UI 디자인",
+    "en": "Mobile UI Design"
+  },
+  "summary": {
+    "ko": "스마트팜 IoT, 양돈",
+    "en": "Smart farm IoT: pig farming"
+  },
+  "tags": [
+    "smartfarm",
+    "iot",
+    "app"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "smartfarm-android/01-thum-yangdon-android-e1586580082919",
+    "alt": {
+      "ko": "Smartfarm Android – 대시보드, 환경 설정, 개체 목록 화면 목업",
+      "en": "Smartfarm UI for Android – dashboard, environment settings and animal list screens"
+    }
+  },
+  "blocks": [
+    {
+      "type": "text",
+      "body": {
+        "ko": "<p>Bootstrap + Material UI Custom.</p>",
+        "en": "<p>Bootstrap + Material UI Custom.</p>"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 1650,
+    "path": "/portfolio/smartfarm-android/"
+  },
+  "status": "draft-translation"
+}

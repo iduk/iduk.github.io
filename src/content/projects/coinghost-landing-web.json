@@ -1,0 +1,46 @@
+{
+  "slug": "coinghost-landing-web",
+  "year": 2020,
+  "period": {
+    "start": "2020-03"
+  },
+  "order": 3,
+  "title": {
+    "ko": "COINGHOST Landing Web",
+    "en": "COINGHOST Landing Web"
+  },
+  "role": {
+    "ko": "랜딩 웹 UI 디자인, 퍼블리싱",
+    "en": "Landing web UI design, publishing"
+  },
+  "summary": {
+    "ko": "코인고스트 백서 랜딩페이지",
+    "en": "Whitepaper landing page for COINGHOST"
+  },
+  "tags": [
+    "landing",
+    "publishing"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "coinghost-landing-web/01-thum-coninghost-e1586568080596",
+    "alt": {
+      "ko": "COINGHOST 랜딩 웹 – 가치 소개와 토큰 배분 섹션이 보이는 페이지",
+      "en": "COINGHOST Landing Web – page showing the value section and token allocation chart"
+    }
+  },
+  "blocks": [
+    {
+      "type": "text",
+      "body": {
+        "ko": "<p><a href=\"http://coinghost.io/\" target=\"_blank\" rel=\"noopener noreferrer\">http://coinghost.io/</a></p>",
+        "en": "<p><a href=\"http://coinghost.io/\" target=\"_blank\" rel=\"noopener noreferrer\">http://coinghost.io/</a></p>"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 1884,
+    "path": "/portfolio/coinghost-landing-web/"
+  },
+  "status": "draft-translation"
+}

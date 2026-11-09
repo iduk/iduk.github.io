@@ -1,0 +1,47 @@
+{
+  "slug": "telecare-service-showcase-ui",
+  "year": 2017,
+  "period": {
+    "start": "2017-04"
+  },
+  "order": 13,
+  "title": {
+    "ko": "Telecare Service Showcase UI",
+    "en": "Telecare Service Showcase UI"
+  },
+  "role": {
+    "ko": "컨셉 디자인",
+    "en": "Concept design"
+  },
+  "summary": {
+    "ko": "앱서비스 고도화를 위한 컨셉 시안 — LivOn TSP ver3.1, Concept Design",
+    "en": "Concept drafts for upgrading the app service (LivOn TSP ver3.1)"
+  },
+  "tags": [
+    "telecare",
+    "app"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "telecare-service-showcase-ui/01-thum-tsp31",
+    "alt": {
+      "ko": "Telecare Service Showcase – TSP ver3.1 컨셉 화면 대표 이미지",
+      "en": "Telecare Service Showcase UI – TSP ver3.1 concept cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "longshot",
+      "image": "telecare-service-showcase-ui/02-tsp3-1-styleguide",
+      "alt": {
+        "ko": "Telecare Service Showcase – TSP 3.1 스타일 가이드",
+        "en": "Telecare Service Showcase UI – TSP 3.1 style guide"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 525,
+    "path": "/portfolio/telecare-service-showcase-ui/"
+  },
+  "status": "draft-translation"
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "product-mockup",
+  "year": 2017,
+  "period": {
+    "start": "2017-09"
+  },
+  "order": 10,
+  "title": {
+    "ko": "Products MockUp",
+    "en": "Products MockUp"
+  },
+  "role": {
+    "ko": "제품 목업 스케치",
+    "en": "Product mockup sketches"
+  },
+  "summary": {
+    "ko": "리본실버케어 주요제품 목업",
+    "en": "Mockups of the main products of LivOn Silver Care"
+  },
+  "tags": [
+    "mockup"
+  ],
+  "featured": false,
+  "cover": {
+    "image": "product-mockup/01-thum-mockup-tsp",
+    "alt": {
+      "ko": "Products MockUp – 제품 목업 대표 이미지",
+      "en": "Products MockUp – product mockup cover image"
+    }
+  },
+  "blocks": [
+    {
+      "type": "image",
+      "image": "product-mockup/02-livon-product-flat-mockup",
+      "alt": {
+        "ko": "Products MockUp – 주요 제품 플랫 목업",
+        "en": "Products MockUp – flat mockup of the main products"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 538,
+    "path": "/portfolio/product-mockup/"
+  },
+  "status": "draft-translation"
+}

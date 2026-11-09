@@ -1,0 +1,56 @@
+{
+  "slug": "smartfarm-dashboard",
+  "year": 2018,
+  "period": {
+    "start": "2018-07",
+    "end": "2018-08"
+  },
+  "order": 8,
+  "title": {
+    "ko": "SmartFarm Dashboard",
+    "en": "SmartFarm Dashboard"
+  },
+  "role": {
+    "ko": "스마트팜 관리자 화면 UI 작업",
+    "en": "Admin screen UI design for a smart farm"
+  },
+  "summary": {
+    "ko": "스마트팜 IoT, 축산 농장 프로젝트, \"양돈\"",
+    "en": "Smart farm IoT project for a livestock farm, \"Yangdon\" (pig farming)"
+  },
+  "tags": [
+    "smartfarm",
+    "iot",
+    "dashboard"
+  ],
+  "featured": true,
+  "cover": {
+    "image": "smartfarm-dashboard/01-thum-yangdon-dashboard-2-e1586575586524",
+    "alt": {
+      "ko": "SmartFarm Dashboard – 관리자 대시보드 대표 화면",
+      "en": "SmartFarm Dashboard – admin dashboard cover screen"
+    }
+  },
+  "blocks": [
+    {
+      "type": "longshot",
+      "image": "smartfarm-dashboard/04-yangdon-dashboard",
+      "alt": {
+        "ko": "SmartFarm Dashboard – 관리자 화면 전체 캡처",
+        "en": "SmartFarm Dashboard – full-length capture of the admin screens"
+      }
+    },
+    {
+      "type": "text",
+      "body": {
+        "ko": "<p>Bootstrap + Material UI Custom.</p>",
+        "en": "<p>Bootstrap + Material UI Custom.</p>"
+      }
+    }
+  ],
+  "legacy": {
+    "id": 1241,
+    "path": "/portfolio/smartfarm-dashboard/"
+  },
+  "status": "draft-translation"
+}
