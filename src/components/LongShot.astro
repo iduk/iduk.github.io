@@ -2,6 +2,7 @@
 import { getImage } from 'astro:assets';
 import { localeFromPath, t } from '../lib/i18n';
 import { widthClass } from '../lib/imageColors';
+import { hasLargerFull } from '../lib/imageWidths';
 import { resolveImage } from '../lib/masters';
 import Picture from './Picture.astro';
 
@@ -16,41 +17,57 @@ const locale = localeFromPath(Astro.url.pathname);
 
 const { entry, master } = resolveImage(image);
 
-// 틀 안 이미지는 960px 이하 변형으로 시작한다. 큰 파일은 "원본 크기로 보기"를 눌러야 받는다.
-const INLINE_MAX = 960;
-const FULL_MAX = 2560;
+// 틀은 데스크톱에서도 960 CSS px까지만 넓어진다. srcset은 원본 폭(최대 1920)까지 후보를 주므로
+// 고해상도 화면은 선명한 변형을, 모바일 첫 로드는 sizes(--gutter와 같은 clamp)에 맞는 하나만 받는다.
+const FRAME_MAX = 960;
+const SRCSET_MAX = 1920;
 
-// 원본 크기 파일: 빌드가 만드는 정적 파일(/_astro/...)이라 JS 없이 같은 탭에서 열린다.
-// 페이지의 srcset에는 넣지 않으므로 모바일 첫 로드에서 받지 않는다.
-const full = await getImage({
-  src: master,
-  width: Math.min(FULL_MAX, entry.width),
-  format: 'webp',
-});
+// 원본 크기 파일은 틀 안 표시 폭보다 클 때만 링크로 연다(정적 /_astro 파일, JS 없음).
+const full = hasLargerFull(entry.width, FRAME_MAX)
+  ? await getImage({ src: master, width: entry.width, format: 'webp' })
+  : undefined;
 ---
 <figure class="longshot">
-  <div class={`frame ${widthClass(entry.width)}`}>
-    <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
-    <div class="viewport" role="region" tabindex="0" aria-label={t(locale, 'longshot.label')}>
-      <span class="edge edge-top" aria-hidden="true"></span>
-      <Picture
-        image={image}
-        alt={alt}
-        sizes={`min(100vw, ${INLINE_MAX}px)`}
-        maxWidth={INLINE_MAX}
-      />
-      <span class="edge edge-bottom" aria-hidden="true"></span>
+  <div class="cap">
+    <div class={`wrap ${widthClass(entry.width)}`}>
+      <div class="frame">
+        <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="viewport" role="region" tabindex="0" aria-label={t(locale, 'longshot.label')}>
+          <span class="edge edge-top" aria-hidden="true"></span>
+          <Picture
+            image={image}
+            alt={alt}
+            sizes={`min(calc(100vw - 2 * clamp(1.25rem, 4vw, 4rem)), ${FRAME_MAX}px)`}
+            maxWidth={SRCSET_MAX}
+            fallbackWidth={FRAME_MAX}
+          />
+          <span class="edge edge-bottom" aria-hidden="true"></span>
+        </div>
+      </div>
+      {
+        full && (
+          <div class="actions">
+            <a class="full" href={full.src}>
+              {t(locale, 'longshot.full')}
+            </a>
+          </div>
+        )
+      }
     </div>
   </div>
-  <figcaption class="actions">
-    <a class="full" href={full.src}>{t(locale, 'longshot.full')}</a>
-  </figcaption>
 </figure>
 
 <style>
   .longshot {
     margin: 0;
     padding-inline: var(--gutter);
+  }
+  .cap {
+    max-width: 960px;
+    margin-inline: auto;
+  }
+  .wrap {
+    margin-inline: auto;
   }
   .frame {
     --frame-line: color-mix(in srgb, var(--color-text) 22%, transparent);
@@ -89,11 +106,20 @@ const full = await getImage({
     outline: 2px solid var(--color-accent);
     outline-offset: -2px;
   }
+  /* :has()를 쓸 수 있으면 포커스 링을 틀 바깥으로 옮겨 페이지 배경과의 대비로 보이게 한다. */
+  @supports selector(:has(*)) {
+    .viewport:focus-visible {
+      outline: none;
+    }
+    .frame:has(.viewport:focus-visible) {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 3px;
+    }
+  }
   .actions {
     display: flex;
     justify-content: flex-end;
     margin-top: 0.5rem;
-    margin-inline: auto;
   }
   .full {
     display: inline-flex;

@@ -16,3 +16,8 @@ export function intrinsicSize(
   const width = Math.min(natural.width, maxWidth);
   return { width, height: Math.round((natural.height * width) / natural.width) };
 }
+
+/** "원본 크기로 보기" 파일이 틀 안에 보이는 폭(displayWidth, CSS px)보다 클 때만 의미가 있다. */
+export function hasLargerFull(naturalWidth: number, displayWidth: number): boolean {
+  return naturalWidth > displayWidth;
+}

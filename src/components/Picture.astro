@@ -10,16 +10,25 @@ interface Props {
   alt: string;
   sizes: string;
   priority?: boolean;
-  /** srcset에 넣을 가장 큰 폭(px). 긴 캡처가 큰 변형을 미리 받지 않게 막는다. */
+  /** srcset에 넣을 가장 큰 폭(px). */
   maxWidth?: number;
+  /** 폴백 src와 width/height 속성의 폭(px). srcset 지원 브라우저는 쓰지 않는다. 비율은 원본 그대로. */
+  fallbackWidth?: number;
 }
 
-const { image, alt, sizes, priority = false, maxWidth = Number.POSITIVE_INFINITY } = Astro.props;
+const {
+  image,
+  alt,
+  sizes,
+  priority = false,
+  maxWidth = Number.POSITIVE_INFINITY,
+  fallbackWidth = Number.POSITIVE_INFINITY,
+} = Astro.props;
 
 const { entry, master } = resolveImage(image);
 
 const widths = srcsetWidths(entry.width, maxWidth);
-const { width, height } = intrinsicSize(entry, maxWidth);
+const { width, height } = intrinsicSize(entry, fallbackWidth);
 ---
 <AstroPicture
   src={master}

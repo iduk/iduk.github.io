@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { intrinsicSize, srcsetWidths } from '../../src/lib/imageWidths';
+import { hasLargerFull, intrinsicSize, srcsetWidths } from '../../src/lib/imageWidths';
 
 describe('srcsetWidths', () => {
   it('원본보다 큰 폭은 만들지 않고 원본 폭을 마지막 후보로 더한다', () => {
@@ -28,5 +28,14 @@ describe('intrinsicSize', () => {
       width: 960,
       height: 4433,
     });
+  });
+});
+
+describe('hasLargerFull', () => {
+  it('원본이 표시 폭보다 클 때만 참', () => {
+    expect(hasLargerFull(1920, 960)).toBe(true);
+    expect(hasLargerFull(961, 960)).toBe(true);
+    expect(hasLargerFull(960, 960)).toBe(false);
+    expect(hasLargerFull(477, 960)).toBe(false);
   });
 });
