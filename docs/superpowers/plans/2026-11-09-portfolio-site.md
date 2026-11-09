@@ -40,7 +40,7 @@ scripts/lib/names.ts        파일명 정규화·중복 처리 (순수 함수)
 scripts/lib/convert.ts      이미지 한 장 변환과 평균색 (sharp)
 scripts/lib/blocks.ts       dl.subject 파싱, 이미지 분류, 본문 정화
 scripts/lib/privacy.ts      개인정보 패턴 검사, 데모 텍스트 정화
-scripts/convert-images.ts   CLI: 147장 변환, images.json 생성
+scripts/convert-images.ts   CLI: 93장 변환, images.json 생성
 scripts/build-content.ts    CLI: posts.json → src/content/projects/*.json
 scripts/copy-demos.ts       CLI: ../iduk.design/html → public/html (정화)
 scripts/check-privacy.ts    CLI: 저장소·dist 검사 (CI 사용)
