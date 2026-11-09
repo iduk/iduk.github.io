@@ -43,14 +43,7 @@ const other: Locale = locale === 'ko' ? 'en' : 'ko';
       type="font/woff2"
       crossorigin
     />
-    <script is:inline>
-      try {
-        var saved = localStorage.getItem('theme');
-        if (saved === 'light' || saved === 'dark') {
-          document.documentElement.setAttribute('data-theme', saved);
-        }
-      } catch (e) {}
-    </script>
+    <script is:inline src="/theme-init.js"></script>
   </head>
   <body>
     <a class="skip-link" href="#main">{t(locale, 'nav.skip')}</a>

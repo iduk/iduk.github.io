@@ -6,16 +6,33 @@ interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const labels = {
+  toggle: t(locale, 'theme.toggle'),
+  system: t(locale, 'theme.system'),
+  light: t(locale, 'theme.light'),
+  dark: t(locale, 'theme.dark'),
+};
 ---
 <header class="site-header">
   <a class="logo" href={localizedPath(locale, '/')} aria-label={`iduk, ${t(locale, 'nav.home')}`}>iduk</a>
-  <nav class="nav" aria-label="Primary">
+  <nav class="nav" aria-label={t(locale, 'nav.primary')}>
     <a href={localizedPath(locale, '/work/')}>{t(locale, 'nav.work')}</a>
-    <button type="button" class="theme-toggle" data-theme-toggle hidden aria-label={t(locale, 'theme.toggle')}>
+    <button
+      type="button"
+      class="theme-toggle"
+      data-theme-toggle
+      data-state="system"
+      data-label-toggle={labels.toggle}
+      data-label-system={labels.system}
+      data-label-light={labels.light}
+      data-label-dark={labels.dark}
+      aria-label={`${labels.toggle}: ${labels.system}`}
+      hidden
+    >
       <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75">
         <circle cx="10" cy="10" r="6.5" />
-        <path d="M10 3.5v13" />
-        <path d="M10 3.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" />
+        <path class="half" d="M10 3.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" />
+        <circle class="full" cx="10" cy="10" r="6.5" fill="currentColor" />
       </svg>
     </button>
   </nav>
@@ -24,17 +41,39 @@ const { locale } = Astro.props;
 <script>
   const root = document.documentElement;
   const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  type State = 'system' | 'light' | 'dark';
+  const order: State[] = ['system', 'light', 'dark'];
+
+  function read(): State {
+    try {
+      const v = localStorage.getItem('theme');
+      if (v === 'light' || v === 'dark') return v;
+    } catch {}
+    return 'system';
+  }
+
+  function apply(state: State, persist: boolean) {
+    if (state === 'system') root.removeAttribute('data-theme');
+    else root.setAttribute('data-theme', state);
+    if (persist) {
+      try {
+        if (state === 'system') localStorage.removeItem('theme');
+        else localStorage.setItem('theme', state);
+      } catch {}
+    }
+    if (button) {
+      button.dataset.state = state;
+      const name = button.dataset[`label${state[0].toUpperCase()}${state.slice(1)}`];
+      button.setAttribute('aria-label', `${button.dataset.labelToggle}: ${name}`);
+    }
+  }
+
   if (button) {
     button.hidden = false;
+    apply(read(), false);
     button.addEventListener('click', () => {
-      const current =
-        root.getAttribute('data-theme') ??
-        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      const next = current === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try {
-        localStorage.setItem('theme', next);
-      } catch {}
+      const current = (button.dataset.state as State) ?? 'system';
+      apply(order[(order.indexOf(current) + 1) % order.length], true);
     });
   }
 </script>
@@ -81,7 +120,22 @@ const { locale } = Astro.props;
     background: none;
     cursor: pointer;
   }
+  .theme-toggle[hidden] {
+    display: none;
+  }
   .theme-toggle:hover {
     color: var(--color-accent);
+  }
+  .theme-toggle .full {
+    display: none;
+  }
+  .theme-toggle[data-state='light'] .half {
+    display: none;
+  }
+  .theme-toggle[data-state='dark'] .half {
+    display: none;
+  }
+  .theme-toggle[data-state='dark'] .full {
+    display: inline;
   }
 </style>
