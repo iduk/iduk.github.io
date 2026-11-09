@@ -200,7 +200,7 @@ tests/                      Vitest 단위, Playwright e2e
 - [ ] **Step 2:** 실행해서 실패 확인.
 - [ ] **Step 3:** `copy-demos.ts`: `.DS_Store`, `.vscode`, `*.map`, `.git` 제외하고 복사한 뒤 텍스트 파일(`html/css/js`)에 `sanitizeDemoText` 적용. 교체 보고서는 저장소 밖에 쓴다. 복사 후 `옛서버호스트`, `sftp`가 없는지 검사. PDF 3개는 파일명을 ASCII로 하고 작성자·회사 속성을 제거.
 - [ ] **Step 4:** 404는 한 페이지에 한글·영문 안내와 홈 링크.
-- [ ] **Step 5:** 검증: `/html/*` 모든 페이지가 200이고 깨진 내부 링크 0(링크 검사), 접속 정보 문자열 0. 데모 속 사라진 외부 주소 목록을 보고(대체 여부는 사용자 결정).
+- [ ] **Step 5:** 검증: `/html/*` 모든 페이지가 200이고 깨진 내부 링크 0(링크 검사). **작업 상세 페이지의 데모 링크(`/html/atom/`, `/html/hidea/`)가 실제로 200인지 포함**(Task 5에서 404로 남겨 둠). 접속 정보 문자열 0. 데모 속 사라진 외부 주소 목록을 보고(대체 여부는 사용자 결정).
 - [ ] **Step 6:** 커밋 `S09: 404, 데모, PDF`.
 
 ### Task 9: 움직임 (S10)
@@ -223,7 +223,7 @@ tests/                      Vitest 단위, Playwright e2e
 
 - [ ] **Step 1:** 실패하는 테스트: `/portfolio/oyedu`→`/work/oyedu/`(301), `/portfolio/1812`→`/work/jejuair-mobile/`, `/wp-admin`·`/wp-login.php`·`/xmlrpc.php`는 404, 응답에 `Content-Security-Policy`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, `Strict-Transport-Security(max-age=300)`가 있고 브라우저 콘솔에 CSP 위반 0, 모든 한글 페이지에 영문 쌍과 상호 `hreflang`(`x-default`는 한글).
 - [ ] **Step 2:** 실행해서 실패 확인.
-- [ ] **Step 3:** `vercel.json` 헤더와 리다이렉트, `/html/*` 전용 완화 정책(`docs/03` 4절 참고), Astro `security.csp` 해시, `default-src 'self'`, `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'none'`, `form-action 'self'`. SEO: 언어별 title·설명·canonical, OG 이미지(1200×630, 빌드 시), 사이트맵 i18n, `robots.txt`, `og:locale`. **`security.txt`, `Person` 구조화 데이터, `mailto:`는 만들지 않는다.**
+- [ ] **Step 3:** `vercel.json` 헤더와 리다이렉트, `/html/*` 전용 완화 정책(`docs/03` 4절 참고), Astro `security.csp` 해시, `default-src 'self'`, `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'none'`, `form-action 'self'`. SEO: 언어별 title·설명·canonical, OG 이미지(1200×630 크롭, 빌드 시; 현재는 세로가 긴 이미지가 원본 비율로 나오므로 크롭 필요)와 `og:image:width`·`og:image:height`·`og:image:alt`, 사이트맵 i18n, `robots.txt`, `og:locale`. **`security.txt`, `Person` 구조화 데이터, `mailto:`는 만들지 않는다.**
 - [ ] **Step 4:** 검증: 테스트 통과, `curl -sI`로 `pnpm preview` 응답 헤더 확인.
 - [ ] **Step 5:** 커밋 `S11: 헤더, 리다이렉트, SEO`.
 
@@ -237,7 +237,7 @@ tests/                      Vitest 단위, Playwright e2e
 
 - [ ] **Step 1:** 실패하는 테스트: 메일 형태 문자열이 있는 임시 파일을 넣으면 `check-privacy`가 1을 돌려준다(검사 자체의 시험). `status: draft-translation`이 있으면 공개 전 검사 모드가 실패한다.
 - [ ] **Step 2:** 실행해서 실패 확인.
-- [ ] **Step 3:** `check-privacy`: `docs/07` 6절 항목(메일, 전화, `/Users/`, `gmail|naver|kakao|옛서버호스트|sftp|옛계정ID`, `dist`의 `mailto:|tel:`, 이미지 GPS, 프로덕션 소스맵). `docs/`는 메일·전화·`/Users/` 패턴만 검사하고(`@scope/패키지` 표기는 허용 목록), `옛서버호스트|sftp|옛계정ID` 같은 키워드는 `src/`, `public/`, `dist/`에서만 검사한다(문서가 설명 목적으로 언급함). axe(두 언어 전 페이지 위반 0), 360/768/1280/1920 뷰포트 가로 스크롤 없음, 링크 검사, Lighthouse CI(모바일 95, JS·CSS·글꼴 예산). CI는 `permissions: contents: read`, 외부 액션은 커밋 SHA 고정, `--frozen-lockfile`. 주간 은폐 검사: 일반 방문자 헤더로 두 번 요청해 본문이 같은지와 허용 목록 밖 스크립트 주소를 비교.
+- [ ] **Step 3:** `check-privacy`: `docs/07` 6절 항목(메일, 전화, `/Users/`, `gmail|naver|kakao|옛서버호스트|sftp|옛계정ID`, `dist`의 `mailto:|tel:`, 이미지 GPS, 프로덕션 소스맵). `docs/`는 메일·전화·`/Users/` 패턴만 검사하고(`@scope/패키지` 표기는 허용 목록), `옛서버호스트|sftp|옛계정ID` 같은 키워드는 `src/`, `public/`, `dist/`에서만 검사한다(문서가 설명 목적으로 언급함). **dist의 모든 내부 `href`가 실제 파일로 해석되는지 검사**(데모 링크 포함), axe(두 언어 전 페이지 위반 0), 360/768/1280/1920 뷰포트 가로 스크롤 없음, 링크 검사, Lighthouse CI(모바일 95, JS·CSS·글꼴 예산). CI는 `permissions: contents: read`, 외부 액션은 커밋 SHA 고정, `--frozen-lockfile`. 주간 은폐 검사: 일반 방문자 헤더로 두 번 요청해 본문이 같은지와 허용 목록 밖 스크립트 주소를 비교.
 - [ ] **Step 3b:** 일부러 `alt`를 비운 시험 변경이 CI에서 실패하는 것을 확인한 뒤 원복.
 - [ ] **Step 4:** 검증: `pnpm lint && pnpm check && pnpm vitest run && pnpm build && pnpm e2e` 전부 통과, `check-privacy` 0.
 - [ ] **Step 5:** 커밋 `S12: 품질 게이트와 CI`.
