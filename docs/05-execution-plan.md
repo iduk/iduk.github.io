@@ -251,7 +251,7 @@
    - 스크롤 가장자리 그림자는 CSS `animation-timeline: scroll()`.
    - 틀 안 이미지는 960px 폭 변형으로 시작하고, "원본 크기로 보기" 버튼을 누르면 2560px 변형을 로드한다.
 2. 블록 종류 `longshot`을 S06의 렌더러에 연결한다.
-3. 세로 8192px 초과 2장(tsp32-UI, yangdon-dashboard)은 특히 확인한다. 이 중 yangdon-dashboard는 비공개 글에 속하면 대상에서 제외된다. 공개 글에 있는 것만 확인하고 기록한다.
+3. 세로 8192px 초과 2장(tsp32-UI, yangdon-dashboard)은 특히 확인한다. 두 장 모두 공개 글(telecare-service-app, smartfarm-dashboard)에 속한다.
 
 **통과 기준**
 - 공개 글의 긴 캡처가 모두 틀 안에서 보이고, 휠·터치·키보드로 스크롤된다.

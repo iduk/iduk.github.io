@@ -251,7 +251,7 @@ function safeHref(raw: string | undefined): { href: string; external: boolean } 
       const u = new URL(href);
       if (u.username !== '' || u.password !== '') return undefined;
       if (u.protocol === 'http:' || u.protocol === 'https:')
-        return { href: raw.trim(), external: true };
+        return { href: u.href, external: true };
     } catch {
       return undefined;
     }

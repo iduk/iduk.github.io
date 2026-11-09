@@ -170,6 +170,12 @@ describe('parseContent', () => {
 });
 
 describe('scanText', () => {
+  it('긴 영숫자 연속에서도 빠르게 끝난다', () => {
+    const t0 = Date.now();
+    scanText('a'.repeat(100_000));
+    expect(Date.now() - t0).toBeLessThan(500);
+  });
+
   it('이메일을 찾는다', () => {
     expect(scanText(`문의 ${email} 로`)).toEqual([{ kind: 'email', match: email }]);
   });
