@@ -1,0 +1,39 @@
+---
+import type { Locale } from '../../lib/i18n';
+import { t } from '../../lib/i18n';
+
+interface Props {
+  demo: string;
+  locale: Locale;
+}
+// /html/<demo>/ 는 정적 파일이며 Task 8(S09)에서 들어온다. 그 전에는 링크 대상이 없다.
+const { demo, locale } = Astro.props;
+---
+<div class="demo-block">
+  <a class="demo-link" href={`/html/${demo}/`}>
+    <span class="label">{t(locale, 'work.demo')}</span>
+    <span class="arrow" aria-hidden="true">→</span>
+  </a>
+</div>
+
+<style>
+  .demo-block {
+    padding-inline: var(--gutter);
+  }
+  .demo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: var(--tap-min);
+    padding: 0.75rem 0;
+    border-bottom: 2px solid currentColor;
+    font-size: var(--fs-sub);
+    font-weight: var(--fw-sub);
+    letter-spacing: var(--ls-sub);
+    line-height: var(--lh-sub);
+    text-decoration: none;
+  }
+  .demo-link:hover {
+    color: var(--color-accent);
+  }
+</style>

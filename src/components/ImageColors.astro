@@ -1,0 +1,10 @@
+---
+import { createHash } from 'node:crypto';
+import { imageColorCss } from '../lib/imageColors';
+
+// 이미지 로드 전 배경(평균색). style 속성은 CSP(style-src 'self')에 막히므로
+// 규칙을 한 번에 내보내고 그 해시를 이 페이지의 CSP에 추가한다.
+const css = imageColorCss();
+Astro.csp?.insertStyleHash(`sha256-${createHash('sha256').update(css).digest('base64')}`);
+---
+<style set:html={css}></style>

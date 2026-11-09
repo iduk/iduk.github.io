@@ -1,0 +1,181 @@
+---
+import { getImage } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BlockRenderer from '../components/blocks/BlockRenderer.astro';
+import Picture from '../components/Picture.astro';
+import Base from '../layouts/Base.astro';
+import type { Locale } from '../lib/i18n';
+import { localizedPath, t } from '../lib/i18n';
+import { resolveImage } from '../lib/masters';
+import { getPublicProjects, neighbors } from '../lib/projects';
+import type { Project } from '../lib/schema';
+
+interface Props {
+  project: Project;
+  locale: Locale;
+}
+const { project, locale } = Astro.props;
+
+const tagNames = new Map((await getCollection('tags')).map((e) => [e.data.id, e.data.name]));
+const tags = project.tags.map((id) => tagNames.get(id)?.[locale] ?? id);
+const { prev, next } = neighbors(await getPublicProjects(), project.slug);
+
+const fmt = (p: string) => p.replace('-', '.');
+const { start, end } = project.period ?? {};
+const period = start ? (end && end !== start ? `${fmt(start)} – ${fmt(end)}` : fmt(start)) : '';
+
+const og = await getImage({
+  src: resolveImage(project.cover.image).master,
+  width: 1200,
+  format: 'jpg',
+  quality: 80,
+});
+const ogImage = new URL(og.src, Astro.site ?? 'https://iduk.co.kr').href;
+const href = (p: Project) => localizedPath(locale, `/work/${p.slug}/`);
+---
+<Base
+  title={`${project.title[locale]} — iduk`}
+  description={project.summary[locale]}
+  locale={locale}
+  ogImage={ogImage}
+  ogType="article"
+>
+  <article class="work">
+    <header class="head">
+      <h1 class="title">{project.title[locale]}</h1>
+      <dl class="meta">
+        {
+          period && (
+            <div>
+              <dt>{t(locale, 'work.period')}</dt>
+              <dd>{period}</dd>
+            </div>
+          )
+        }
+        <div>
+          <dt>{t(locale, 'work.role')}</dt>
+          <dd>{project.role[locale]}</dd>
+        </div>
+        {
+          tags.length > 0 && (
+            <div>
+              <dt>{t(locale, 'work.tags')}</dt>
+              <dd>{tags.join(' · ')}</dd>
+            </div>
+          )
+        }
+      </dl>
+    </header>
+
+    <div class="stack">
+      <figure class="cover">
+        <Picture
+          image={project.cover.image}
+          alt={project.cover.alt[locale]}
+          sizes="100vw"
+          priority
+        />
+      </figure>
+      {project.blocks.map((block) => <BlockRenderer block={block} locale={locale} />)}
+    </div>
+  </article>
+
+  <nav class="pager" aria-label={t(locale, 'work.nav')}>
+    {
+      prev ? (
+        <a class="prev" href={href(prev)} rel="prev">
+          <span class="label">{t(locale, 'work.prev')}</span>
+          <span class="name">{prev.title[locale]}</span>
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      next && (
+        <a class="next" href={href(next)} rel="next">
+          <span class="label">{t(locale, 'work.next')}</span>
+          <span class="name">{next.title[locale]}</span>
+        </a>
+      )
+    }
+  </nav>
+</Base>
+
+<style>
+  .head {
+    padding: clamp(2rem, 1rem + 4vw, 5rem) var(--gutter) clamp(2rem, 1rem + 3vw, 4rem);
+  }
+  .title {
+    max-width: 18ch;
+    font-size: var(--fs-title);
+    font-weight: var(--fw-title);
+    line-height: var(--lh-title);
+    letter-spacing: var(--ls-title);
+    overflow-wrap: anywhere;
+  }
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: 1rem 2rem;
+    margin-top: clamp(1.5rem, 1rem + 2vw, 3rem);
+    font-size: var(--fs-meta);
+    font-weight: var(--fw-meta);
+    line-height: var(--lh-meta);
+    letter-spacing: var(--ls-meta);
+  }
+  .meta dt {
+    color: var(--color-muted);
+  }
+  .meta dd {
+    margin-top: 0.25rem;
+    overflow-wrap: anywhere;
+  }
+  .stack {
+    display: grid;
+    gap: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  }
+  .cover {
+    margin: 0;
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: var(--section-gap);
+    padding: 0 var(--gutter) var(--section-gap);
+  }
+  .pager a {
+    display: block;
+    min-width: 0;
+    text-decoration: none;
+  }
+  .pager .label {
+    display: block;
+    color: var(--color-muted);
+    font-size: var(--fs-meta);
+    font-weight: var(--fw-meta);
+    letter-spacing: var(--ls-meta);
+  }
+  .pager .name {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: var(--fs-sub);
+    font-weight: var(--fw-sub);
+    line-height: var(--lh-sub);
+    letter-spacing: var(--ls-sub);
+    overflow-wrap: anywhere;
+  }
+  .pager a:hover .name {
+    color: var(--color-accent);
+  }
+  @media (min-width: 48rem) {
+    .pager {
+      grid-template-columns: 1fr 1fr;
+    }
+    .pager .next {
+      grid-column: 2;
+      text-align: right;
+    }
+  }
+</style>

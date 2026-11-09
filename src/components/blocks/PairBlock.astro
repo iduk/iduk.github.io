@@ -1,0 +1,34 @@
+---
+import Picture from '../Picture.astro';
+
+interface Props {
+  images: { image: string; alt: string }[];
+}
+const { images } = Astro.props;
+---
+<div class="pair-block">
+  {
+    images.map((i) => (
+      <figure>
+        <Picture image={i.image} alt={i.alt} sizes="(min-width: 48rem) 50vw, 100vw" />
+      </figure>
+    ))
+  }
+</div>
+
+<style>
+  .pair-block {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  @media (min-width: 48rem) {
+    .pair-block {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  figure {
+    margin: 0;
+    min-width: 0;
+  }
+</style>

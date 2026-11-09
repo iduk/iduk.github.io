@@ -1,0 +1,44 @@
+---
+import { Picture as AstroPicture } from 'astro:assets';
+import { colorClass } from '../lib/imageColors';
+import { resolveImage } from '../lib/masters';
+
+interface Props {
+  /** images.json 키: `<post-slug>/<NN>-<slug>` */
+  image: string;
+  alt: string;
+  sizes: string;
+  priority?: boolean;
+}
+
+const { image, alt, sizes, priority = false } = Astro.props;
+
+const { entry, master } = resolveImage(image);
+
+// 원본보다 큰 폭은 만들지 않는다. 목록에 없는 원본 폭(예: 1200)은 마지막 후보로 더한다.
+const WIDTHS = [640, 960, 1280, 1920, 2560];
+const widths = WIDTHS.filter((w) => w <= entry.width);
+if (!widths.includes(entry.width)) widths.push(entry.width);
+---
+<AstroPicture
+  src={master}
+  alt={alt}
+  width={entry.width}
+  height={entry.height}
+  widths={widths}
+  sizes={sizes}
+  formats={['avif', 'webp']}
+  fallbackFormat="webp"
+  loading={priority ? 'eager' : 'lazy'}
+  decoding={priority ? undefined : 'async'}
+  fetchpriority={priority ? 'high' : undefined}
+  class={`pic ${colorClass(entry.avgColor)}`}
+/>
+
+<style is:global>
+  .pic {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

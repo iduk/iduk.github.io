@@ -19,6 +19,13 @@ const ko = {
   'notfound.title': '페이지를 찾을 수 없습니다',
   'notfound.body': '주소가 바뀌었거나 없는 페이지입니다.',
   'notfound.home': '홈으로 돌아가기',
+  'work.period': '기간',
+  'work.role': '역할',
+  'work.tags': '분류',
+  'work.prev': '이전 작업',
+  'work.next': '다음 작업',
+  'work.nav': '다른 작업',
+  'work.demo': '데모 보기',
 } as const;
 
 export type UiKey = keyof typeof ko;
@@ -41,6 +48,13 @@ const en: Record<UiKey, string> = {
   'notfound.title': 'Page not found',
   'notfound.body': 'The address has changed or the page does not exist.',
   'notfound.home': 'Back to home',
+  'work.period': 'Period',
+  'work.role': 'Role',
+  'work.tags': 'Category',
+  'work.prev': 'Previous project',
+  'work.next': 'Next project',
+  'work.nav': 'More work',
+  'work.demo': 'View demo',
 };
 
 export const ui: Record<Locale, Record<UiKey, string>> = { ko, en };

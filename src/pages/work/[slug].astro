@@ -1,0 +1,13 @@
+---
+import { getPublicProjects } from '../../lib/projects';
+import WorkDetail from '../../views/WorkDetail.astro';
+
+export async function getStaticPaths() {
+  return (await getPublicProjects()).map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+const { project } = Astro.props;
+---
+<WorkDetail project={project} locale="ko" />
