@@ -3,9 +3,11 @@ import { getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import Picture from '../components/Picture.astro';
+import ViewTransitionNames from '../components/ViewTransitionNames.astro';
 import Base from '../layouts/Base.astro';
 import type { Locale } from '../lib/i18n';
 import { localizedPath, t } from '../lib/i18n';
+import { transitionClass } from '../lib/lists';
 import { resolveImage } from '../lib/masters';
 import { formatPeriod } from '../lib/period';
 import { getPublicProjects, neighbors } from '../lib/projects';
@@ -39,8 +41,9 @@ const href = (p: Project) => localizedPath(locale, `/work/${p.slug}/`);
   ogImage={ogImage}
   ogType="article"
 >
+  <ViewTransitionNames slot="head" slugs={[project.slug]} />
   <article class="work">
-    <header class="head">
+    <header class="head reveal">
       <h1 class="title">{project.title[locale]}</h1>
       <dl class="meta">
         {
@@ -67,7 +70,7 @@ const href = (p: Project) => localizedPath(locale, `/work/${p.slug}/`);
     </header>
 
     <div class="stack">
-      <figure class="cover">
+      <figure class:list={['cover', 'zoom', transitionClass(project.slug)]}>
         <Picture
           image={project.cover.image}
           alt={project.cover.alt[locale]}
@@ -79,7 +82,7 @@ const href = (p: Project) => localizedPath(locale, `/work/${p.slug}/`);
     </div>
   </article>
 
-  <nav class="pager" aria-label={t(locale, 'work.nav')}>
+  <nav class="pager reveal" aria-label={t(locale, 'work.nav')}>
     {
       prev ? (
         <a class="prev" href={href(prev)} rel="prev">

@@ -21,15 +21,15 @@ const tags = project.tags.map((id) => tagNames.get(id)?.[locale] ?? id).join(' �
 const href = localizedPath(locale, `/work/${project.slug}/`);
 const cover = project.cover;
 ---
-<li class:list={['row', withPreview ? 'compact' : 'big']} data-work-row>
+<li class:list={['row', withPreview ? 'compact' : 'big', !withPreview && !priority && 'reveal']} data-work-row>
   <a class="link" href={href} data-work-link>
     {
       withPreview ? (
         <>
-          <span class="name" data-work-title>
+          <span class="name reveal" data-work-title>
             {project.title[locale]}
           </span>
-          <span class="tags">{tags}</span>
+          <span class="tags reveal">{tags}</span>
           <span class="preview" aria-hidden="true">
             <span class:list={['frame', transitionClass(project.slug)]}>
               <Picture
@@ -45,7 +45,7 @@ const cover = project.cover;
       ) : (
         <>
           {/* 행 전체가 제목을 포함한 링크이므로 이미지는 장식이다(이름이 두 번 읽히지 않게). */}
-          <span class:list={['cover', transitionClass(project.slug)]}>
+          <span class:list={['cover', 'zoom', transitionClass(project.slug)]}>
             <Picture
               image={cover.image}
               alt=""

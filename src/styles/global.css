@@ -131,3 +131,99 @@
     }
   }
 }
+
+/*
+ * 움직임 (docs/01-concept-design.md 7절). CSS만 쓴다.
+ * 어떤 정적 규칙도 요소를 숨기거나 옮기지 않는다. 숨김·이동은 아래의 @supports / @media 안
+ * 애니메이션 키프레임에만 있으므로, 지원하지 않는 브라우저(Safari·Firefox 일부)에서는 모든 요소가
+ * 처음부터 보이고 이동은 일반 이동으로 동작한다.
+ * 이동은 translate/scale 개별 속성과 opacity만 써서(레이아웃 불변) 다른 transform을 건드리지 않는다.
+ */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+  }
+  to {
+    opacity: 1;
+    translate: none;
+  }
+}
+
+@keyframes hero-open {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    /* 끝 모양은 가장자리를 약간 넘겨서 자간·내려긋기가 잘리지 않게 한다. 끝나면 clip-path는 none으로 돌아간다. */
+    clip-path: inset(-0.1em -0.1em -0.25em -0.1em);
+  }
+}
+
+@layer components {
+  /* 확대 대상 이미지의 틀: 확대해도 넘치지 않는다. */
+  .zoom {
+    overflow: hidden;
+  }
+
+  /* 스크롤 등장: 보이는 크기가 작은 블록에만 쓴다(키 큰 요소는 진입 구간이 길어진다). */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        /* 단축 속성을 쓰지 않는다: 압축기가 animation-timeline을 단축 속성에 합쳐 버리면 일부 브라우저가 무시한다. */
+        animation-name: reveal-up;
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 40%;
+      }
+    }
+  }
+
+  /* 히어로: 줄 단위로 가려졌다 열린다. 문서가 새로 열릴 때 한 번만 재생된다(bfcache 복원 시 재생 안 됨). */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-line {
+      animation: hero-open 800ms var(--ease) backwards;
+    }
+    .hero-line:nth-child(2) {
+      animation-delay: 120ms;
+    }
+  }
+
+  /* 이미지 호버: 마우스처럼 호버 가능한 입력에서만. */
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .zoom .pic {
+      transition-property: scale;
+      transition-duration: var(--dur-long);
+      transition-timing-function: var(--ease);
+    }
+    .zoom:hover .pic {
+      scale: 1.03;
+    }
+  }
+}
+
+/* 페이지 이동: 같은 출처 문서 사이의 브라우저 기본 교차 문서 전환(JS 라우터 없음). 미지원 브라우저는 일반 이동. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: var(--dur-base);
+  animation-timing-function: var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* 이동·크기 변화 없이 120ms 이하의 투명도 교차만 */
+  ::view-transition-group(*) {
+    animation: none;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 120ms;
+    animation-timing-function: linear;
+  }
+}

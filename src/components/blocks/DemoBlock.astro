@@ -9,7 +9,7 @@ interface Props {
 // 데모는 한글 전용이라 영문 페이지에서는 lang="ko"만 표시한다(docs/06 7절). /html/<demo>/ 는 정적 파일이며 Task 8(S09)에서 들어온다. 그 전에는 링크 대상이 없다.
 const { demo, locale } = Astro.props;
 ---
-<div class="demo-block">
+<div class="demo-block reveal">
   <a
     class="demo-link"
     href={`/html/${demo}/`}

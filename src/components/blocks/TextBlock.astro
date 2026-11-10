@@ -6,7 +6,7 @@ interface Props {
 // set:html은 콘텐츠가 변환 시점에 정화되었기 때문에만 안전하다. 사용자 입력을 넣지 말 것.
 const { html } = Astro.props;
 ---
-<div class="text-block" set:html={html} />
+<div class="text-block reveal" set:html={html} />
 
 <style>
   .text-block {

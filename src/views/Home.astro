@@ -15,8 +15,8 @@ const featured = (await getPublicProjects()).filter((p) => p.featured);
 <Base title="iduk" description={t(locale, 'home.description')} locale={locale}>
   <ViewTransitionNames slot="head" slugs={featured.map((p) => p.slug)} />
   <section class="hero">
-    <h1 class="wordmark">iduk</h1>
-    <p class="lede">{t(locale, 'home.heading')}</p>
+    <h1 class="wordmark hero-line">iduk</h1>
+    <p class="lede hero-line">{t(locale, 'home.heading')}</p>
   </section>
 
   <ul class="rows">
@@ -27,7 +27,7 @@ const featured = (await getPublicProjects()).filter((p) => p.featured);
     }
   </ul>
 
-  <p class="all">
+  <p class="all reveal">
     <a href={localizedPath(locale, '/work/')} data-all-work>
       {t(locale, 'home.all')} <span aria-hidden="true">→</span>
     </a>

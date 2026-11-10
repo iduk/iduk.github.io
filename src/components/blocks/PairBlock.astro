@@ -6,10 +6,10 @@ interface Props {
 }
 const { images } = Astro.props;
 ---
-<div class="pair-block">
+<div class="pair-block reveal">
   {
     images.map((i) => (
-      <figure>
+      <figure class="zoom">
         <Picture image={i.image} alt={i.alt} sizes="(min-width: 48rem) 50vw, 100vw" />
       </figure>
     ))
