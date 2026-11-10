@@ -1,0 +1,122 @@
+---
+import { getCollection } from 'astro:content';
+import { type Locale, localizedPath, t } from '../lib/i18n';
+import { groupByYear, usedTags } from '../lib/lists';
+import { getPublicProjects } from '../lib/projects';
+import type { Project } from '../lib/schema';
+import WorkRow from './WorkRow.astro';
+
+interface Props {
+  locale: Locale;
+  /** 이 목록에 보여 줄 글. */
+  projects: Project[];
+  heading: string;
+  /** 현재 태그 id. 없으면 전체 목록. */
+  activeTag?: string;
+}
+const { locale, projects, heading, activeTag } = Astro.props;
+
+const groups = groupByYear(projects);
+const tags = usedTags(
+  await getPublicProjects(),
+  (await getCollection('tags')).map((e) => e.data),
+);
+---
+<div class="listing">
+  <header class="head">
+    <h1 class="title">{heading}</h1>
+    <nav class="filter" aria-label={t(locale, 'work.filter')} data-tag-filter>
+      <ul>
+        <li>
+          <a
+            href={localizedPath(locale, '/work/')}
+            aria-current={activeTag ? undefined : 'page'}
+            data-filter-all>{t(locale, 'work.filter.all')}</a
+          >
+        </li>
+        {
+          tags.map((tag) => (
+            <li>
+              <a
+                href={localizedPath(locale, `/work/tag/${tag.id}/`)}
+                aria-current={tag.id === activeTag ? 'page' : undefined}>{tag.name[locale]}</a
+              >
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </header>
+
+  {
+    groups.map((group) => (
+      <section class="year-group" aria-labelledby={`y${group.year}`} data-year-group={group.year}>
+        <h2 class="year" id={`y${group.year}`} data-year={group.year}>
+          {group.year}
+        </h2>
+        <ul class="rows">
+          {group.projects.map((project) => (
+            <WorkRow project={project} locale={locale} withPreview />
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .listing {
+    padding: 0 var(--gutter) var(--section-gap);
+  }
+  .head {
+    padding: clamp(2rem, 1rem + 4vw, 5rem) 0 clamp(1.5rem, 1rem + 2vw, 3rem);
+  }
+  .title {
+    font-size: var(--fs-title);
+    font-weight: var(--fw-title);
+    line-height: var(--lh-title);
+    letter-spacing: var(--ls-title);
+    overflow-wrap: anywhere;
+  }
+  .filter ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.25rem;
+    margin: clamp(1rem, 0.5rem + 2vw, 2rem) 0 0 -0.75rem;
+    padding: 0;
+    list-style: none;
+    font-size: var(--fs-meta);
+    font-weight: var(--fw-meta);
+    letter-spacing: var(--ls-meta);
+  }
+  .filter a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding: 0 0.75rem;
+    color: var(--color-muted);
+    text-decoration: none;
+  }
+  .filter a:hover {
+    color: var(--color-accent);
+  }
+  .filter a[aria-current='page'] {
+    color: var(--color-text);
+    font-weight: 700;
+    text-decoration: underline;
+  }
+  .year-group {
+    margin-top: clamp(2rem, 1rem + 4vw, 5rem);
+  }
+  .year {
+    color: var(--color-muted);
+    font-size: var(--fs-meta);
+    font-weight: var(--fw-meta);
+    letter-spacing: var(--ls-meta);
+    margin-bottom: 0.5rem;
+  }
+  .rows {
+    margin: 0;
+    padding: 0;
+  }
+</style>

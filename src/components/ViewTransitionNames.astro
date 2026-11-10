@@ -1,0 +1,13 @@
+---
+import { createHash } from 'node:crypto';
+import { transitionCss } from '../lib/lists';
+
+interface Props {
+  slugs: string[];
+}
+// 목록 행 대표 이미지의 view-transition-name. style 속성은 CSP(style-src 'self')에 막히므로
+// 이 페이지에 나오는 슬러그의 규칙만 내보내고 해시를 CSP에 추가한다(ImageColors와 같은 방식).
+const css = transitionCss(Astro.props.slugs);
+Astro.csp?.insertStyleHash(`sha256-${createHash('sha256').update(css).digest('base64')}`);
+---
+<style set:html={css}></style>

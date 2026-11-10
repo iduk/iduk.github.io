@@ -1,23 +1,42 @@
 ---
+import ViewTransitionNames from '../components/ViewTransitionNames.astro';
+import WorkRow from '../components/WorkRow.astro';
 import Base from '../layouts/Base.astro';
 import type { Locale } from '../lib/i18n';
-import { t } from '../lib/i18n';
+import { localizedPath, t } from '../lib/i18n';
+import { getPublicProjects } from '../lib/projects';
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const featured = (await getPublicProjects()).filter((p) => p.featured);
 ---
 <Base title="iduk" description={t(locale, 'home.description')} locale={locale}>
+  <ViewTransitionNames slot="head" slugs={featured.map((p) => p.slug)} />
   <section class="hero">
     <h1 class="wordmark">iduk</h1>
     <p class="lede">{t(locale, 'home.heading')}</p>
   </section>
+
+  <ul class="rows">
+    {
+      featured.map((project, i) => (
+        <WorkRow project={project} locale={locale} priority={i === 0} />
+      ))
+    }
+  </ul>
+
+  <p class="all">
+    <a href={localizedPath(locale, '/work/')} data-all-work>
+      {t(locale, 'home.all')} <span aria-hidden="true">→</span>
+    </a>
+  </p>
 </Base>
 
 <style>
   .hero {
-    padding: var(--section-gap) var(--gutter);
+    padding: clamp(2rem, 1rem + 5vw, 6rem) var(--gutter) clamp(1.5rem, 1rem + 3vw, 4rem);
   }
   .wordmark {
     font-size: var(--fs-hero);
@@ -32,5 +51,26 @@ const { locale } = Astro.props;
     font-weight: var(--fw-sub);
     line-height: var(--lh-sub);
     letter-spacing: var(--ls-sub);
+  }
+  .rows {
+    display: grid;
+    gap: clamp(3rem, 1.5rem + 5vw, 7rem);
+    margin: 0;
+    padding: 0;
+  }
+  .all {
+    padding: var(--section-gap) var(--gutter);
+    font-size: var(--fs-sub);
+    font-weight: var(--fw-sub);
+    line-height: var(--lh-sub);
+    letter-spacing: var(--ls-sub);
+  }
+  .all a {
+    display: inline-block;
+    min-height: var(--tap-min);
+    text-decoration: none;
+  }
+  .all a:hover {
+    color: var(--color-accent);
   }
 </style>

@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import { tagStaticPaths } from '../../../lib/lists';
+import { getPublicProjects } from '../../../lib/projects';
+import TagIndex from '../../../views/TagIndex.astro';
+
+export async function getStaticPaths() {
+  const tags = (await getCollection('tags')).map((e) => e.data);
+  return tagStaticPaths(await getPublicProjects(), tags);
+}
+const { tag, projects } = Astro.props;
+---
+<TagIndex locale="ko" tag={tag} projects={projects} />

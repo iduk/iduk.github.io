@@ -54,6 +54,7 @@ const other: Locale = locale === 'ko' ? 'en' : 'ko';
     />
     <script is:inline src="/theme-init.js"></script>
     <ImageColors />
+    <slot name="head" />
   </head>
   <body>
     <a class="skip-link" href="#main">{t(locale, 'nav.skip')}</a>
