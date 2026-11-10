@@ -32,7 +32,7 @@
   "blocks": [
     {
       "type": "image",
-      "image": "bed-mattress-website/02-bmultra-main",
+      "image": "bed-mattress-website/01-bmultra-main",
       "alt": {
         "ko": "Bed Mattress Website – BM Ultra 메인 화면",
         "en": "Bed Mattress Website – BM Ultra main page"
@@ -40,7 +40,7 @@
     },
     {
       "type": "longshot",
-      "image": "bed-mattress-website/03-bmultra-sub",
+      "image": "bed-mattress-website/02-bmultra-sub",
       "alt": {
         "ko": "Bed Mattress Website – BM Ultra 서브 화면",
         "en": "Bed Mattress Website – BM Ultra sub page"

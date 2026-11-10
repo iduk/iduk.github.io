@@ -23,7 +23,7 @@ import {
   type Subject,
   sanitizeBody,
 } from './lib/blocks';
-import { imageKeyMap, isPublic, type Post } from './lib/posts';
+import { coverImagePath, imageKeyMap, isPublic, type Post } from './lib/posts';
 import { scanText } from './lib/privacy';
 
 type ImageEntry = { width: number; height: number };
@@ -90,7 +90,7 @@ function convertPost(
   };
   const suffixOf = (key: string) => key.slice(key.indexOf('/') + 1).replace(/^\d+-/, '');
 
-  const coverSrc = post.featuredImage?.url ?? fail(`${post.slug}: no featured image`);
+  const coverSrc = coverImagePath(post) ?? fail(`${post.slug}: no featured image`);
   const coverKey = lookup(coverSrc);
 
   const { tokens, dropped } = parseContent(post.contentHtml);
@@ -280,7 +280,6 @@ function manualTodo(args: { report: Report; projects: Project[] }): string {
     '- `online-ad-company-responsive-web`: 본문 기간이 2017.9로 적혀 있으나 글 작성일은 2016-04이다. 원문(2019년 버전 포함)이 모두 2017.9라 그대로 두었다.',
     '- `exhibition-booth-design`: 이미지 이름의 `w275`, `w375` 뜻을 알 수 없어 alt에 그대로 적었다.',
     '- `jejuair-mobile` 의 이미지 키는 옛 슬러그 그대로 `1812/...` 이다(`src/assets/images/1812/`). 글 슬러그와 달라도 키로만 참조하므로 동작에는 문제 없다.',
-    '- 표지(`cover`)가 세로로 긴 글이 있다(`bed-mattress-website`). 표지를 잘라 쓸지 본문 이미지로 바꿀지 결정한다.',
     '- 본문에 이미지가 없고 표지만 있는 글: ' +
       projects
         .filter(

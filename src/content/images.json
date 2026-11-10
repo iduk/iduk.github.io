@@ -33,22 +33,14 @@
   },
   "bed-mattress-website/01-bmultra-main": {
     "src": "/src/assets/images/bed-mattress-website/01-bmultra-main.webp",
-    "width": 587,
-    "height": 2048,
-    "avgColor": "#eeedec",
-    "bytes": 94602,
-    "original": "BMultra-main.png"
-  },
-  "bed-mattress-website/02-bmultra-main": {
-    "src": "/src/assets/images/bed-mattress-website/02-bmultra-main.webp",
     "width": 1400,
     "height": 1604,
     "avgColor": "#cfcbc8",
     "bytes": 265070,
     "original": "bmUltra-main.jpg"
   },
-  "bed-mattress-website/03-bmultra-sub": {
-    "src": "/src/assets/images/bed-mattress-website/03-bmultra-sub.webp",
+  "bed-mattress-website/02-bmultra-sub": {
+    "src": "/src/assets/images/bed-mattress-website/02-bmultra-sub.webp",
     "width": 1400,
     "height": 4186,
     "avgColor": "#f2f1f0",

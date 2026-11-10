@@ -157,7 +157,7 @@
 
 ## S04. 이미지 변환
 
-**목표** 쓰이는 61장(대표 이미지와 본문 이미지)을 WebP 마스터로 만들고 메타데이터 파일을 만든다. 원본은 건드리지 않는다.
+**목표** 쓰이는 60장(대표 이미지와 본문 이미지)을 WebP 마스터로 만들고 메타데이터 파일을 만든다. 원본은 건드리지 않는다.
 
 **입력** `../iduk.design/data/posts.json`의 `images`, `featuredImage`, `contentImages`, 그리고 `../iduk.design/images/original/`.
 **출력** `src/assets/images/<slug>/<번호>-<이름>.webp`, `src/content/images.json`, 변환 보고서(저장소 밖).
@@ -422,7 +422,7 @@
 - [ ] S01 태그, 정리된 브랜치, docs 공개 가능 확인
 - [ ] S02 Astro 7 + pnpm 12 골격, 공급망 설정, 빌드 통과
 - [ ] S03 토큰·글꼴·레이아웃
-- [ ] S04 이미지 61장 WebP, `images.json`
+- [ ] S04 이미지 60장 WebP, `images.json`
 - [ ] S05 글 24개 JSON, 비공개 글 유출 0
 - [ ] S06 작업 상세 24개
 - [ ] S07 LongShot
