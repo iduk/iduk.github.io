@@ -290,7 +290,11 @@ test.describe('콘솔 CSP 위반 0 (헤더 CSP + meta CSP 동시 적용)', () =>
 const KNOWN_PROBES: { demo: string; pattern: RegExp }[] = [
   { demo: 'atom', pattern: /^script-src eval @js\/modernizr-custom\.js:3 / },
   { demo: 'atom', pattern: /^worker-src (?:blob|data) @js\/modernizr-custom\.js:[45] / },
-  { demo: 'atom', pattern: /^media-src data @atom\/(?::24|index\.html:24|[a-z]+\.html:25) / },
+  // media-src data: 탐지는 비동기로 실행되어 Chromium이 보고하는 소스 줄이 그 순간 실행 중인 스크립트 태그에 따라
+  // 바뀐다(24, 25, 212 …). 그래서 줄 번호는 고정하지 않는다. 대신 지시어(media-src), 차단 대상 종류(data),
+  // 데모(atom 페이지를 연 경우에만 허용)와 출처 모양(atom의 html 페이지, 디렉터리 색인, 또는 소스가 비어 `@:0`)은
+  // 그대로 좁게 고정한다.
+  { demo: 'atom', pattern: /^media-src data @(?:atom\/(?:[a-z]+\.html)?)?:\d+ / },
   { demo: 'atom', pattern: /^console: Refused to evaluate a string as JavaScript/ },
   { demo: 'atom', pattern: /^console: Creating a worker from '(?:blob|data):/ },
   { demo: 'atom', pattern: /^console: Loading media from\s+'data:/ },
