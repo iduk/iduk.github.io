@@ -1,12 +1,13 @@
 /**
  * dist/를 정적으로 내보내면서 vercel.json의 헤더·리다이렉트를 적용하는 로컬 서버(테스트 전용).
+ * 라우트는 Vercel의 변환기로 만들고 vercel-routes.ts의 평가기로 처리한다.
  * 파일 해석은 Vercel의 정적 서비스와 같은 모양만 흉내 낸다: `/dir/` → `dir/index.html`, 없으면 `404.html`(상태 404).
  */
 import { readFile, stat } from 'node:fs/promises';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { extname, join, normalize, sep } from 'node:path';
-import { headersFor, redirectFor, type VercelConfig } from './vercel-routes';
+import { evaluate, transform, type VercelConfig } from './vercel-routes';
 
 const TYPES: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
@@ -44,15 +45,17 @@ async function fileAt(root: string, urlPath: string): Promise<string | null> {
 export type DistServer = { port: number; origin: string; close: () => Promise<void> };
 
 export async function startDistServer(root: string, config: VercelConfig): Promise<DistServer> {
+  const routes = transform(config);
   const server: Server = createServer(async (req, res) => {
     try {
       const url = new URL(req.url ?? '/', 'http://localhost');
+      const evaluation = evaluate(routes, { path: url.pathname, query: url.searchParams });
       const send = (status: number, extra: Record<string, string>, body?: Buffer) => {
-        res.writeHead(status, { ...headersFor(config, url.pathname), ...extra });
+        res.writeHead(status, { ...evaluation.headers, ...extra });
         res.end(req.method === 'HEAD' ? undefined : body);
       };
-      const redirect = redirectFor(config, { path: url.pathname, query: url.searchParams });
-      if (redirect) return send(redirect.status, { location: redirect.location });
+      if (evaluation.redirect)
+        return send(evaluation.redirect.status, { location: evaluation.redirect.location });
       const file = await fileAt(root, url.pathname);
       if (file) {
         const type = TYPES[extname(file).toLowerCase()] ?? 'application/octet-stream';

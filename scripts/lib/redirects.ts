@@ -1,17 +1,16 @@
 /**
  * 옛 워드프레스 주소 → 새 주소 리다이렉트를 콘텐츠 JSON에서 만든다(순수 함수 + 읽기 도우미).
  * 상태 코드는 301. Vercel의 `permanent: true`는 308이라 쓰지 않고 `statusCode: 301`을 쓴다.
+ * 슬래시 없는 옛 주소(`/portfolio/oyedu`)는 규칙을 두지 않는다: Vercel이 변환한 라우트에서 `trailingSlash`의
+ * 308(`/portfolio/oyedu/`로)이 사용자 리다이렉트보다 앞서므로 그 규칙은 도달할 수 없다. 두 번 이동해 도착한다.
+ * `/?p=ID`·`/?page_id=ID` → `/` 규칙도 두지 않는다: 요청 쿼리가 목적지로 전달되어 같은 규칙에 다시 맞아 무한 반복된다.
+ * 정적 홈은 쿼리를 무시하고 200으로 응답하며 canonical이 `/`를 가리킨다.
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 export type LegacyProject = { slug: string; legacyPath: string | undefined };
-export type Redirect = {
-  source: string;
-  destination: string;
-  statusCode: 301;
-  has?: { type: 'query'; key: string }[];
-};
+export type Redirect = { source: string; destination: string; statusCode: 301 };
 
 export function readLegacyProjects(dir: string): LegacyProject[] {
   return readdirSync(dir)
@@ -32,12 +31,6 @@ const permanent = (source: string, destination: string): Redirect => ({
   statusCode: 301,
 });
 
-/** 슬래시 있는 형태와 없는 형태를 모두 낸다(source가 슬래시로 끝나면 없는 형태에는 맞지 않기 때문). */
-function both(legacyPath: string, destination: string): Redirect[] {
-  const bare = legacyPath.replace(/\/$/, '');
-  return [permanent(`${bare}/`, destination), permanent(bare, destination)];
-}
-
 export function buildRedirects(projects: LegacyProject[]): Redirect[] {
   const rules: Redirect[] = [];
   for (const p of [...projects].sort((a, b) => a.slug.localeCompare(b.slug))) {
@@ -45,12 +38,8 @@ export function buildRedirects(projects: LegacyProject[]): Redirect[] {
     if (!/^\/portfolio\/[A-Za-z0-9-]+\/$/.test(p.legacyPath)) {
       throw new Error(`${p.slug}: 예상하지 못한 legacy.path "${p.legacyPath}"`);
     }
-    rules.push(...both(p.legacyPath, `/work/${p.slug}/`));
+    rules.push(permanent(p.legacyPath, `/work/${p.slug}/`));
   }
-  rules.push(...both('/portfolio/', '/work/'));
-  // 옛 워드프레스 짧은 주소: /?p=ID, /?page_id=ID → 홈
-  for (const key of ['p', 'page_id']) {
-    rules.push({ ...permanent('/', '/'), has: [{ type: 'query', key }] });
-  }
+  rules.push(permanent('/portfolio/', '/work/'));
   return rules;
 }

@@ -5,7 +5,7 @@
   "type": "module",
   "packageManager": "pnpm@12.18.0",
   "engines": {
-    "node": ">=22.23.4"
+    "node": "24.x"
   },
   "scripts": {
     "dev": "astro dev",
@@ -29,6 +29,7 @@
     "@axe-core/playwright": "^4.14.0",
     "@biomejs/biome": "^2.6.6",
     "@playwright/test": "^1.65.0",
+    "@vercel/routing-utils": "6.2.0",
     "parse5": "^8.1.0",
     "tsx": "^4.23.15",
     "typescript": "6.0.3",

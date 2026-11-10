@@ -29,7 +29,7 @@
 
 - **Astro에도 2026년 보안 공지가 여럿 있다.** 대부분 서버 렌더링(호스트 헤더 SSRF), 서버 아일랜드, 뷰 트랜지션 값 처리와 관련된 것이다(2차 출처 기준, 수정 버전은 6.3.3, 6.4.6, 7.0.4, 7.1.0). 정적 출력, 서버 아일랜드 미사용, ClientRouter 미사용으로 대부분 비켜 간다. 7.4.2는 위 수정 버전보다 새 버전이다. 적용 전에 공식 GitHub Security Advisory를 직접 확인한다.
 - **익숙함은 Next.js가 앞선다.** 사용자의 기존 Vercel 프로젝트 대부분이 Next.js다. 이 항목이 결정적이라면 Next.js 16으로 가도 된다. 이 경우 `output: 'export'`로 정적 내보내기를 쓰고, 이미지 최적화는 끄고 빌드 때 만든 파일을 쓴다. 본 문서의 나머지 대부분은 그대로 적용된다.
-- Astro 7은 Node 22.23.4 이상이 필요하다. 이 Mac의 Node는 24.17.0이라 충족한다.
+- Astro 7은 Node 22.23.4 이상이 필요하다. 이 Mac의 Node는 24.17.0이다. `package.json`의 `engines.node`는 `24.x`로 고정한다. Vercel은 `engines.node`를 대시보드 설정보다 우선하고, `>=22.23.4` 같은 범위는 사용 가능한 최신 메이저(26.x)로 풀어 버린다. Node 25부터는 Corepack을 배포본에 포함하지 않아 `packageManager: pnpm@12.18.0`을 따를 수 없으므로, Corepack이 들어 있는 24.x로 고정한다.
 - Astro의 CSP 기능은 ClientRouter와 Shiki 코드 강조를 지원하지 않는다. 이 프로젝트는 둘 다 쓰지 않는다.
 
 ### Next.js로 되돌려야 하는 신호
@@ -82,7 +82,7 @@ allowBuilds:                   # 설치 스크립트를 허용할 패키지만 �
 | 빌드 도구용 | cheerio 1.2.0, sanitize-html 2.18.1 | | 변환 스크립트에서만. 사이트 번들에는 들어가지 않는다 |
 | 2단계 DB | drizzle-orm 0.45.4, drizzle-kit 0.31.11, @neondatabase/serverless 1.2.0 | | |
 
-직접 의존성은 15개 안쪽을 상한으로 둔다. 쓰지 않는 라이브러리는 넣지 않는다.
+직접 의존성은 15개 안쪽을 상한으로 둔다. 쓰지 않는 라이브러리는 넣지 않는다. 현재 15개(dependencies 6, devDependencies 9)다. S11에서 `@vercel/routing-utils`(devDependency, 6.2.0 고정)를 더했다: `vercel.json`을 Vercel이 쓰는 변환기로 라우트로 바꿔 시험하기 위해서다. 이 패키지의 새 버전들(6.4.1, 6.5.0, 6.6.1)은 `trustPolicy: no-downgrade`에 걸려 설치되지 않아(신뢰 등급 하락) 통과하는 6.2.0을 쓴다. 정책은 완화하지 않았다.
 
 ## 4. 저장소 구조
 

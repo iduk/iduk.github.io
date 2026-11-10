@@ -1,95 +1,87 @@
 import { describe, expect, it } from 'vitest';
-import {
-  headersFor,
-  matchingHeaderRules,
-  matchSource,
-  redirectFor,
-  type VercelConfig,
-} from '../helpers/vercel-routes';
+import { evaluate, type Route, resolve, transform } from '../helpers/vercel-routes';
 
-// 해석기 자체의 시험. 사례는 Vercel 문서(vercel.json 절)의 source 예시에서 가져왔다.
-describe('matchSource (path-to-regexp 부분집합)', () => {
-  it('"/(.*)"는 루트와 모든 경로에 맞는다', () => {
-    for (const p of ['/', '/a', '/a/b/c.html', '/en/work/x/'])
-      expect(matchSource('/(.*)', p)).not.toBeNull();
-  });
-  it('"/:path*"는 0개 이상 세그먼트', () => {
-    expect(matchSource('/:path*', '/')).not.toBeNull();
-    expect(matchSource('/:path*', '/a/b')).toEqual({ path: 'a/b' });
-  });
-  it('"/html/:path*"는 /html 아래만', () => {
-    for (const p of ['/html', '/html/', '/html/atom/', '/html/a/b.html']) {
-      expect(matchSource('/html/:path*', p), p).not.toBeNull();
-    }
-    for (const p of ['/htmlx/', '/work/html/', '/'])
-      expect(matchSource('/html/:path*', p), p).toBeNull();
-  });
-  it('음의 전방탐색 그룹: "/((?!html(?:/|$)).*)"', () => {
-    const s = '/((?!html(?:/|$)).*)';
-    for (const p of ['/', '/work/oyedu/', '/en/', '/htmlx/', '/robots.txt'])
-      expect(matchSource(s, p), p).not.toBeNull();
-    for (const p of ['/html', '/html/', '/html/atom/', '/html/atom/index.html'])
-      expect(matchSource(s, p), p).toBeNull();
-  });
-  it('리터럴은 대소문자를 구분하고 끝 슬래시는 있어도 없어도 된다(비엄격)', () => {
-    expect(matchSource('/portfolio/oyedu/', '/portfolio/oyedu/')).not.toBeNull();
-    expect(matchSource('/portfolio/oyedu', '/portfolio/oyedu/')).not.toBeNull();
-    expect(matchSource('/portfolio/oyedu', '/Portfolio/oyedu')).toBeNull();
-    // 리터럴이 슬래시로 끝나면 슬래시 없는 경로에는 맞지 않는다: 그래서 두 형태를 모두 둔다.
-    expect(matchSource('/portfolio/oyedu/', '/portfolio/oyedu')).toBeNull();
-  });
-  it('이름 있는 매개변수는 한 세그먼트', () => {
-    expect(matchSource('/posts/:id', '/posts/12')).toEqual({ id: '12' });
-    expect(matchSource('/posts/:id', '/posts/12/x')).toBeNull();
-    expect(matchSource('/posts/:id(\\d+)', '/posts/ab')).toBeNull();
-  });
-  it('루트 "/"는 루트에만', () => {
-    expect(matchSource('/', '/')).not.toBeNull();
-    expect(matchSource('/', '/x/')).toBeNull();
-  });
-});
-
-describe('redirectFor / headersFor', () => {
-  const config: VercelConfig = {
-    trailingSlash: true,
-    redirects: [
-      { source: '/old/:slug', destination: '/new/:slug/', statusCode: 301 },
-      { source: '/', has: [{ type: 'query', key: 'p' }], destination: '/', statusCode: 301 },
-    ],
-    headers: [
-      { source: '/(.*)', headers: [{ key: 'A', value: '1' }] },
-      {
-        source: '/x/:p*',
-        headers: [
-          { key: 'A', value: '2' },
-          { key: 'B', value: 'b' },
-        ],
-      },
-    ],
-  };
-  it('매개변수를 목적지에 대입한다', () => {
-    expect(redirectFor(config, { path: '/old/foo' })).toMatchObject({
+// 평가기 자체의 시험: 합성 라우트로 규칙을, 실제 변환기 출력으로 Vercel이 만드는 모양을 확인한다.
+describe('evaluate (합성 라우트)', () => {
+  const routes: Route[] = [
+    { src: '^/old/(.+)$', headers: { Location: '/new/$1/' }, status: 301 },
+    { src: '^/$', headers: { Location: '/' }, status: 301, has: [{ type: 'query', key: 'p' }] },
+    { src: '^(?:/(.*))$', headers: { A: '1' }, continue: true },
+    { src: '^/x(?:/(.*))?$', headers: { A: '2', B: 'b' }, continue: true },
+    { src: '^/stop$', headers: { C: 'c' } },
+    { src: '^/after-stop$', headers: { D: 'd' }, continue: true },
+  ];
+  it('캡처를 Location에 대입한다', () => {
+    expect(evaluate(routes, { path: '/old/foo' }).redirect).toMatchObject({
       status: 301,
       location: '/new/foo/',
     });
   });
+  it('리다이렉트 응답에는 앞선 continue 라우트의 헤더만 붙는다(뒤의 헤더 라우트는 건너뜀)', () => {
+    expect(evaluate(routes, { path: '/old/foo' }).headers).toEqual({});
+  });
+  it('요청 쿼리는 Location에 그대로 붙는다(쿼리 없는 Location일 때)', () => {
+    const q = new URLSearchParams('p=1&z=2');
+    expect(evaluate(routes, { path: '/', query: q }).redirect?.location).toBe('/?p=1&z=2');
+    expect(
+      evaluate([{ ...routes[0], headers: { Location: '/n/?a=b' } }], { path: '/old/x', query: q })
+        .redirect?.location,
+    ).toBe('/n/?a=b');
+  });
   it('has(query)는 키가 있을 때만', () => {
-    expect(redirectFor(config, { path: '/', query: new URLSearchParams('p=1') })?.status).toBe(301);
-    expect(redirectFor(config, { path: '/', query: new URLSearchParams('q=1') })).toBeNull();
-    expect(redirectFor(config, { path: '/' })).toBeNull();
+    expect(
+      evaluate(routes, { path: '/', query: new URLSearchParams('q=1') }).redirect,
+    ).toBeUndefined();
+    expect(evaluate(routes, { path: '/' }).redirect).toBeUndefined();
   });
-  it('trailingSlash: 확장자 없는 경로만 308, 파일 경로는 그대로', () => {
-    expect(redirectFor(config, { path: '/about' })).toMatchObject({
+  it('continue 헤더는 합쳐지고 같은 이름은 뒤가 이긴다', () => {
+    expect(evaluate(routes, { path: '/y' }).headers).toEqual({ a: '1' });
+    expect(evaluate(routes, { path: '/x/q' }).headers).toEqual({ a: '2', b: 'b' });
+  });
+  it('continue 없는 라우트는 평가를 멈춘다', () => {
+    expect(evaluate(routes, { path: '/stop' }).headers).toEqual({ a: '1', c: 'c' });
+    expect(evaluate(routes, { path: '/after-stop' }).headers).toEqual({ a: '1', d: 'd' });
+  });
+  it('resolve: 반복하는 리다이렉트는 오류', () => {
+    const loop: Route[] = [
+      { src: '^/a$', headers: { Location: '/b' }, status: 301 },
+      { src: '^/b$', headers: { Location: '/a' }, status: 301 },
+    ];
+    expect(() => resolve(loop, '/a', () => true)).toThrow(/loop/);
+  });
+});
+
+describe('transform (실제 @vercel/routing-utils 출력)', () => {
+  const routes = transform({
+    trailingSlash: true,
+    redirects: [{ source: '/portfolio/oyedu/', destination: '/work/oyedu/', statusCode: 301 }],
+    headers: [{ source: '/(.*)', headers: [{ key: 'X-A', value: '1' }] }],
+  });
+  const exists = (p: string) => p !== '/missing/';
+  it('슬래시 없는 경로는 사용자 리다이렉트보다 먼저 308로 슬래시가 붙는다(두 번 이동)', () => {
+    const r = resolve(routes, '/portfolio/oyedu', exists);
+    expect(r.hops).toEqual([
+      { from: '/portfolio/oyedu', status: 308, location: '/portfolio/oyedu/' },
+      { from: '/portfolio/oyedu/', status: 301, location: '/work/oyedu/' },
+    ]);
+    expect(r.finalStatus).toBe(200);
+  });
+  it('확장자 있는 경로는 슬래시가 붙지 않고, 파일 경로의 끝 슬래시는 제거된다', () => {
+    expect(evaluate(routes, { path: '/robots.txt' }).redirect).toBeUndefined();
+    expect(evaluate(routes, { path: '/a/b.html/' }).redirect).toMatchObject({
       status: 308,
-      location: '/about/',
+      location: '/a/b.html',
     });
-    expect(redirectFor(config, { path: '/robots.txt' })).toBeNull();
-    expect(redirectFor(config, { path: '/a/styles.css' })).toBeNull();
-    expect(redirectFor(config, { path: '/about/' })).toBeNull();
   });
-  it('헤더는 맞는 규칙을 합치고 같은 이름은 뒤가 이긴다', () => {
-    expect(headersFor(config, '/y/')).toEqual({ a: '1' });
-    expect(headersFor(config, '/x/q/')).toEqual({ a: '2', b: 'b' });
-    expect(matchingHeaderRules(config, '/x/q/')).toHaveLength(2);
+  it('헤더 라우트는 리다이렉트보다 뒤라 리다이렉트 응답에는 붙지 않고, 일반 응답과 404에는 붙는다', () => {
+    expect(evaluate(routes, { path: '/portfolio/oyedu/' }).headers).toEqual({});
+    expect(resolve(routes, '/', exists).headers).toEqual({ 'x-a': '1' });
+    expect(resolve(routes, '/missing/', exists)).toMatchObject({
+      finalStatus: 404,
+      headers: { 'x-a': '1' },
+    });
+  });
+  it('/.well-known은 첫 라우트가 평가를 멈춰 헤더가 붙지 않는다(변환기의 동작)', () => {
+    expect(evaluate(routes, { path: '/.well-known/x' }).headers).toEqual({});
   });
 });

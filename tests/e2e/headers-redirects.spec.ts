@@ -1,12 +1,13 @@
 /**
  * 헤더·리다이렉트·SEO를 실제 Chromium으로 확인한다.
  *
- * 증명하는 것: vercel.json의 규칙을 문서에 적힌 의미(tests/helpers/vercel-routes.ts의 가정)대로 적용했을 때
- *  - 리다이렉트 표, 워드프레스 경로 404, 응답 헤더 값,
- *  - 헤더 CSP와 meta CSP가 함께 적용되는 상태에서 콘솔 위반 0(데모는 완화 정책),
- *  - hreflang·canonical·OG 태그와 OG 이미지(1200x630 JPEG).
- * 증명하지 못하는 것: 실제 Vercel이 같은 규칙을 같은 방식으로 적용하는지(헤더 병합, 리다이렉트와 trailingSlash의
- * 순서, 쿼리 전달, `source` 정규식 지원). 그것은 S13 미리보기 배포에서만 확인된다.
+ * vercel.json은 Vercel의 변환기(@vercel/routing-utils)로 라우트가 되고, tests/helpers/vercel-routes.ts의 평가기가
+ * Vercel 문서의 라우트 의미(순서, continue 헤더, 3xx+Location, 쿼리 전달, 파일 시스템, 404)대로 처리한다.
+ *
+ * 증명하는 것: 변환된 라우트가 이 평가 의미에서 내는 응답. 즉 리다이렉트 표(두 번 이동 포함), wp 경로 404,
+ * 헤더 값, 헤더 CSP와 meta CSP가 함께 적용된 상태의 콘솔 위반 0(데모는 완화 정책), hreflang·canonical·OG.
+ * 증명하지 못하는 것: 실제 Vercel 엣지가 같은 라우트를 같은 순서·의미로 실행하는지(헤더 병합, 쿼리 전달,
+ * 파일 시스템 조회 시점, 리다이렉트 응답의 헤더). 그것은 S13 미리보기 배포에서만 확인된다.
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, sep } from 'node:path';
@@ -107,43 +108,53 @@ const htmlOf = (demo: string) => {
 };
 
 test.describe('리다이렉트', () => {
-  test('옛 주소 24개 x (슬래시 있음/없음) → 301 → 새 주소 200', async ({
+  test('옛 주소 24개: 슬래시 있으면 301 한 번, 없으면 308 다음 301 두 번, 최종 200', async ({
     dist: s,
     request,
     page,
   }) => {
     for (const p of projects) {
-      for (const from of [p.legacy.path, p.legacy.path.replace(/\/$/, '')]) {
-        const res = await request.get(`${s.origin}${from}`, { maxRedirects: 0 });
-        expect(res.status(), from).toBe(301);
-        expect(res.headers().location, from).toBe(`/work/${p.slug}/`);
-      }
-      const final = await page.goto(`${s.origin}${p.legacy.path}`);
+      const bare = p.legacy.path.replace(/\/$/, '');
+      const one = await request.get(`${s.origin}${p.legacy.path}`, { maxRedirects: 0 });
+      expect([p.legacy.path, one.status()], p.slug).toEqual([p.legacy.path, 301]);
+      expect(one.headers().location, p.legacy.path).toBe(`/work/${p.slug}/`);
+      // 슬래시 없는 주소: trailingSlash의 308이 먼저, 그 다음 301(두 번 이동)
+      const first = await request.get(`${s.origin}${bare}`, { maxRedirects: 0 });
+      expect([bare, first.status()], p.slug).toEqual([bare, 308]);
+      expect(first.headers().location, bare).toBe(p.legacy.path);
+      const final = await page.goto(`${s.origin}${bare}`);
       expect(final?.status(), p.slug).toBe(200);
       expect(page.url()).toBe(`${s.origin}/work/${p.slug}/`);
     }
   });
 
-  test('/portfolio/1812 → jejuair-mobile, /portfolio → /work/', async ({ dist: s, request }) => {
-    const cases: [string, string][] = [
-      ['/portfolio/1812', '/work/jejuair-mobile/'],
-      ['/portfolio/1812/', '/work/jejuair-mobile/'],
-      ['/portfolio', '/work/'],
-      ['/portfolio/', '/work/'],
-      ['/?p=1833', '/'],
-      ['/?page_id=77', '/'],
-    ];
-    for (const [from, to] of cases) {
-      const res = await request.get(`${s.origin}${from}`, { maxRedirects: 0 });
-      expect([from, res.status()], from).toEqual([from, 301]);
-      expect(res.headers().location, from).toBe(to);
-    }
+  test('/portfolio/1812 → jejuair-mobile, /portfolio → /work/ (두 번 이동)', async ({
+    dist: s,
+    request,
+  }) => {
+    const get = async (path: string) => {
+      const r = await request.get(`${s.origin}${path}`, { maxRedirects: 0 });
+      return [r.status(), r.headers().location];
+    };
+    expect(await get('/portfolio/1812/')).toEqual([301, '/work/jejuair-mobile/']);
+    expect(await get('/portfolio/1812')).toEqual([308, '/portfolio/1812/']);
+    expect(await get('/portfolio/')).toEqual([301, '/work/']);
+    expect(await get('/portfolio')).toEqual([308, '/portfolio/']);
   });
 
-  test('쿼리 없는 홈, 다른 쿼리는 이동하지 않는다', async ({ dist: s, request }) => {
-    for (const url of ['/', '/?utm_source=x', '/work/?p=1']) {
+  test('/?p=ID, /?page_id=ID는 이동 없이 홈 200 (canonical이 /를 가리킨다)', async ({
+    dist: s,
+    request,
+    page,
+  }) => {
+    for (const url of ['/?p=1833', '/?page_id=77', '/', '/?utm_source=x', '/work/?p=1']) {
       expect((await request.get(`${s.origin}${url}`, { maxRedirects: 0 })).status(), url).toBe(200);
     }
+    await page.goto(`${s.origin}/?p=1833`);
+    expect(await page.locator('link[rel=canonical]').getAttribute('href')).toBe(
+      'https://iduk.co.kr/',
+    );
+    expect(page.url()).toBe(`${s.origin}/?p=1833`);
   });
 
   test('trailingSlash: /work/oyedu → /work/oyedu/, 파일은 그대로', async ({ dist: s, request }) => {
@@ -250,7 +261,8 @@ test.describe('콘솔 CSP 위반 0 (헤더 CSP + meta CSP 동시 적용)', () =>
     page,
   }) => {
     const mutated: VercelConfig = JSON.parse(JSON.stringify(config));
-    for (const rule of mutated.headers ?? []) {
+    const rules = mutated.headers as { headers: { key: string; value: string }[] }[];
+    for (const rule of rules) {
       for (const h of rule.headers) {
         if (h.key === 'Content-Security-Policy' && !h.value.includes('script-src'))
           h.value = `default-src 'self'; ${h.value}`;
@@ -278,7 +290,7 @@ test.describe('콘솔 CSP 위반 0 (헤더 CSP + meta CSP 동시 적용)', () =>
 const KNOWN_PROBES: { demo: string; pattern: RegExp }[] = [
   { demo: 'atom', pattern: /^script-src eval @js\/modernizr-custom\.js:3 / },
   { demo: 'atom', pattern: /^worker-src (?:blob|data) @js\/modernizr-custom\.js:[45] / },
-  { demo: 'atom', pattern: /^media-src data @atom\/(?:[a-z]+\.html)?:\d+ / },
+  { demo: 'atom', pattern: /^media-src data @atom\/(?::24|index\.html:24|[a-z]+\.html:25) / },
   { demo: 'atom', pattern: /^console: Refused to evaluate a string as JavaScript/ },
   { demo: 'atom', pattern: /^console: Creating a worker from '(?:blob|data):/ },
   { demo: 'atom', pattern: /^console: Loading media from\s+'data:/ },

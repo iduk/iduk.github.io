@@ -91,11 +91,12 @@
 **Vercel 규칙 해석(문서 근거와 한계).** https://vercel.com/docs/project-configuration/vercel-json 기준.
 - `trailingSlash: true`: 슬래시 없는 경로는 308로 슬래시를 붙인다. 확장자 있는 경로(`/robots.txt`, `/files/*.pdf`, `/html/*/x.html`)는 이동하지 않는다. `cleanUrls`는 쓰지 않는다(`.html` 주소를 확장자 없는 주소로 보내 데모 링크를 깨뜨린다).
 - `redirects`의 `permanent: true`는 308이다. 301을 쓰려고 `statusCode: 301`을 쓴다.
-- `source`는 쿼리를 뺀 경로에 맞춘다. 쿼리 옛 주소(`/?p=ID`, `/?page_id=ID`)는 `has: [{type: query, key}]`로 맞춘다.
-- 헤더 규칙이 여럿 맞을 때 같은 헤더 이름이 어떻게 합쳐지는지는 문서에 없다. 그래서 `Content-Security-Policy`를 내는 규칙이 어떤 경로에서도 정확히 하나만 맞게 `source`를 서로 배타적으로 썼다. `/html/`을 빼는 전방탐색은 문서의 "Negative lookahead" 예시와 같은 형태다(`/((?!maintenance).*)`). 단위 테스트(`tests/unit/vercel-config.test.ts`)가 대표 경로 14개에서 CSP 규칙이 정확히 하나, 헤더 이름 중복 0임을 검사한다.
+- `source`는 쿼리를 뺀 경로에 맞춘다. 옛 워드프레스 쿼리 주소(`/?p=ID`, `/?page_id=ID`)는 **리다이렉트하지 않는다.** Vercel은 요청의 쿼리를 리다이렉트 목적지로 넘기므로 `/?p=1` → `/`가 `/?p=1`이 되어 같은 규칙에 다시 맞고 끝없이 반복된다(변환된 라우트와 평가기로 확인). 정적 홈은 쿼리를 무시하고 200으로 응답하며 canonical이 `/`를 가리키므로 검색엔진도 하나로 합친다.
+- 변환된 라우트에서 `trailingSlash`의 308(`/foo` → `/foo/`)이 사용자 리다이렉트보다 앞선다. 그래서 슬래시 없는 옛 주소(`/portfolio/oyedu`)의 규칙은 도달할 수 없어 두지 않는다. 슬래시 없는 옛 주소는 308 다음 301, 두 번 이동으로 도착한다. 리다이렉트 응답에는 보안 헤더가 붙지 않는다(헤더 라우트가 리다이렉트보다 뒤에 있다).
+- 헤더 규칙이 여럿 맞을 때 같은 헤더 이름이 어떻게 합쳐지는지는 문서에 없다. 그래서 `Content-Security-Policy`를 내는 규칙이 어떤 경로에서도 정확히 하나만 맞게 `source`를 서로 배타적으로 썼다. `/html`을 빼는 전방탐색은 문서의 "Negative lookahead" 예시와 같은 형태다(`/((?!maintenance).*)`). 데모 규칙의 `source`는 `/html(/.*)?`이다. `/html/:path*`는 변환기가 `^/html(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?$`로 만들어 `/html/`과 `/html/atom/`(슬래시 형태의 정식 데모 주소)에 맞지 않고, 엄격한 규칙은 `/html` 아래 전부를 빼므로 그 주소에 CSP도 `X-Robots-Tag`도 붙지 않는 오류가 있었다. 단위 테스트(`tests/unit/vercel-config.test.ts`)가 대표 경로 20개와 경로 조합 수백 개에서 CSP 규칙이 정확히 하나이고 올바른 쪽인지, `/html` 경로만 noindex를 받는지 검사한다.
 - 하이픈·소문자만 쓰는 슬러그에서만 안전하다. `source`에는 path-to-regexp 문법이 쓰이므로 슬러그에 `:`·`(`·`*` 같은 문자가 들어오면 생성기가 막는다.
 
-**로컬 검증 도구의 한계.** `tests/helpers/vercel-routes.ts`는 위 문서 내용을 따르는 작은 해석기이며 Vercel의 구현이 아니다. 다음은 실제 Vercel에서 S13 미리보기 배포로만 확인된다: 같은 헤더 이름의 병합, `source` 정규식 지원(`(?!…)` 그룹), 리다이렉트와 `trailingSlash` 이동의 순서, 리다이렉트 목적지로 쿼리가 전달되는지(`/?p=1` → `/`가 `/?p=1`로 가서 되풀이되지 않는지), 헤더가 리다이렉트·404 응답에도 붙는지.
+**로컬 검증 도구와 한계.** `vercel.json`은 Vercel이 쓰는 변환기(`@vercel/routing-utils`의 `getTransformedRoutes`, devDependency 6.2.0)로 라우트 배열이 되고, `tests/helpers/vercel-routes.ts`가 그 배열을 Vercel 라우트 문서의 의미(순서대로 평가, `continue` 헤더 합치기, `status`+`Location`은 리다이렉트, 쿼리 전달, 파일 시스템 조회, 404)대로 평가한다. 변환은 실제 Vercel 코드이고 평가는 문서에 따라 직접 쓴 것이라 실제 엣지 라우터는 아니다. 실제 Vercel에서 S13 미리보기 배포로만 확인되는 것: 평가 순서와 `continue` 의미, 같은 이름 헤더의 병합, 리다이렉트로의 쿼리 전달(이 때문에 `?p=` 규칙을 뺐다), 파일 시스템 조회가 라우트 앞뒤 어디서 일어나는지, 리다이렉트·404 응답의 헤더.
 
 ### 4.3 Vercel 방화벽 (Hobby)
 
@@ -184,7 +185,7 @@ Vercel Hobby의 런타임 로그는 1시간만 남는다. 로그에 의존하지
 ## 8. 공개 후 점검 목록
 
 - [ ] 보안 헤더 점검 서비스에서 A 이상
-- [ ] 미리보기에서 `/?p=1`이 `/`로 한 번만 이동하고 되풀이되지 않는다(4.2 "Vercel 규칙 해석")
+- [ ] 미리보기에서 `/?p=1`이 이동 없이 200이다(4.2 "Vercel 규칙 해석")
 - [ ] Mozilla Observatory에서 B+ 이상
 - [ ] CSP 위반이 브라우저 콘솔에 없다
 - [ ] HSTS 사전 등록은 1주 관찰 뒤에 신청한다

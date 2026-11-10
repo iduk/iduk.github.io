@@ -41,7 +41,7 @@
       ]
     },
     {
-      "source": "/html/:path*",
+      "source": "/html(/.*)?",
       "headers": [
         {
           "key": "Content-Security-Policy",
@@ -61,17 +61,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/ad-company-wordpress",
-      "destination": "/work/ad-company-wordpress/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/bed-mattress-website/",
-      "destination": "/work/bed-mattress-website/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/bed-mattress-website",
       "destination": "/work/bed-mattress-website/",
       "statusCode": 301
     },
@@ -81,17 +71,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/cardduck",
-      "destination": "/work/cardduck/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/chinese-community/",
-      "destination": "/work/chinese-community/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/chinese-community",
       "destination": "/work/chinese-community/",
       "statusCode": 301
     },
@@ -101,17 +81,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/coinghost-landing-web",
-      "destination": "/work/coinghost-landing-web/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/coinghost-mobile-app/",
-      "destination": "/work/coinghost-mobile-app/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/coinghost-mobile-app",
       "destination": "/work/coinghost-mobile-app/",
       "statusCode": 301
     },
@@ -121,17 +91,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/cooking-landing-page-template",
-      "destination": "/work/cooking-landing-page-template/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/engineering-responsive-web/",
-      "destination": "/work/engineering-responsive-web/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/engineering-responsive-web",
       "destination": "/work/engineering-responsive-web/",
       "statusCode": 301
     },
@@ -141,17 +101,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/exhibition-booth-design",
-      "destination": "/work/exhibition-booth-design/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/exhibition-brochure/",
-      "destination": "/work/exhibition-brochure/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/exhibition-brochure",
       "destination": "/work/exhibition-brochure/",
       "statusCode": 301
     },
@@ -161,17 +111,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/expressway",
-      "destination": "/work/expressway/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/healthcare-icon-set/",
-      "destination": "/work/healthcare-icon-set/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/healthcare-icon-set",
       "destination": "/work/healthcare-icon-set/",
       "statusCode": 301
     },
@@ -181,17 +121,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/1812",
-      "destination": "/work/jejuair-mobile/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/online-ad-company-responsive-web/",
-      "destination": "/work/online-ad-company-responsive-web/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/online-ad-company-responsive-web",
       "destination": "/work/online-ad-company-responsive-web/",
       "statusCode": 301
     },
@@ -201,17 +131,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/oyedu",
-      "destination": "/work/oyedu/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/product-mockup/",
-      "destination": "/work/product-mockup/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/product-mockup",
       "destination": "/work/product-mockup/",
       "statusCode": 301
     },
@@ -221,17 +141,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/smartband-app-ui",
-      "destination": "/work/smartband-app-ui/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/smartfarm-android/",
-      "destination": "/work/smartfarm-android/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/smartfarm-android",
       "destination": "/work/smartfarm-android/",
       "statusCode": 301
     },
@@ -241,17 +151,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/smartfarm-dashboard",
-      "destination": "/work/smartfarm-dashboard/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/smartfarm-dashboard-firststeps/",
-      "destination": "/work/smartfarm-dashboard-firststeps/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/smartfarm-dashboard-firststeps",
       "destination": "/work/smartfarm-dashboard-firststeps/",
       "statusCode": 301
     },
@@ -261,17 +161,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/telecare-service-app",
-      "destination": "/work/telecare-service-app/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/telecare-service-showcase-ui/",
-      "destination": "/work/telecare-service-showcase-ui/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/telecare-service-showcase-ui",
       "destination": "/work/telecare-service-showcase-ui/",
       "statusCode": 301
     },
@@ -281,17 +171,7 @@
       "statusCode": 301
     },
     {
-      "source": "/portfolio/telecare-service-website",
-      "destination": "/work/telecare-service-website/",
-      "statusCode": 301
-    },
-    {
       "source": "/portfolio/website-renewal-ui/",
-      "destination": "/work/website-renewal-ui/",
-      "statusCode": 301
-    },
-    {
-      "source": "/portfolio/website-renewal-ui",
       "destination": "/work/website-renewal-ui/",
       "statusCode": 301
     },
@@ -299,33 +179,6 @@
       "source": "/portfolio/",
       "destination": "/work/",
       "statusCode": 301
-    },
-    {
-      "source": "/portfolio",
-      "destination": "/work/",
-      "statusCode": 301
-    },
-    {
-      "source": "/",
-      "destination": "/",
-      "statusCode": 301,
-      "has": [
-        {
-          "type": "query",
-          "key": "p"
-        }
-      ]
-    },
-    {
-      "source": "/",
-      "destination": "/",
-      "statusCode": 301,
-      "has": [
-        {
-          "type": "query",
-          "key": "page_id"
-        }
-      ]
     }
   ]
 }

@@ -1,174 +1,134 @@
 /**
- * vercel.json의 `headers`·`redirects`·`trailingSlash`를 로컬에서 평가하는 작은 해석기(테스트 전용).
+ * vercel.json을 Vercel이 쓰는 변환기(`@vercel/routing-utils`의 `getTransformedRoutes`)로 라우트 배열로 바꾸고,
+ * 그 배열을 순서대로 평가하는 테스트 전용 해석기.
  *
- * `astro preview`는 vercel.json을 적용하지 않으므로, 실제 Vercel 대신 문서에 적힌 규칙을 흉내 낸다.
- * 이것은 Vercel의 구현이 아니다. 아래 가정이 실제 배포와 다르면 S13 미리보기 배포에서만 드러난다.
+ * 변환은 실제 Vercel 코드다(정규식, 슬래시 308 라우트의 위치, 헤더 라우트의 `continue`). 평가 순서는 Vercel의
+ * 라우트 문서를 따라 직접 구현했다(아래 가정). 실제 엣지 라우터가 아니므로 S13 미리보기 배포에서 다시 확인한다.
  *
- *  - `source`는 path-to-regexp(v6) 문법의 부분집합: 리터럴, `:이름`, `:이름*`/`+`/`?`, `(정규식)`.
- *    대소문자를 구분하고, 끝의 슬래시는 있어도 없어도 된다(비엄격 모드). `source`는 쿼리를 뺀 경로에 맞춘다.
- *  - 사용자 `redirects`가 `trailingSlash` 이동보다 먼저 평가된다(어느 쪽이 먼저인지 문서에 없다. 두 경우 모두
- *    최종 주소가 같도록 vercel.json에 슬래시 있는/없는 `source`를 둘 다 둔다).
- *  - 리다이렉트 목적지에는 들어온 쿼리를 붙이지 않는다(문서에 명시 없음, S13에서 확인).
- *  - `headers`는 맞는 규칙 전부를 순서대로 합치고, 같은 이름이면 뒤의 값이 이긴다(문서에 명시 없음).
- *    그래서 vercel.json은 같은 이름이 겹치지 않게 규칙을 서로 배타적으로 쓴다(vercel-config.test.ts가 검사).
- *  - 응답 헤더는 리다이렉트와 404 응답에도 붙는다.
+ * 평가 규칙(가정):
+ *  - 라우트를 위에서부터 보고, `src` 정규식(대소문자 구분)이 경로에 맞고 `has`/`missing`이 충족되면 적용한다.
+ *  - `status` 3xx + `headers.Location`이면 리다이렉트: 그 시점까지 `continue` 라우트가 모은 헤더와 함께 응답하고
+ *    끝낸다. `$1` 같은 캡처는 Location에 대입한다. Location에 쿼리가 없으면 요청의 쿼리를 그대로 붙인다.
+ *  - `continue: true` 라우트는 `headers`를 모으고 다음 라우트로 간다. 같은 이름은 뒤의 값이 이긴다.
+ *  - `continue`가 없는 라우트(`/.well-known`)는 맞으면 평가를 멈춘다(이후 헤더 라우트는 적용되지 않는다).
+ *  - 끝까지 리다이렉트가 없으면 정적 파일 시스템에서 찾고, 없으면 404. 모은 헤더는 200과 404 모두에 붙는다.
  */
+import { getTransformedRoutes } from '@vercel/routing-utils';
 
-export type HeaderRule = { source: string; headers: { key: string; value: string }[] };
-export type Condition = {
-  type: 'query' | 'header' | 'cookie' | 'host';
-  key: string;
-  value?: string;
-};
-export type RedirectRule = {
-  source: string;
-  destination: string;
-  statusCode?: number;
-  permanent?: boolean;
+export type Condition = { type: string; key: string; value?: string };
+export type Route = {
+  src?: string;
+  dest?: string;
+  headers?: Record<string, string>;
+  status?: number;
+  continue?: boolean;
   has?: Condition[];
   missing?: Condition[];
+  handle?: string;
 };
-export type VercelConfig = {
-  trailingSlash?: boolean;
-  headers?: HeaderRule[];
-  redirects?: RedirectRule[];
-  [key: string]: unknown;
-};
+export type VercelConfig = Record<string, unknown>;
 
-const DELIMS = '/#?';
-const escapeLiteral = (s: string) => s.replace(/[.+*?^${}()[\]|\\]/g, '\\$&');
-
-/** path-to-regexp v6 비엄격 모드에 맞춘 정규식과 매개변수 이름. */
-export function compileSource(source: string): { regex: RegExp; names: string[] } {
-  const names: string[] = [];
-  let out = '';
-  let i = 0;
-  let literal = '';
-  const flush = () => {
-    out += escapeLiteral(literal);
-    literal = '';
-  };
-  const readGroup = (): string => {
-    // source[i] === '('
-    let depth = 0;
-    let body = '';
-    for (; i < source.length; i++) {
-      const c = source[i];
-      if (c === '\\') {
-        body += c + (source[++i] ?? '');
-        continue;
-      }
-      if (c === '(') {
-        depth++;
-        if (depth === 1) continue;
-      } else if (c === ')') {
-        depth--;
-        if (depth === 0) {
-          i++;
-          return body;
-        }
-      }
-      body += c;
-    }
-    throw new Error(`unbalanced group in ${source}`);
-  };
-  while (i < source.length) {
-    const c = source[i];
-    if (c === '\\') {
-      literal += source[i + 1] ?? '';
-      i += 2;
-      continue;
-    }
-    if (c === ':' || c === '(') {
-      let prefix = '';
-      if (literal.endsWith('/')) {
-        prefix = '/';
-        literal = literal.slice(0, -1);
-      }
-      flush();
-      let name = '';
-      let pattern = `[^${DELIMS.replace('/', '\\/')}]+?`;
-      if (c === ':') {
-        i++;
-        while (/[A-Za-z0-9_]/.test(source[i] ?? '')) name += source[i++];
-        if (!name) throw new Error(`missing parameter name in ${source}`);
-        if (source[i] === '(') pattern = readGroup();
-      } else {
-        pattern = readGroup();
-      }
-      names.push(name || String(names.length));
-      const mod = /[?*+]/.test(source[i] ?? '') ? source[i++] : '';
-      const pre = escapeLiteral(prefix);
-      if (mod === '+' || mod === '*') {
-        const inner = `(?:${pattern})(?:${pre || '\\/'}(?:${pattern}))*`;
-        out += `(?:${pre}(${inner}))${mod === '*' ? '?' : ''}`;
-      } else {
-        out += `(?:${pre}(${pattern}))${mod === '?' ? '?' : ''}`;
-      }
-      continue;
-    }
-    literal += c;
-    i++;
-  }
-  flush();
-  return { regex: new RegExp(`^${out}[\\/#\\?]?$`), names };
+export function transform(config: VercelConfig): Route[] {
+  const out = getTransformedRoutes(config as Parameters<typeof getTransformedRoutes>[0]);
+  if (out.error) throw new Error(`getTransformedRoutes: ${out.error.message}`);
+  return out.routes as Route[];
 }
 
-export function matchSource(source: string, path: string): Record<string, string> | null {
-  const { regex, names } = compileSource(source);
-  const m = regex.exec(path);
+const lower = (h: Record<string, string>) =>
+  Object.fromEntries(Object.entries(h).map(([k, v]) => [k.toLowerCase(), v]));
+
+function condition(c: Condition, query: URLSearchParams): boolean {
+  if (c.type !== 'query') throw new Error(`condition ${c.type} is not supported by the harness`);
+  const v = query.get(c.key);
+  if (v === null) return false;
+  return c.value === undefined || new RegExp(`^(?:${c.value})$`).test(v);
+}
+
+export function routeMatches(
+  route: Route,
+  path: string,
+  query = new URLSearchParams(),
+): RegExpExecArray | null {
+  if (route.handle || route.src === undefined) return null;
+  const m = new RegExp(route.src).exec(path);
   if (!m) return null;
-  const params: Record<string, string> = {};
-  names.forEach((n, idx) => {
-    if (m[idx + 1] !== undefined) params[n] = m[idx + 1];
-  });
-  return params;
+  if (!(route.has ?? []).every((c) => condition(c, query))) return null;
+  if ((route.missing ?? []).some((c) => condition(c, query))) return null;
+  return m;
 }
 
-export type Request = { path: string; query?: URLSearchParams; headers?: Record<string, string> };
+export type Evaluation = {
+  redirect?: { status: number; location: string; route: Route };
+  headers: Record<string, string>;
+  /** 맞은 라우트 전부(순서대로). */
+  matched: Route[];
+};
 
-function conditionHolds(c: Condition, req: Request): boolean {
-  if (c.type !== 'query')
-    throw new Error(`condition type ${c.type} is not supported by the harness`);
-  const value = req.query?.get(c.key);
-  if (value === null || value === undefined) return false;
-  return c.value === undefined || new RegExp(`^(?:${c.value})$`).test(value);
-}
-
-const hasAll = (conds: Condition[] | undefined, req: Request) =>
-  (conds ?? []).every((c) => conditionHolds(c, req));
-const hasNone = (conds: Condition[] | undefined, req: Request) =>
-  (conds ?? []).every((c) => !conditionHolds(c, req));
-
-export function matchingHeaderRules(config: VercelConfig, path: string): HeaderRule[] {
-  return (config.headers ?? []).filter((r) => matchSource(r.source, path) !== null);
-}
-
-export function headersFor(config: VercelConfig, path: string): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const rule of matchingHeaderRules(config, path)) {
-    for (const { key, value } of rule.headers) out[key.toLowerCase()] = value;
-  }
-  return out;
-}
-
-export type Redirect = { status: number; location: string; rule?: RedirectRule };
-
-/** 사용자 redirects → trailingSlash 순서로 한 번 평가한다. 이동이 없으면 null. */
-export function redirectFor(config: VercelConfig, req: Request): Redirect | null {
-  for (const rule of config.redirects ?? []) {
-    const params = matchSource(rule.source, req.path);
-    if (!params) continue;
-    if (!hasAll(rule.has, req) || !hasNone(rule.missing, req)) continue;
-    const location = rule.destination.replace(/:([A-Za-z0-9_]+)/g, (_, n) => params[n] ?? '');
-    return { status: rule.statusCode ?? (rule.permanent ? 308 : 307), location, rule };
-  }
-  if (config.trailingSlash === true && !req.path.endsWith('/')) {
-    const last = req.path.slice(req.path.lastIndexOf('/') + 1);
-    if (!last.includes('.')) {
-      const q = req.query?.toString();
-      return { status: 308, location: `${req.path}/${q ? `?${q}` : ''}` };
+export function evaluate(
+  routes: Route[],
+  req: { path: string; query?: URLSearchParams },
+): Evaluation {
+  const query = req.query ?? new URLSearchParams();
+  let headers: Record<string, string> = {};
+  const matched: Route[] = [];
+  for (const route of routes) {
+    const m = routeMatches(route, req.path, query);
+    if (!m) continue;
+    if (route.dest)
+      throw new Error('route.dest is not supported by the harness (vercel.json has no rewrites)');
+    matched.push(route);
+    const status = route.status ?? 0;
+    const hdr = lower(route.headers ?? {});
+    if (status >= 300 && status < 400 && hdr.location) {
+      let location = hdr.location.replace(/\$(\d+)/g, (_, n) => m[Number(n)] ?? '');
+      const q = query.toString();
+      if (q && !location.includes('?')) location += `?${q}`;
+      const { location: _l, ...rest } = hdr;
+      return { redirect: { status, location, route }, headers: { ...headers, ...rest }, matched };
     }
+    headers = { ...headers, ...hdr };
+    if (!route.continue) break;
   }
-  return null;
+  return { headers, matched };
+}
+
+/** 이 경로에서 Content-Security-Policy를 내는 `continue` 헤더 라우트들(리다이렉트 여부와 무관하게 `src`만 본다). */
+export function headerRoutesFor(routes: Route[], path: string): Route[] {
+  return routes.filter((r) => r.continue && r.headers && routeMatches(r, path) !== null);
+}
+
+export type Resolution = {
+  hops: { from: string; status: number; location: string }[];
+  finalUrl: string;
+  finalStatus: number;
+  headers: Record<string, string>;
+};
+
+/** 리다이렉트를 따라가 최종 응답까지 계산한다. `exists`는 정적 파일 시스템 조회. 반복하면 오류. */
+export function resolve(
+  routes: Route[],
+  start: string,
+  exists: (pathname: string) => boolean,
+  maxHops = 10,
+): Resolution {
+  const seen = new Set<string>();
+  const hops: Resolution['hops'] = [];
+  let url = new URL(start, 'http://site.test');
+  for (;;) {
+    const key = url.pathname + url.search;
+    if (seen.has(key)) throw new Error(`redirect loop: ${[...seen, key].join(' -> ')}`);
+    seen.add(key);
+    if (hops.length > maxHops) throw new Error(`too many redirects from ${start}`);
+    const ev = evaluate(routes, { path: url.pathname, query: url.searchParams });
+    if (!ev.redirect) {
+      return {
+        hops,
+        finalUrl: key,
+        finalStatus: exists(url.pathname) ? 200 : 404,
+        headers: ev.headers,
+      };
+    }
+    hops.push({ from: key, status: ev.redirect.status, location: ev.redirect.location });
+    url = new URL(ev.redirect.location, url);
+  }
 }
