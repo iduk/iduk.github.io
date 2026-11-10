@@ -1,5 +1,4 @@
 ---
-import { getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import Picture from '../components/Picture.astro';
@@ -12,6 +11,7 @@ import { resolveImage } from '../lib/masters';
 import { formatPeriod } from '../lib/period';
 import { getPublicProjects, neighbors } from '../lib/projects';
 import type { Project } from '../lib/schema';
+import { ogForProject } from '../lib/seo';
 
 interface Props {
   project: Project;
@@ -25,20 +25,13 @@ const { prev, next } = neighbors(await getPublicProjects(), project.slug);
 
 const period = project.period ? formatPeriod(project.period, locale) : '';
 
-const og = await getImage({
-  src: resolveImage(project.cover.image).master,
-  width: 1200,
-  format: 'jpg',
-  quality: 80,
-});
-const ogImage = new URL(og.src, Astro.site ?? 'https://iduk.co.kr').href;
 const href = (p: Project) => localizedPath(locale, `/work/${p.slug}/`);
 ---
 <Base
   title={`${project.title[locale]} — iduk`}
   description={project.summary[locale]}
   locale={locale}
-  ogImage={ogImage}
+  ogImage={ogForProject(project, locale)}
   ogType="article"
 >
   <ViewTransitionNames slot="head" slugs={[project.slug]} />

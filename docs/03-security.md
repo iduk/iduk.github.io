@@ -48,21 +48,54 @@
 
 ### 4.2 HTTP 헤더
 
-`vercel.json`으로 모든 응답에 붙인다.
+`vercel.json`으로 응답에 붙인다. 규칙은 서로 겹치지 않게 세 개로 나눈다.
+
+| 규칙(`source`) | 헤더 |
+|---|---|
+| `/(.*)` (전부) | `Strict-Transport-Security`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` |
+| `/((?!html(?:/\|$)).*)` (`/html` 밖 전부) | 엄격한 `Content-Security-Policy` |
+| `/html/:path*` (데모) | 완화한 `Content-Security-Policy`, `X-Robots-Tag: noindex, nofollow` |
 
 | 헤더 | 값 | 비고 |
 |---|---|---|
-| Content-Security-Policy | `default-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests` | 스크립트와 스타일 해시는 Astro가 페이지마다 만들어 meta 태그로 넣는다 |
-| Strict-Transport-Security | 처음 1주는 `max-age=86400`. 문제가 없으면 `max-age=63072000; includeSubDomains; preload` | 모든 하위 도메인이 HTTPS인지 확인한 뒤에 올린다 |
+| Content-Security-Policy (헤더) | `img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests` | **`default-src`, `script-src`, `style-src`를 넣지 않는다.** 아래 "헤더와 meta의 관계" 참고 |
+| Content-Security-Policy (meta, Astro) | `default-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; script-src 'self' <해시…>; style-src 'self' <해시…>` | `astro.config.mjs`의 `security.csp.directives`와 해시. 페이지마다 다르다 |
+| Strict-Transport-Security | 지금 `max-age=300`. 올리는 순서는 아래 | 모든 하위 도메인이 HTTPS인지 확인한 뒤에 올린다 |
 | X-Content-Type-Options | `nosniff` | |
 | Referrer-Policy | `strict-origin-when-cross-origin` | |
 | Permissions-Policy | `camera=(), microphone=(), geolocation=(), payment=(), usb=()` | |
 | Cross-Origin-Opener-Policy | `same-origin` | |
 
-- meta 태그의 CSP는 `frame-ancestors`를 적용하지 못한다. 그래서 HTTP 헤더 CSP도 같이 둔다. 둘은 교집합으로 적용된다.
-- Astro의 CSP 기능은 개발 서버에서 동작하지 않는다. `build`와 `preview`로 확인한다.
-- `/html/*` 데모는 자체 스크립트와 지도 서비스를 쓴다. 이 경로에만 별도 CSP를 둔다. 확인된 외부 호스트는 `ajax.googleapis.com`, `maps.googleapis.com`, `dmaps.daum.net`이다. 브라우저 콘솔의 위반 보고로 실제 필요한 것만 확정한다.
-- 외부 스크립트, 외부 글꼴, 외부 CDN을 쓰지 않는다. 처음 버전에는 서드파티 스크립트가 0개다.
+**HSTS 올리는 순서.** 처음 배포는 `max-age=300`(5분)이다. 도메인 전환(S14) 뒤 문제가 없으면 `max-age=86400`(1일, 첫 주) → `max-age=31536000`(1년) 순으로 `vercel.json` 값만 바꿔 배포한다. `includeSubDomains`와 `preload`는 모든 하위 도메인이 HTTPS인 것을 확인한 뒤 사용자 확인을 받아 마지막에 붙인다(`preload` 등록은 되돌리기 어렵다). 이 표의 현재 값이 `vercel.json`과 같아야 한다(단위 테스트가 `max-age=300`을 고정한다. 올릴 때 테스트의 기대값도 함께 바꾼다).
+
+**헤더와 meta의 관계.** 브라우저는 정책이 둘 이상이면 모두 통과해야 허용한다(교집합). 그래서 헤더에 `default-src 'self'`를 두면 `script-src`·`style-src`가 따로 없는 헤더 정책이 해시된 인라인 `<style>`·`<script>`를 막는다(meta가 허용해도 소용없다). 실제로 헤더에 `default-src`를 넣어 보면 위반이 나는 것을 e2e 대조군 시험이 확인한다. 그러므로 `default-src`와 해시가 필요한 지시어는 meta에만 두고, 헤더는 해시가 필요 없고 meta가 적용하지 못하는 지시어(`frame-ancestors`, `upgrade-insecure-requests`)와 중복 방어(`img-src` 등)만 갖는다. meta에는 `frame-ancestors`를 넣을 수 없다(브라우저가 무시하고 콘솔에 경고한다).
+
+- Astro의 CSP 기능은 개발 서버에서 동작하지 않는다. `build`와 `preview`로 확인한다. `astro preview`는 `vercel.json`을 적용하지 않으므로 `tests/helpers/static-server.ts`가 `vercel.json`을 해석해 적용하는 서버를 쓴다(한계는 아래).
+- `/html/*` 데모는 인라인 스크립트·스타일을 쓰고 외부 호스트 몇 곳을 부른다. 이 경로에만 완화 정책을 둔다. 지시어마다 실제로 요청하는 호스트만 허용하고 와일드카드는 쓰지 않는다.
+
+  | 지시어 | 허용 | 쓰는 데모 |
+  |---|---|---|
+  | `script-src` | `'self' 'unsafe-inline' https://ajax.googleapis.com` | hidea(jQuery) |
+  | `style-src` | `'self' 'unsafe-inline' https://fonts.googleapis.com https://pro.fontawesome.com` | atom, hidea |
+  | `font-src` | `'self' https://fonts.gstatic.com https://pro.fontawesome.com` | 위 스타일시트가 부르는 글꼴 |
+  | `img-src` | `'self' data: https://images.unsplash.com` | atom(business.html) |
+  | `frame-src` | `https://www.youtube.com` | hidea(유튜브 임베드) |
+  | `connect-src` | `'self'` | |
+  | 그 밖 | `default-src 'self'`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`, `upgrade-insecure-requests` | |
+
+  지도 서비스 호스트(`maps.googleapis.com`, `dmaps.daum.net`)는 S09에서 지도 임베드를 중립화해서 더 이상 필요 없고 허용하지 않는다. 근거는 두 가지다. (1) `public/html`의 HTML·CSS 정적 참조를 훑은 목록, (2) 실제 Chromium으로 데모의 모든 html 페이지를 열어 요청된 외부 출처를 기록한 것(`tests/e2e/headers-redirects.spec.ts`가 외부 요청을 빈 응답으로 막고 출처를 출력한다). 한계: 외부 스크립트가 런타임에 불러오는 호스트(예: 유튜브 플레이어 내부)는 빈 응답 때문에 드러나지 않는다.
+- atom 데모의 `modernizr-custom.js`는 기능 탐지로 문자열 평가, blob·data 워커, data 미디어를 일부러 시도한다. 완화 정책은 이를 막고(`unsafe-eval`, `worker-src blob: data:`, `media-src data:`를 열지 않는다) Modernizr는 "미지원"으로 처리하며 화면은 그대로다. 그 결과 atom 데모에서 콘솔에 CSP 경고가 남는다. e2e는 이 알려진 탐지 항목만 정확히 허용하고 그 밖의 위반은 실패로 센다. 경고를 없애려면 위 세 지시어를 여는 방법뿐이고(데모 보안 약화), 권장하지 않는다.
+- `/html/*`에는 `X-Robots-Tag: noindex, nofollow`를 붙인다. 의뢰인 제작물을 검색에 노출하지 않는 기본값이다. `robots.txt`에서는 `/html`을 막지 않는다(막으면 크롤러가 noindex를 읽지 못한다).
+- 외부 스크립트, 외부 글꼴, 외부 CDN은 본 사이트(`/html/*` 밖)에서 쓰지 않는다. 서드파티 스크립트는 0개다.
+
+**Vercel 규칙 해석(문서 근거와 한계).** https://vercel.com/docs/project-configuration/vercel-json 기준.
+- `trailingSlash: true`: 슬래시 없는 경로는 308로 슬래시를 붙인다. 확장자 있는 경로(`/robots.txt`, `/files/*.pdf`, `/html/*/x.html`)는 이동하지 않는다. `cleanUrls`는 쓰지 않는다(`.html` 주소를 확장자 없는 주소로 보내 데모 링크를 깨뜨린다).
+- `redirects`의 `permanent: true`는 308이다. 301을 쓰려고 `statusCode: 301`을 쓴다.
+- `source`는 쿼리를 뺀 경로에 맞춘다. 쿼리 옛 주소(`/?p=ID`, `/?page_id=ID`)는 `has: [{type: query, key}]`로 맞춘다.
+- 헤더 규칙이 여럿 맞을 때 같은 헤더 이름이 어떻게 합쳐지는지는 문서에 없다. 그래서 `Content-Security-Policy`를 내는 규칙이 어떤 경로에서도 정확히 하나만 맞게 `source`를 서로 배타적으로 썼다. `/html/`을 빼는 전방탐색은 문서의 "Negative lookahead" 예시와 같은 형태다(`/((?!maintenance).*)`). 단위 테스트(`tests/unit/vercel-config.test.ts`)가 대표 경로 14개에서 CSP 규칙이 정확히 하나, 헤더 이름 중복 0임을 검사한다.
+- 하이픈·소문자만 쓰는 슬러그에서만 안전하다. `source`에는 path-to-regexp 문법이 쓰이므로 슬러그에 `:`·`(`·`*` 같은 문자가 들어오면 생성기가 막는다.
+
+**로컬 검증 도구의 한계.** `tests/helpers/vercel-routes.ts`는 위 문서 내용을 따르는 작은 해석기이며 Vercel의 구현이 아니다. 다음은 실제 Vercel에서 S13 미리보기 배포로만 확인된다: 같은 헤더 이름의 병합, `source` 정규식 지원(`(?!…)` 그룹), 리다이렉트와 `trailingSlash` 이동의 순서, 리다이렉트 목적지로 쿼리가 전달되는지(`/?p=1` → `/`가 `/?p=1`로 가서 되풀이되지 않는지), 헤더가 리다이렉트·404 응답에도 붙는지.
 
 ### 4.3 Vercel 방화벽 (Hobby)
 
@@ -70,11 +103,11 @@
 
 | 규칙 | 조건 | 동작 |
 |---|---|---|
-| 1 | 경로가 `/wp-*`, `/xmlrpc.php`, `/phpmyadmin*`, `*.php`로 시작하거나 끝남 | 차단 |
+| 1 | 경로가 `/wp-`로 시작, 또는 `/xmlrpc.php`와 같음, 또는 `/phpmyadmin`으로 시작, 또는 `.php`로 끝남(대시보드: Request Path starts with `/wp-` OR equals `/xmlrpc.php` OR starts with `/phpmyadmin` OR ends with `.php`) | 차단(Deny) |
 | 2 | 경로 `/api/contact`로 가는 POST를 같은 IP에서 분당 5회 초과 (2단계) | 요율 제한 |
 | 3 | 예비. 공격이 오면 임시 차단용으로 비워 둔다 | |
 
-규칙 1은 옛 워드프레스 주소를 계속 두드리는 봇을 걸러 낸다. 구글에 스팸 주소가 남아 있을 수 있어서 정적 404가 아니라 차단으로 둔다. 공격 상황에서는 Attack Mode를 켤 수 있다.
+규칙 1은 옛 워드프레스 주소를 계속 두드리는 봇을 걸러 낸다. 이 규칙은 대시보드 설정이라 `vercel.json`에는 없다(S13). `vercel.json`은 이 경로에 리다이렉트·예외·재작성을 두지 않아 방화벽이 꺼져 있어도 정적 404가 나온다(자동 시험으로 확인). 구글에 스팸 주소가 남아 있을 수 있어서 정적 404가 아니라 차단으로 둔다. 공격 상황에서는 Attack Mode를 켤 수 있다.
 
 ### 4.4 의존성과 공급망
 
@@ -151,6 +184,7 @@ Vercel Hobby의 런타임 로그는 1시간만 남는다. 로그에 의존하지
 ## 8. 공개 후 점검 목록
 
 - [ ] 보안 헤더 점검 서비스에서 A 이상
+- [ ] 미리보기에서 `/?p=1`이 `/`로 한 번만 이동하고 되풀이되지 않는다(4.2 "Vercel 규칙 해석")
 - [ ] Mozilla Observatory에서 B+ 이상
 - [ ] CSP 위반이 브라우저 콘솔에 없다
 - [ ] HSTS 사전 등록은 1주 관찰 뒤에 신청한다

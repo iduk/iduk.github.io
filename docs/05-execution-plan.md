@@ -319,12 +319,12 @@
 
 **할 일**
 1. `vercel.json`
-   - 헤더: `Content-Security-Policy`는 Astro가 생성하는 메타/헤더를 사용하고, 나머지 `Strict-Transport-Security`(처음에는 `max-age=300`, 안정되면 올림), `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`(카메라, 마이크, 위치 모두 비움), `Cross-Origin-Opener-Policy: same-origin`.
+   - 헤더: `Content-Security-Policy`는 Astro가 만드는 meta(해시와 `default-src` 등)와 `vercel.json` 헤더(해시 불필요한 지시어만, `default-src` 없음. 03번 문서 4.2)를 함께 쓴다. 그리고 `Strict-Transport-Security`(처음에는 `max-age=300`, 안정되면 올림), `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`(카메라, 마이크, 위치 모두 비움), `Cross-Origin-Opener-Policy: same-origin`.
    - `/html/*`에는 데모 전용 완화 정책을 따로 둔다(03번 문서 참조).
-   - 리다이렉트: `/portfolio/:slug` → `/work/:slug/`(301), `/portfolio/1812` → `/work/jejuair-mobile/`, 옛 `/?p=ID` 쿼리 주소는 홈으로, `/wp-admin`·`/wp-login.php`·`/xmlrpc.php`는 404.
+   - 리다이렉트는 `pnpm exec tsx scripts/gen-redirects.ts`가 `src/content/projects/*.json`의 `legacy.path`에서 만든다(손으로 고치지 않는다, `--check`로 최신 여부 확인, 단위 테스트가 24개 전부 일치를 검사). 상태 코드는 `statusCode: 301`(`permanent`는 308). 슬래시 있는/없는 형태를 모두 둔다. `/portfolio/:slug` → `/work/:slug/`(301), `/portfolio/1812` → `/work/jejuair-mobile/`, 옛 `/?p=ID` 쿼리 주소는 홈으로, `/wp-admin`·`/wp-login.php`·`/xmlrpc.php`는 404.
    - 옛 이미지 경로(`/wp-content/uploads/...`)는 연결하지 않는다.
 2. Astro `security.csp`로 스크립트·스타일 해시를 생성하고 `default-src 'self'`, `img-src 'self' data:`, `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'none'`, `form-action 'self'`를 지시한다.
-3. SEO: 언어별 `<title>`, 설명, `hreflang` 상호 연결과 `x-default`, 사이트맵 i18n, 정규 주소, 열린 그래프 이미지(작업 대표 이미지에서 1200×630 빌드 시 생성), `sitemap-index.xml`, `robots.txt`, `Person`·`CreativeWork` 구조화 데이터(JSON-LD도 해시 대상).
+3. SEO: 언어별 `<title>`, 설명, `hreflang` 상호 연결과 `x-default`, 사이트맵 i18n(404, `/html/`, `/files/`, `/og/` 제외, `lastmod` 없음: 결정적인 값이 없다), 정규 주소, 열린 그래프 이미지(작업 대표 이미지에서 1200×630 JPEG을 빌드 시 `/og/<slug>.jpg`로 생성: 세로로 긴 이미지는 위쪽을 자르고, 파일마다 300KB 미만, 메타데이터 없음. 홈·목록·태그는 `/og/default.jpg`=홈 첫 대표 작업), `sitemap-index.xml`, `robots.txt`(전체 허용, `/html` 막지 않음). **JSON-LD는 넣지 않는다.** `Person`은 07번 문서가 금지하고, 저자 없는 `CreativeWork`는 얻는 것이 작은데 인라인 스크립트라 해시가 필요하다.
 4. `security.txt`, `Person` 구조화 데이터, `mailto:`는 만들지 않는다([07번](07-privacy.md)).
 
 **통과 기준**
@@ -353,14 +353,17 @@
 ## S13. 미리보기 배포와 최종 확인 🛑
 
 **할 일**
-1. Vercel에서 프로젝트를 가져온다(GitHub 앱 권한은 이 저장소 하나만). 프레임워크 Astro, 설치 명령 `pnpm install --frozen-lockfile`, Node 24.
+1. Vercel에서 프로젝트를 가져온다(GitHub 앱 권한은 이 저장소 하나만). `vercel.json`이 프레임워크 Astro, 설치 명령 `pnpm install --frozen-lockfile`, 빌드 `pnpm build`, 출력 `dist`를 정한다. 대시보드에서 따로 정해야 하는 것(문서 근거):
+   - **환경 변수 `ENABLE_EXPERIMENTAL_COREPACK=1`.** 락 파일 버전이 `9.0`이라 Vercel이 락 파일만 보면 pnpm 9 또는 10을 고른다(https://vercel.com/docs/package-managers). `packageManager: pnpm@12.18.0`을 따르게 하려면 Corepack을 켜야 한다(https://vercel.com/docs/builds/configure-a-build#corepack). 실험 기능이라 빌드 로그에서 실제 pnpm 버전(`pnpm -v`)을 확인한다. 이 값은 비밀이 아니다.
+   - **Node 버전.** `package.json`의 `engines.node`(`>=22.23.4`)가 대시보드 설정보다 우선하고, `>=22.0.0` 같은 범위는 사용 가능한 최신 메이저(현재 26.x)로 풀린다(https://vercel.com/docs/functions/runtimes/node-js/node-js-versions). Node 24로 고정하려면 `engines.node`를 `24.x`로 바꿔야 한다(결정 필요, 이 단계에서는 바꾸지 않았다). 첫 미리보기 빌드 로그에서 `node -v`를 확인한다.
 2. 환경 변수 없음(1단계). Deployment Protection은 미리보기에만 켠다.
 3. `portfolio` 브랜치를 푸시하고 미리보기 주소를 받는다. **푸시 전에 S05의 `git grep` 검사를 다시 실행한다.**
 4. 미리보기에서 점검한다.
    - 실제 휴대폰(iOS Safari, Android Chrome)과 데스크톱 3종 브라우저.
    - Lighthouse 모바일, securityheaders, SSL Labs는 도메인 연결 후.
    - 이미지 용량과 Vercel 데이터 전송량 대시보드.
-5. 방화벽 규칙을 설정한다(03번 문서 4절): 사용자 정의 규칙 3개 이내, 요율 제한 1개.
+5. 방화벽 규칙을 설정한다(03번 문서 4.3): 사용자 정의 규칙 3개 이내, 요율 제한 1개. 규칙 1(차단): Request Path starts with `/wp-` OR equals `/xmlrpc.php` OR starts with `/phpmyadmin` OR ends with `.php` → Deny.
+   - 미리보기에서 `vercel.json` 해석을 확인한다(로컬 시험이 증명하지 못하는 것, 03번 문서 4.2): `curl -sI`로 `/`, `/en/`, `/html/atom/`의 헤더(엄격한 CSP와 완화 CSP가 합쳐지지 않았는지, `X-Robots-Tag`), `/portfolio/oyedu`와 `/portfolio/1812`의 `301`과 `Location`, `/?p=1`이 한 번만 `/`로 가는지(되풀이 없음), `/wp-login.php`가 404인지.
 6. 점검 결과를 `docs/launch-checklist.md`에 기록하고 사용자에게 보고한다.
 
 **통과 기준** 04번 문서 단계 4의 완료 기준 전부. 사용자가 미리보기를 보고 승인.

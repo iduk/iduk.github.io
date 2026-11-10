@@ -5,13 +5,14 @@ import Header from '../components/Header.astro';
 import ImageColors from '../components/ImageColors.astro';
 import type { Locale } from '../lib/i18n';
 import { localeFromPath, localizedPath, stripLocale, t } from '../lib/i18n';
+import { OG_HEIGHT, OG_WIDTH } from '../lib/ogSize';
 
 interface Props {
   title: string;
   description?: string;
   locale?: Locale;
-  /** 절대 주소. 있으면 og:image와 twitter 카드를 낸다. */
-  ogImage?: string;
+  /** OG 이미지(1200x630) 경로와 alt. 있으면 og:image* 와 twitter 큰 카드를 낸다. */
+  ogImage?: { path: string; alt: string };
   ogType?: 'website' | 'article';
   /** 검색에 노출하지 않는 페이지(404). canonical·alternate·og:url도 내지 않는다. */
   noindex?: boolean;
@@ -45,7 +46,10 @@ const other: Locale = locale === 'ko' ? 'en' : 'ko';
     <meta property="og:type" content={ogType} />
     {!noindex && <meta property="og:url" content={abs(locale)} />}
     <meta property="og:site_name" content="iduk" />
-    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image" content={new URL(ogImage.path, site).href} />}
+    {ogImage && <meta property="og:image:width" content={String(OG_WIDTH)} />}
+    {ogImage && <meta property="og:image:height" content={String(OG_HEIGHT)} />}
+    {ogImage && <meta property="og:image:alt" content={ogImage.alt} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <meta property="og:locale" content={ogLocale[locale]} />
     <meta property="og:locale:alternate" content={ogLocale[other]} />

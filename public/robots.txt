@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://iduk.co.kr/sitemap-index.xml

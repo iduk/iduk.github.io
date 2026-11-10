@@ -8,7 +8,7 @@ const dist = process.env.DIST_DIR ?? join(import.meta.dirname, '../../dist');
 function htmlFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
     const full = join(dir, name);
-    // /html/* 은 Astro가 만든 페이지가 아니라 그대로 복사한 정적 데모다. 헤더 CSP는 S11(vercel.json)에서 다룬다.
+    // /html/* 은 Astro가 만든 페이지가 아니라 그대로 복사한 정적 데모다. 데모 전용 CSP는 vercel.json 헤더(vercel-config.test.ts)에서 시험한다.
     if (dir === dist && name === 'html') return [];
     if (statSync(full).isDirectory()) return htmlFiles(full);
     return name.endsWith('.html') ? [full] : [];
@@ -22,6 +22,20 @@ describe.skipIf(!existsSync(dist))('CSP covers every inline script in dist', () 
       const html = readFileSync(file, 'utf8');
       const csp = html.match(/http-equiv="content-security-policy" content="([^"]*)"/)?.[1] ?? '';
       expect(csp).toContain('script-src');
+      // security.csp.directives: 해시가 필요 없는 지시어도 meta에 들어간다. frame-ancestors는 meta에서 무시되므로 넣지 않는다.
+      const dirs = csp.split(';').map((d) => d.trim());
+      for (const d of [
+        "default-src 'self'",
+        "img-src 'self' data:",
+        "font-src 'self'",
+        "connect-src 'self'",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+      ]) {
+        expect(dirs, d).toContain(d);
+      }
+      expect(csp).not.toContain('frame-ancestors');
       const scriptSrc = csp.split(';').find((d) => d.trim().startsWith('script-src')) ?? '';
       expect(scriptSrc).not.toContain('unsafe-inline');
       const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)];

@@ -5,6 +5,7 @@ import Base from '../layouts/Base.astro';
 import type { Locale } from '../lib/i18n';
 import { localizedPath, t } from '../lib/i18n';
 import { getPublicProjects } from '../lib/projects';
+import { defaultOg } from '../lib/seo';
 
 interface Props {
   locale: Locale;
@@ -12,7 +13,12 @@ interface Props {
 const { locale } = Astro.props;
 const featured = (await getPublicProjects()).filter((p) => p.featured);
 ---
-<Base title="iduk" description={t(locale, 'home.description')} locale={locale}>
+<Base
+  title={t(locale, 'home.title')}
+  description={t(locale, 'home.description')}
+  locale={locale}
+  ogImage={await defaultOg(locale)}
+>
   <ViewTransitionNames slot="head" slugs={featured.map((p) => p.slug)} />
   <section class="hero">
     <h1 class="wordmark hero-line">iduk</h1>
