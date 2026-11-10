@@ -99,12 +99,15 @@ describe('src/content', () => {
   it('src/assets/images의 모든 파일은 images.json에 항목이 있다', () => {
     const base = join(root, 'src/assets/images');
     const onDisk: string[] = [];
+    // Finder가 만드는 .DS_Store만 무시한다. 그 밖의 낯선 파일은 그대로 걸러낸다.
     for (const d of readdirSync(base, { withFileTypes: true })) {
+      if (d.name === '.DS_Store') continue;
       if (!d.isDirectory()) {
         onDisk.push(d.name);
         continue;
       }
-      for (const f of readdirSync(join(base, d.name))) onDisk.push(`${d.name}/${f}`);
+      for (const f of readdirSync(join(base, d.name)))
+        if (f !== '.DS_Store') onDisk.push(`${d.name}/${f}`);
     }
     const expected = Object.keys(images).map((k) => `${k}.webp`);
     expect(onDisk.sort()).toEqual(expected.sort());

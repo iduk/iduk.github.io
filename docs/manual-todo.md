@@ -55,10 +55,10 @@
 
 - 외부 링크는 원문 그대로 본문 `text` 블록에 남겼다. 오래된 주소는 사라졌거나 다른 주인이 쓸 수 있으니 공개 전에 열어 보고 살아 있는 것만 둔다.
   - `coinghost-landing-web`: http://coinghost.io/
-  - `telecare-service-app`: http://family.livoncare.com
+  - `telecare-service-app`: http://family.livoncare.com/
   - `telecare-service-app`: https://play.google.com/store/apps/details?id=com.ionicframework.livonapp397686
   - `smartband-app-ui`: https://play.google.com/store/apps/details?id=kr.hidea.smartband
-  - `chinese-community`: http://www.meilismd.com
+  - `chinese-community`: http://www.meilismd.com/
 - `online-ad-company-responsive-web`: 본문 기간이 2017.9로 적혀 있으나 글 작성일은 2016-04이다. 원문(2019년 버전 포함)이 모두 2017.9라 그대로 두었다.
 - `exhibition-booth-design`: 이미지 이름의 `w275`, `w375` 뜻을 알 수 없어 alt에 그대로 적었다.
 - `jejuair-mobile` 의 이미지 키는 옛 슬러그 그대로 `1812/...` 이다(`src/assets/images/1812/`). 글 슬러그와 달라도 키로만 참조하므로 동작에는 문제 없다.

@@ -61,6 +61,15 @@ function hrefsOf(html: string): string[] {
   return [...html.matchAll(/<a\b[^>]*\bhref="([^"]*)"/g)].map((m) => m[1] as string);
 }
 
+/** sanitizeBody가 http(s) 주소를 URL 직렬화 형태(`http://a.com` → `http://a.com/`)로 바꾸므로 비교 전에 맞춘다. */
+function normalizeHref(href: string): string {
+  try {
+    return /^https?:\/\//i.test(href) ? new URL(href).href : href;
+  } catch {
+    return href;
+  }
+}
+
 function periodStartKey(start: string): number {
   const [y, m] = start.split('-');
   return Number(y) * 100 + Number(m ?? 0);
@@ -163,7 +172,7 @@ function convertPost(
         blocks.push({ type: 'demo', demo: demo.slug });
       } else {
         sourceHrefs.add(t.href);
-        if (!text || !hrefsOf(text.ko).includes(t.href)) {
+        if (!text || !hrefsOf(text.ko).map(normalizeHref).includes(normalizeHref(t.href))) {
           fail(`${post.slug}: link not carried into text block: ${t.href}`);
         }
       }
