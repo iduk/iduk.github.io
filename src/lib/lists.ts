@@ -37,6 +37,11 @@ export function tagStaticPaths<T extends { id: string }>(projects: Project[], ta
   }));
 }
 
+/** `{name}`, `{n}` 자리표시자를 채운 태그 페이지 설명. */
+export function tagDescription(template: string, name: string, count: number): string {
+  return template.replace('{name}', name).replace('{n}', String(count));
+}
+
 /** 목록 행과 상세 대표 이미지를 잇는 view-transition 이름과 그 클래스. */
 export function transitionName(slug: string): string {
   return `work-${slug}`;

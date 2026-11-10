@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   groupByYear,
   projectsByTag,
+  tagDescription,
   tagStaticPaths,
   transitionCss,
   usedTags,
@@ -52,6 +53,15 @@ describe('transitionCss', () => {
   it('슬러그마다 클래스 규칙을 낸다', () => {
     expect(transitionCss(['a', 'b-c'])).toBe(
       '.vt-a{view-transition-name:work-a}.vt-b-c{view-transition-name:work-b-c}',
+    );
+  });
+});
+
+describe('tagDescription', () => {
+  it('이름과 개수를 채운다', () => {
+    expect(tagDescription('{name} 작업 {n}개', '웹', 3)).toBe('웹 작업 3개');
+    expect(tagDescription('Projects tagged {name}: {n}', 'Web', 12)).toBe(
+      'Projects tagged Web: 12',
     );
   });
 });

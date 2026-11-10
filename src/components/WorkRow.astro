@@ -44,10 +44,11 @@ const cover = project.cover;
         </>
       ) : (
         <>
+          {/* 행 전체가 제목을 포함한 링크이므로 이미지는 장식이다(이름이 두 번 읽히지 않게). */}
           <span class:list={['cover', transitionClass(project.slug)]}>
             <Picture
               image={cover.image}
-              alt={cover.alt[locale]}
+              alt=""
               sizes="100vw"
               priority={priority}
             />
