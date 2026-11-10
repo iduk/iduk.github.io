@@ -82,15 +82,46 @@ test.describe('모션 줄이기(reduce)', () => {
     expect(await movingAnimations(page)).toEqual([]);
   });
 
-  test('교차 문서 전환은 이동 없이 120ms 이하 투명도만', async ({ page, browserName }) => {
-    test.skip(browserName !== 'chromium', '교차 문서 전환은 Chromium 기준');
-    const info = await captureTransition(page, '/', `a[href="/work/${featured[0].slug}/"]`);
+  const reduceTransition = async (page: Page, from: string, link: string) => {
+    const info = await captureTransition(page, from, link);
     expect(info.hasTransition).toBe(true);
+    const pseudos = info.anims.map((a) => a.pseudo ?? '');
+    // 공유 요소 이름이 꺼져 있어야 한다: work-* 그룹·이미지 쌍이 없고, 새 문서에 이름도 없다.
+    expect(
+      pseudos.filter((x) => x.includes('work-')),
+      'reduce에서 공유 요소 의사 요소가 있으면 옛/새 크기의 이미지가 겹쳐 보인다',
+    ).toEqual([]);
+    expect(info.names).toEqual([]);
+    // 남는 것은 root의 투명도 교차뿐이고 120ms 이하다.
+    expect(pseudos).toContain('::view-transition-old(root)');
+    expect(pseudos).toContain('::view-transition-new(root)');
     for (const a of info.anims.filter((x) => x.pseudo?.startsWith('::view-transition'))) {
       const moves = a.keys.filter((k) => MOTION_PROPS.some((p) => k === p));
       expect(moves, `${a.pseudo} ${a.keys}`).toEqual([]);
       expect(a.duration, a.pseudo ?? '').toBeLessThanOrEqual(120);
     }
+  };
+
+  test('홈 → 상세: root 교차 페이드만(공유 요소 없음, 120ms 이하)', async ({
+    page,
+    browserName,
+  }) => {
+    test.skip(browserName !== 'chromium', '교차 문서 전환은 Chromium 기준');
+    await reduceTransition(page, '/', `a[href="/work/${featured[0].slug}/"]`);
+  });
+
+  test('목록 → 상세: root 교차 페이드만(공유 요소 없음, 120ms 이하)', async ({
+    browser,
+    browserName,
+  }) => {
+    test.skip(browserName !== 'chromium', '교차 문서 전환은 Chromium 기준');
+    const ctx = await browser.newContext({
+      viewport: { width: 1440, height: 900 },
+      reducedMotion: 'reduce',
+    });
+    const page = await ctx.newPage();
+    await reduceTransition(page, '/work/', `a[href="/work/${projects[3].slug}/"]`);
+    await ctx.close();
   });
 });
 
@@ -121,20 +152,31 @@ async function captureTransition(page: Page, from: string, linkSelector: string)
         .map((e) => getComputedStyle(e).viewTransitionName)
         .filter((n) => n && n !== 'none' && n !== 'root');
   });
-  await page.goto(from);
-  const link = page.locator(linkSelector).first();
-  await link.scrollIntoViewIfNeeded();
-  await link.hover();
-  // 첫 문서의 pagereveal 기록을 지우고, 이동한 문서의 기록만 읽는다.
-  await page.evaluate(() => sessionStorage.removeItem('pr'));
-  await Promise.all([page.waitForURL((u) => u.pathname !== from), link.click()]);
-  await page.waitForFunction(() => {
-    const v = sessionStorage.getItem('pr');
-    return (
-      !!v && location.pathname !== '/' && (!JSON.parse(v).hasTransition || 'anims' in JSON.parse(v))
-    );
-  });
-  const raw = JSON.parse((await page.evaluate(() => sessionStorage.getItem('pr'))) ?? '{}');
+  // Chromium은 드물게(부하가 큰 실행에서 약 100회 중 1회) 전환을 건너뛰고 일반 이동을 한다.
+  // 옵트인(@view-transition)이 빠졌다면 매번 건너뛰므로, 몇 번 다시 시도해도 이 시험은 여전히 실패한다.
+  const attempts = 3;
+  let raw: { hasTransition?: boolean; anims?: unknown[]; names?: unknown[] } = {};
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    await page.goto(from);
+    // 나가는 문서가 아직 첫 렌더(pagereveal)를 끝내지 못했으면 브라우저는 전환을 건너뛴다. 끝날 때까지 기다린다.
+    await page.waitForFunction(() => sessionStorage.getItem('pr') !== null);
+    const link = page.locator(linkSelector).first();
+    await link.scrollIntoViewIfNeeded();
+    await link.hover();
+    // 첫 문서의 pagereveal 기록을 지우고, 이동한 문서의 기록만 읽는다.
+    await page.evaluate(() => sessionStorage.removeItem('pr'));
+    await Promise.all([page.waitForURL((u) => u.pathname !== from), link.click()]);
+    await page.waitForFunction((fromPath) => {
+      const v = sessionStorage.getItem('pr');
+      return (
+        !!v &&
+        location.pathname !== fromPath &&
+        (!JSON.parse(v).hasTransition || 'anims' in JSON.parse(v))
+      );
+    }, from);
+    raw = JSON.parse((await page.evaluate(() => sessionStorage.getItem('pr'))) ?? '{}');
+    if (raw.hasTransition) break;
+  }
   return {
     hasTransition: !!raw.hasTransition,
     anims: (raw.anims ?? []) as { pseudo: string | null; duration: number; keys: string[] }[],
@@ -149,6 +191,53 @@ const uniqueNames = (page: Page) =>
       .filter((n) => n && n !== 'none' && n !== 'root');
     return names;
   });
+
+test.describe('인쇄', () => {
+  for (const path of ['/', '/work/', `/work/${sample}/`]) {
+    test(`${path}: 인쇄 미디어에서는 숨김·이동·마스크가 없다`, async ({ page }) => {
+      await page.goto(path);
+      await page.emulateMedia({ media: 'print' });
+      const bad = await page.evaluate(() =>
+        [...document.querySelectorAll('.reveal, .hero-line, .zoom .pic')]
+          .map((e) => {
+            const c = getComputedStyle(e);
+            return {
+              cls: e.className,
+              opacity: c.opacity,
+              translate: c.translate,
+              scale: c.scale,
+              clip: c.clipPath,
+              anim: c.animationName,
+            };
+          })
+          .filter(
+            (s) =>
+              s.opacity !== '1' ||
+              s.translate !== 'none' ||
+              s.scale !== 'none' ||
+              s.clip !== 'none' ||
+              s.anim !== 'none',
+          ),
+      );
+      expect(bad).toEqual([]);
+      expect(await page.locator('.reveal, .hero-line').count()).toBeGreaterThan(0);
+    });
+  }
+
+  test('화면 미디어에서는 접힌 곳 아래 .reveal이 실제로 숨어 있다(인쇄 시험이 의미 있음)', async ({
+    page,
+    browserName,
+  }) => {
+    test.skip(browserName !== 'chromium', 'ViewTimeline은 Chromium 기준');
+    await page.goto('/');
+    const hidden = await page.evaluate(
+      () =>
+        [...document.querySelectorAll('.reveal')].filter((e) => getComputedStyle(e).opacity !== '1')
+          .length,
+    );
+    expect(hidden).toBeGreaterThan(0);
+  });
+});
 
 /** 모든 엔진: 스크롤 등장 요소는 보이는 위치에서는 항상 완전히 보인다(미지원이면 처음부터). */
 test.describe('모든 엔진: 내용이 항상 보인다', () => {
@@ -244,84 +333,133 @@ test.describe('모션 허용(Chromium)', () => {
     }
   });
 
+  const viewports = [
+    { name: '1280', width: 1280, height: 720 },
+    { name: '360', width: 360, height: 740 },
+  ];
   for (const { loc, prefix } of locales) {
-    test(`${loc} LCP 대표 이미지는 애니메이션되지 않는다(홈·상세)`, async ({ page }) => {
-      for (const path of [`${prefix}/`, `${prefix}/work/${sample}/`]) {
-        await page.goto(path);
-        const res = await page.evaluate(async () => {
-          const lcp = await new Promise<PerformanceEntry | undefined>((resolve) => {
-            new PerformanceObserver((l) => resolve(l.getEntries().at(-1))).observe({
-              type: 'largest-contentful-paint',
-              buffered: true,
-            });
-            setTimeout(() => resolve(undefined), 3000);
-          });
-          const el = (lcp as (PerformanceEntry & { element?: Element }) | undefined)?.element;
-          const covers = [
-            document.querySelector('[data-work-row] .pic, figure.cover .pic'),
-            el,
-          ].filter(Boolean) as Element[];
-          return covers.map((c) => {
+    for (const vp of viewports) {
+      test(`${loc} ${vp.name}px: 최종 LCP 요소는 애니메이션 밖의 이미지다(홈·상세)`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width: vp.width, height: vp.height });
+        await page.addInitScript(() => {
+          const w = window as unknown as { __lcp: (PerformanceEntry & { element?: Element })[] };
+          w.__lcp = [];
+          new PerformanceObserver((l) => {
+            for (const e of l.getEntries())
+              w.__lcp.push(e as PerformanceEntry & { element?: Element });
+          }).observe({ type: 'largest-contentful-paint', buffered: true });
+        });
+        for (const path of [`${prefix}/`, `${prefix}/work/${sample}/`]) {
+          await page.goto(path);
+          await page.waitForLoadState('load');
+          await page.waitForTimeout(1500); // 이미지·히어로 애니메이션이 끝나도록
+          // 사용자 입력이 오면 브라우저는 LCP 보고를 멈춘다. 그때까지의 마지막 항목이 최종이다.
+          await page.mouse.click(1, 1);
+          const res = await page.evaluate(() => {
+            const w = window as unknown as { __lcp: (PerformanceEntry & { element?: Element })[] };
+            const el = w.__lcp.at(-1)?.element;
+            if (!el) return null;
             const chain: Element[] = [];
-            for (let n: Element | null = c; n; n = n.parentElement) chain.push(n);
+            for (let n: Element | null = el; n; n = n.parentElement) chain.push(n);
             return {
-              tag: c.tagName,
-              inReveal: !!c.closest('.reveal'),
-              animated: chain.some((n) => n.getAnimations().length > 0),
+              entries: w.__lcp.length,
+              tag: el.tagName,
+              cls: el.className,
+              inMotion: !!el.closest('.reveal, .hero-line'),
+              animations: chain.flatMap((n) => n.getAnimations().map((a) => a.playState)),
+              inCover: !!el.closest('[data-work-row] .cover, figure.cover'),
+            };
+          });
+          expect(res, `${path}: LCP 항목 없음`).not.toBeNull();
+          expect(res?.tag, `${path}: LCP가 이미지가 아님 (${res?.cls})`).toBe('IMG');
+          expect(res?.inCover, path).toBe(true);
+          expect(res?.inMotion, path).toBe(false);
+          expect(res?.animations, path).toEqual([]);
+        }
+      });
+    }
+  }
+
+  for (const rate of [1, 4]) {
+    test(`히어로 줄: 800ms 열림(CPU ${rate}x), 한 번만, clip-path가 사라지고 다시 열리지 않는다`, async ({
+      page,
+      context,
+    }) => {
+      if (rate > 1) {
+        const cdp = await context.newCDPSession(page);
+        await cdp.send('Emulation.setCPUThrottlingRate', { rate });
+      }
+      // 문서 파싱 직후(애니메이션이 끝나기 전)의 값을 기록하고, 이후 animationstart 횟수를 센다.
+      await page.addInitScript(() => {
+        const w = window as unknown as { __hero: unknown; __starts: string[] };
+        w.__starts = [];
+        addEventListener(
+          'animationstart',
+          (e) => w.__starts.push((e as AnimationEvent).animationName),
+          true,
+        );
+        document.addEventListener('DOMContentLoaded', () => {
+          w.__hero = [...document.querySelectorAll('.hero-line')].map((e) => {
+            const c = getComputedStyle(e);
+            return {
+              name: c.animationName,
+              duration: c.animationDuration,
+              delay: c.animationDelay,
+              iterations: c.animationIterationCount,
+              fill: c.animationFillMode,
+              ease: c.animationTimingFunction,
             };
           });
         });
-        expect(res.length).toBeGreaterThan(0);
-        for (const r of res) {
-          if (r.tag === 'IMG') {
-            expect(r.inReveal, path).toBe(false);
-            expect(r.animated, path).toBe(false);
-          }
-        }
-        // 첫 대표 이미지는 보이는 이미지 후보로서 LCP여야 한다.
-        expect(
-          res.some((r) => r.tag === 'IMG'),
-          `${path} LCP가 이미지가 아님`,
-        ).toBe(true);
-      }
+      });
+      await page.goto('/', { waitUntil: 'commit' });
+      await page.waitForFunction(() => !!(window as unknown as { __hero?: unknown }).__hero);
+      const hero = await page.evaluate(() => (window as unknown as { __hero: unknown }).__hero);
+      expect(hero).toEqual([
+        {
+          name: 'hero-open',
+          duration: '0.8s',
+          delay: '0s',
+          iterations: '1',
+          fill: 'backwards',
+          ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        },
+        {
+          name: 'hero-open',
+          duration: '0.8s',
+          delay: '0.12s',
+          iterations: '1',
+          fill: 'backwards',
+          ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        },
+      ]);
+      // 끝날 때까지 기다린다(애니메이션이 사라지면 끝난 것).
+      await page.waitForFunction(
+        () =>
+          [...document.querySelectorAll('.hero-line')].every((e) => e.getAnimations().length === 0),
+        undefined,
+        { timeout: 10_000 },
+      );
+      await page.waitForTimeout(1200); // 다시 시작하지 않는지 지켜본다
+      const after = await page.evaluate(() => ({
+        starts: (window as unknown as { __starts: string[] }).__starts.filter(
+          (n) => n === 'hero-open',
+        ),
+        clip: [...document.querySelectorAll('.hero-line')].map((e) => getComputedStyle(e).clipPath),
+        running: [...document.querySelectorAll('.hero-line')].flatMap((e) => e.getAnimations())
+          .length,
+      }));
+      expect(after.starts).toHaveLength(2);
+      expect(after.clip).toEqual(['none', 'none']);
+      expect(after.running).toBe(0);
+      // 본문에 실제 텍스트로 남고 이중으로 읽히지 않는다
+      await expect(page.locator('h1')).toHaveText('iduk');
+      await expect(page.locator('.hero-line[aria-hidden]')).toHaveCount(0);
+      await expect(page.locator('.hero-line')).toHaveCount(2);
     });
   }
-
-  test('히어로 줄은 800ms 열림, 한 번만, 끝나면 멈춘다', async ({ page }) => {
-    await page.goto('/');
-    const res = await page.evaluate(async () => {
-      const heroRunning = () =>
-        [...document.querySelectorAll('.hero-line')].flatMap((e) =>
-          e.getAnimations().filter((a) => a.playState === 'running'),
-        ).length;
-      const anims = [...document.querySelectorAll('.hero-line')].flatMap((e) =>
-        e.getAnimations().map((a) => ({
-          name: (a as CSSAnimation).animationName,
-          timing: a.effect?.getTiming(),
-          anim: a,
-        })),
-      );
-      const t0 = performance.now();
-      await Promise.all(anims.map((a) => a.anim.finished));
-      return {
-        count: anims.length,
-        names: anims.map((a) => a.name),
-        iterations: anims.map((a) => a.timing?.iterations),
-        durations: anims.map((a) => a.timing?.duration),
-        waited: performance.now() - t0,
-        after: heroRunning(),
-      };
-    });
-    expect(res.count).toBeGreaterThanOrEqual(2);
-    expect(res.durations.every((d) => d === 800)).toBe(true);
-    expect(res.iterations.every((i) => i === 1)).toBe(true);
-    expect(res.waited).toBeLessThan(1100);
-    expect(res.after).toBe(0);
-    // 본문에 실제 텍스트로 남고 이중으로 읽히지 않는다
-    await expect(page.locator('h1')).toHaveText('iduk');
-    await expect(page.locator('.hero-line[aria-hidden]')).toHaveCount(0);
-    await expect(page.locator('.hero-line')).toHaveCount(2);
-  });
 
   test('뒤로 가기(bfcache)로 돌아와도 히어로가 다시 열리지 않는다', async ({ page }) => {
     await page.goto('/');
@@ -389,22 +527,25 @@ test.describe('모션 허용(Chromium)', () => {
     );
   });
 
-  test('hover:none 환경에서는 확대 규칙이 없다', async ({ browser }) => {
+  test('hover:none 터치 환경에서는 탭해서 :hover가 걸려도 확대되지 않는다', async ({ browser }) => {
     const ctx = await browser.newContext({
       viewport: { width: 390, height: 800 },
       isMobile: true,
       hasTouch: true,
     });
     const page = await ctx.newPage();
-    await page.goto('/');
+    // 링크가 아닌 상세 페이지의 이미지를 탭한다(홈 커버는 탭하면 이동한다).
+    await page.goto(`/work/${sample}/`);
     expect(await page.evaluate(() => matchMedia('(hover: none)').matches)).toBe(true);
-    const img = page.locator('.zoom .pic').first();
+    const img = page.locator('figure.zoom .pic').first();
     await img.scrollIntoViewIfNeeded();
-    expect(await img.evaluate((e) => getComputedStyle(e).transitionProperty)).not.toContain(
-      'scale',
-    );
     await img.tap();
-    await page.waitForTimeout(800).catch(() => {});
+    // 탭은 :hover를 남긴다. 그런데도 확대되지 않아야 시험이 의미가 있다.
+    expect(await img.evaluate((e) => e.parentElement?.closest('.zoom')?.matches(':hover'))).toBe(
+      true,
+    );
+    await page.waitForTimeout(800);
+    expect(await img.evaluate((e) => getComputedStyle(e).scale)).toBe('none');
     await ctx.close();
   });
 

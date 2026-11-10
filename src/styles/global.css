@@ -217,7 +217,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* 이동·크기 변화 없이 120ms 이하의 투명도 교차만 */
+  /*
+   * 공유 요소 이름을 끈다. 이름이 남으면 그룹 이동 없이 옛 크기의 이미지와 새 이미지가 겹쳐 보인다.
+   * 이름이 없으면 root 하나의 교차 페이드만 남는다. 이동·크기 변화 없이 120ms 이하 투명도만.
+   * :root를 붙여 명시도로 .vt-<슬러그> 규칙을 이긴다(그 규칙이 나중에 와도).
+   * 대상: 홈·목록 커버, 목록 호버 미리보기, 상세 커버 모두 .vt-<슬러그> 클래스를 쓴다.
+   */
+  :root [class*="vt-"] {
+    view-transition-name: none;
+  }
+  /* root 그룹의 기본 크기·위치 애니메이션도 없앤다. */
   ::view-transition-group(*) {
     animation: none;
   }
@@ -225,5 +234,19 @@
   ::view-transition-new(*) {
     animation-duration: 120ms;
     animation-timing-function: linear;
+  }
+}
+
+/* 인쇄: 스크린 모션의 숨김·이동·확대가 인쇄물에 남지 않게 한다. */
+@media print {
+  .reveal,
+  .hero-line,
+  .zoom .pic {
+    animation: none !important;
+    transition: none !important;
+    translate: none !important;
+    scale: none !important;
+    opacity: 1 !important;
+    clip-path: none !important;
   }
 }
