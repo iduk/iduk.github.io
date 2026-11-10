@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import { t } from '../lib/i18n';
+---
+<Base title="404 | iduk" locale="ko" noindex basePath="/">
+  <section class="notfound">
+    <p class="code" aria-hidden="true">404</p>
+    <h1 class="title">
+      <span lang="ko">{t('ko', 'notfound.title')}</span>
+      <span lang="en">{t('en', 'notfound.title')}</span>
+    </h1>
+    <p class="body" lang="ko">{t('ko', 'notfound.body')}</p>
+    <p class="body" lang="en">{t('en', 'notfound.body')}</p>
+    <p class="links">
+      <a href="/" hreflang="ko" lang="ko">{t('ko', 'notfound.home')} <span aria-hidden="true">→</span></a>
+      <a href="/en/" hreflang="en" lang="en">{t('en', 'notfound.home')} <span aria-hidden="true">→</span></a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    padding: clamp(2rem, 1rem + 5vw, 6rem) var(--gutter) var(--section-gap);
+  }
+  .code {
+    color: var(--color-accent);
+    font-size: var(--fs-hero);
+    font-weight: var(--fw-hero);
+    line-height: var(--lh-hero);
+    letter-spacing: var(--ls-hero);
+  }
+  .title {
+    margin-top: 1.5rem;
+    font-size: var(--fs-title);
+    font-weight: var(--fw-title);
+    line-height: var(--lh-title);
+    letter-spacing: var(--ls-title);
+    overflow-wrap: anywhere;
+  }
+  .title span {
+    display: block;
+  }
+  .body {
+    margin-top: 1.5rem;
+    max-width: var(--measure);
+    color: var(--color-muted);
+  }
+  .body + .body {
+    margin-top: 0.25rem;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    margin-top: 3rem;
+    font-size: var(--fs-sub);
+    font-weight: var(--fw-sub);
+    line-height: var(--lh-sub);
+    letter-spacing: var(--ls-sub);
+  }
+  .links a {
+    display: inline-block;
+    min-height: var(--tap-min);
+    text-decoration: none;
+  }
+  .links a:hover,
+  .links a:focus-visible {
+    color: var(--color-accent);
+  }
+</style>

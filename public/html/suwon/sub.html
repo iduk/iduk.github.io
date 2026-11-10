@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title>수원 상수도 관망관리 시스템</title>
+        <!-- The jQuery library -->
+        <script src="js/egovframework/cmmn/jquery.min.js"></script>
+        <script src="js/egovframework/cmmn/trirand/i18n/grid.locale-en.js"></script>
+        <script src="js/egovframework/cmmn/trirand/jquery.jqGrid.js"></script>
+        <!-- Webfonts -->
+        <link rel="stylesheet" href="css/egovframework/cmmn/fonts.css">
+        <link rel="stylesheet" href="css/egovframework/cmmn/glyphicons.css">
+        <link rel="stylesheet" href="css/egovframework/cmmn/fontawesome/5.4.1/all.min.css">
+        <!-- Css -->
+        <link rel="stylesheet" type="text/css" media="screen" href="css/egovframework/cmmn/bootstrap/4.1.3/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/egovframework/cmmn/bootstrap/4.1.3/bootstrap-datetimepicker.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/egovframework/cmmn/non-responsive.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/egovframework/cmmn/trirand/ui.jqgrid-bootstrap.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/egovframework/cmmn/highcharts/highcharts.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/egovframework/cmmn/custom.css" />
+        <!-- [if lt IE 9]> <script src="js/egovframework/cmmn/html5shiv.js"></script> <script src="js/egovframework/cmmn/html5shiv-printshiv.js"></script> <![endif] -->
+    </head>
+
+
+    <body>
+        <div id="all">
+            <!-- Navigation -->
+            <nav id="sidebar">
+                <ul id="navigation" class="navigation">
+                    <div class="sidebar-header">
+                        <h3><a href="/" class="logo" title="수원 상수도 고도화 시스템"></a></h3>
+                    </div>
+                    <div class="sidebar-toggle-btn">
+                        <button type="button" id="sidebarCollapse" class="rounded-circle">
+                            <i class="far fa-stream"></i>
+                        </button>
+                    </div>
+                    <li><a href="index.html"><i class="far fa-monitor-heart-rate"></i><span class="navText">실시간
+                                모니터링</span></a></li>
+                    <li id="menuA">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-target="#subA" aria-controls="subA"
+                            aria-expanded="true">
+                            <i class="far fa-sort-amount-down"></i><span class="navText">데이터 조회</span>
+                        </a>
+                        <ul id="subA" class="collapse levelList" aria-labelledby="menuA" data-parent="#navigation">
+                            <li><a href="sub.html"><span class="navText">유량/수압 조회</span></a></li>
+                            <li><a href=""><span class="navText">유량/수압 일별조회</span></a></li>
+                            <li><a href=""><span class="navText">수질조회</span></a></li>
+                            <li><a href=""><span class="navText">요금부과량조회</span></a></li>
+                            <li><a href=""><span class="navText">요금부과량관리</span></a></li>
+                        </ul>
+                    </li>
+                    <li id="menuB">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-target="#subB" aria-controls="subB"
+                            aria-expanded="false">
+                            <i class="far fa-chart-pie-alt"></i><span class="navText">데이터 분석</span>
+                        </a>
+                        <ul id="subB" class="collapse levelList" aria-labelledby="menuB" data-parent="#navigation">
+                            <li><a href="#"><span class="navText">유수율 분석</span></a></li>
+                            <li id="sub-depthB-1">
+                                <a href="#" class="collapsed" role="button" data-toggle="collapse"
+                                    data-target="#subB-1" aria-controls="subB-1" aria-expanded="false">
+                                    <span class="navText">손실량 분석</span>
+                                </a>
+                                <ul id="subB-1" class="collapse levelList" aria-labelledby="sub-depthB-1" data-parent="#subB">
+                                    <li><a href="#"><span class="navText">총괄수량수지 분석</span></a></li>
+                                    <li><a href="#"><span class="navText">야간최소유량 분석</span></a></li>
+                                    <li><a href="#"><span class="navText">단계시험</span></a></li>
+                                    <li><a href="#"><span class="navText">누수량 종합 분석</span></a></li>
+                                    <li><a href="#"><span class="navText">송/배수관 누수분석</span></a></li>
+                                    <li><a href="#"><span class="navText">누수 감시</span></a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#"><span class="navText">수압 분석</span></a></li>
+                            <li><a href="#"><span class="navText">패턴 분석</span></a></li>
+                            <li><a href="#"><span class="navText">사용량 예측</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="menuC">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-target="#subC" aria-controls="subC"
+                            aria-expanded="false">
+                            <i class="far fa-shield-check"></i><span class="navText">상수도 상태 진단</span>
+                        </a>
+                        <ul id="subC" class="collapse levelList" aria-labelledby="menuC" data-parent="#navigation">
+                            <li><a href="#"><span class="navText">추세분석</span></a></li>
+                            <li><a href="#"><span class="navText">관망진단</span></a></li>
+                            <li><a href="#"><span class="navText">집중관리 블록 우선순위 조회</span></a></li>
+                        </ul>
+                    </li>
+                    <li id="menuD">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-target="#subD" aria-controls="subD"
+                            aria-expanded="false">
+                            <i class="far fa-sliders-h-square"></i><span class="navText">상수도 운영 지원</span>
+                        </a>
+                        <ul id="subD" class="collapse levelList" aria-labelledby="menuD" data-parent="#navigation">
+                            <li><a href="#"><span class="navText">단수 제수변 추적</span></a></li>
+                            <li><a href="#"><span class="navText">수압 제어값 산정</span></a></li>
+                            <li id="sub-depthD-1">
+                                <a class="collapsed" role="button" data-toggle="collapse" data-target="#subD-1"
+                                    aria-controls="subD-1" aria-expanded="false">
+                                    <span class="navText">운영모의 기능화</span>
+                                </a>
+                                <ul id="subD-1" class="collapse levelList" aria-labelledby="sub-depthD-1" data-parent="#subD">
+                                    <li><a href="#"><span class="navText">모델 관리자</span></a></li>
+                                    <li><a href="#"><span class="navText">유량/수압현황 모의</span></a></li>
+                                    <li><a href="#"><span class="navText">우회경로 모의</span></a></li>
+                                    <li><a href="#"><span class="navText">정체구간 모의</span></a></li>
+                                    <li><a href="#"><span class="navText">잔류염소 모의</span></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li id="menuE">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-target="#subE" aria-controls="subE"
+                            aria-expanded="false">
+                            <i class="far fa-cogs"></i><span class="navText">환경설정</span>
+                        </a>
+                        <ul id="subE" class="collapse levelList" aria-labelledby="menuE" data-parent="#navigation">
+                            <li id="sub-depthE-1">
+                                <a class="collapsed" role="button" data-toggle="collapse" data-target="#subE-1"
+                                    aria-controls="subE-1" aria-expanded="false">
+                                    <span class="navText">블록정보</span>
+                                </a>
+                                <ul id="subE-1" class="collapse levelList" aria-labelledby="sub-depthE-1" data-parent="#subE">
+                                    <li><a href="#"><span class="navText">블록 설정</span></a></li>
+                                    <li><a href="#"><span class="navText">기초정보 등록</span></a></li>
+                                    <li><a href="#"><span class="navText">블록정보 조회</span></a></li>
+                                    <li><a href="#"><span class="navText">가압장 설정</span></a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#"><span class="navText">블록경계관리</span></a></li>
+                            <li><a href="#"><span class="navText">경보 및 SMS 설정</span></a></li>
+                            <li id="sub-depthE-2">
+                                <a class="collapsed" role="button" data-toggle="collapse" data-target="#subE-2"
+                                    aria-controls="subE-2" aria-expanded="false">
+                                    <span class="navText">비정상 데이터 설정</span>
+                                </a>
+                                <ul id="subE-2" class="collapse levelList" aria-labelledby="sub-depthE-2" data-parent="#subE">
+                                    <li><a href="#"><span class="navText">확정성필터링</span></a></li>
+                                    <li><a href="#"><span class="navText">판정성필터링</span></a></li>
+                                    <li><a href="#"><span class="navText">임의 필터링(유량수압)</span></a></li>
+                                    <li><a href="#"><span class="navText">임의필터링(수질)</span></a></li>
+                                </ul>
+                            </li>
+                            <li id="sub-depthE-3">
+                                <a class="collapsed" role="button" data-toggle="collapse" data-target="#subE-3"
+                                    aria-controls="subE-3" aria-expanded="false">
+                                    <span class="navText">오프라인 데이터 등록</span>
+                                </a>
+                                <ul id="subE-3" class="collapse levelList" aria-labelledby="sub-depthE-3" data-parent="#subE">
+                                    <li><a href="#"><span class="navText">유량수압</span></a></li>
+                                    <li><a href="#"><span class="navText">수질</span></a></li>
+                                    <li><a class="disabled" href="#"><span class="navText">GIS 데이터</span></a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#"><span class="navText">적산유량초기화</span></a></li>
+                            <li><a href="#"><span class="navText">이벤트 기록조회</span></a></li>
+                            <li><a href="#"><span class="navText">데이터 정규화</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- etc Link -->
+                <ul class="list-unstyled etcArea">
+                    <li>
+                        <button type="button" class="btn btn-primary btn-block">
+                            <i class="far fa-globe-asia"></i>
+                            <span class="pl-2">업무포털로 이동</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            <!-- Block Navigation -->
+            <nav class="block-navigation">
+                <div class="block-nav-title">
+                    <h4>단계별 블록 선택</h4>
+                </div>
+                <section class="blockPanel-wrapper">
+                    <article class="blockPanel">
+                        <!-- #Block-1 -->
+                        <div class="blockPanel-heading">
+                            <a data-toggle="collapse" aria-expanded="false" href="#blockNav1">
+                                <span class="badge badge-primary mr-2">대</span><span class="blockName">광역 2단계</span>
+                            </a>
+                        </div>
+                        <!-- #Block-2 -->
+                        <ul id="blockNav1" class="list-group panel-collapse collapse">
+                            <li>
+                                <a data-toggle="collapse" aria-expanded="false" href="#blockNav2-1">
+                                    <span class="badge badge-warning mr-2">중</span><span class="blockName">일림 배수지</span>
+                                </a>
+                            </li>
+                            <!-- #Block-3 -->
+                            <ul class="collapse" id="blockNav2-1">
+                                <li>
+                                    <a href=""><span class="badge badge-success mr-2">소</span><span class="blockName">일림
+                                            1</span></a>
+                                </li>
+                                <li>
+                                    <a href=""><span class="badge badge-success mr-2">소</span><span class="blockName">일림
+                                            2</span></a>
+                                </li>
+                            </ul>
+                        </ul>
+                    </article>
+                    <article class="blockPanel">
+                        <!-- #Block-1 -->
+                        <div class="blockPanel-heading">
+                            <a data-toggle="collapse" aria-expanded="false" href="#blockNav2" class="warning">
+                                <span class="badge badge-primary mr-2">대</span><span class="blockName">광역 3단계</span>
+                            </a>
+                        </div>
+                        <!-- #Block-2 -->
+                        <ul id="blockNav2" class="panel-collapse collapse in">
+                            <li>
+                                <a data-toggle="collapse" aria-expanded="false" href="#blockNav2-2">
+                                    <span class="badge badge-warning mr-2">중</span><span class="blockName">일림 배수지</span>
+                                </a>
+                            </li>
+                            <!-- #Block-3 -->
+                            <ul class="collapse" id="blockNav2-2">
+                                <li>
+                                    <a href=""><span class="badge badge-success mr-2">소</span><span class="blockName">일림
+                                            1</span></a>
+                                </li>
+                                <li>
+                                    <a href=""><span class="badge badge-success mr-2">소</span><span class="blockName">일림
+                                            2</span></a>
+                                </li>
+                            </ul>
+                        </ul>
+                    </article>
+                    <article class="blockPanel">
+                        <!-- #Block-1 -->
+                        <div class="blockPanel-heading">
+                            <a data-toggle="collapse" aria-expanded="false" href="#blockNav3">
+                                <span class="badge badge-primary mr-2">대</span><span class="blockName">광역 4단계</span>
+                            </a>
+                        </div>
+                        <!-- #Block-2 -->
+                        <ul id="blockNav3" class="panel-collapse collapse in">
+                            <li>
+                                <a data-toggle="collapse" aria-expanded="false" href="#blockNav2-3">
+                                    <span class="badge badge-warning mr-2">중</span><span class="blockName">일림 배수지</span>
+                                </a>
+                            </li>
+                            <!-- #Block-3 -->
+                            <ul class="collapse" id="blockNav2-3">
+                                <li>
+                                    <a href="">
+                                        <span class="badge badge-success mr-2">소</span><span class="blockName">일림 1</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="">
+                                        <span class="badge badge-success mr-2">소</span><span class="blockName">일림 2</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </ul>
+                    </article>
+                    <article class="blockPanel">
+                        <!-- #Block-1 -->
+                        <div class="blockPanel-heading">
+                            <a data-toggle="collapse" aria-expanded="false" href="#blockNav4">
+                                <span class="badge badge-primary mr-2">대</span><span class="blockName">광역 5단계 영통분기</span>
+                            </a>
+                        </div>
+                        <!-- #Block-2 -->
+                        <ul id="blockNav4" class="panel-collapse collapse">
+                            <li>
+                                <a data-toggle="collapse" aria-expanded="false" href="#blockNav2-4">
+                                    <span class="badge badge-warning mr-2">중</span><span class="blockName">일림 배수지</span>
+                                </a>
+                            </li>
+                            <!-- #Block-3 -->
+                            <ul class="collapse" id="blockNav2-4">
+                                <li>
+                                    <a href="">
+                                        <span class="badge badge-success mr-2">소</span><span class="blockName">일림 1</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="">
+                                        <span class="badge badge-success mr-2">소</span><span class="blockName">일림 2</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </ul>
+                    </article>
+                    <article class="blockPanel">
+                        <!-- #Block-1 -->
+                        <div class="blockPanel-heading">
+                            <a data-toggle="collapse" aria-expanded="false" href="#blockNav5" class="warning">
+                                <!-- (!)Warning Mark Class -->
+                                <span class="badge badge-primary mr-2">대</span><span class="blockName">광역 5단계 하동분기</span>
+                            </a>
+                        </div>
+                        <!-- #Block-2 -->
+                        <ul id="blockNav5" class="panel-collapse collapse">
+                            <li>
+                                <a data-toggle="collapse" aria-expanded="false" href="#blockNav2-5" class="warning">
+                                    <span class="badge badge-warning mr-2">중</span><span class="blockName">일림 배수지</span>
+                                </a>
+                            </li>
+                            <!-- #Block-3 -->
+                            <ul class="collapse" id="blockNav2-5">
+                                <li>
+                                    <a href="">
+                                        <span class="badge badge-success mr-2">소</span><span class="blockName">일림 1</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="warning">
+                                        <span class="badge badge-success mr-2">소</span><span class="blockName">일림 2</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </ul>
+                    </article>
+                </section>
+
+                <article class="term-search py-4 px-4">
+                    <form>
+                        <h6 class="mb-3">기간 조회</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="oneWeek" id="oneWeek" value="" checked="checked">
+                            <label class="form-check-label" for="oneWeek">최근 일주일</label>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="radio" name="userSelect" id="userSelect" value="">
+                            <label class="form-check-label" for="userSelect">사용자 선택</label>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="datepicker"><small class="text-secondary">날짜 선택</small></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><small class="input-group-text bg-white text-size-14"><i
+                                            class="far fa-calendar-check text-secondary"></i></small></div>
+                                <input type="text" class="form-control datepicker" placeholder="시작일 선택" />
+                            </div>
+                            <div class="input-group mt-2">
+                                <div class="input-group-prepend"><small class="input-group-text bg-white text-size-14"><i
+                                            class="far fa-calendar-check text-secondary"></i></small></div>
+                                <input type="text" class="form-control datepicker" placeholder="종료일 선택" />
+                            </div>
+                        </div>
+                        <div><button type="button" class="btn btn-block btn-success">조회하기</button></div>
+                    </form>
+                </article>
+
+            </nav>
+            <!-- //Block Nav -->
+
+            <!-- ### Pages Content -->
+            <main id="pages">
+                <!-- Inner Header -->
+                <header class="container-fluid innerHeader">
+                    <div class="row py-2 px-2">
+                        <div class="col-9">
+                            <h5>수원 상수도 관망관리 시스템</h5>
+                            <nav aria-label="breadcrumb" class="display-inline">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">관망관리시스템</a></li>
+                                    <li class="breadcrumb-item"><a href="#">두번째 메뉴명</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">현재 페이지</li>
+                                </ol>
+                            </nav>
+                        </div>
+                        <div class="col-3 d-flex justify-content-end align-items-center">
+                            <div class="userArea pr-3">
+                                <span class="userImg pr-2"><img class="rounded-circle" src="/html/_placeholder.svg"
+                                        alt=""></span>
+                                <span class="userName">Administator</span>
+                            </div>
+                            <a href="" class="btn btn-link" role="button">
+                                <i class="far fa-sign-out"></i>
+                            </a>
+                        </div>
+                    </div>
+                </header>
+                <article class="container-fluid serviceHeader">
+                    <div class="row">
+                        <div class="col">
+                            <ul class="nav headerTabs" id="pills-tab" role="tablist">
+                                <li><a class="active" id="data-view" data-toggle="pill" href="#data-view-tab" role="tab"
+                                        aria-controls="data-view" aria-selected="true">데이터 보기</a></li>
+                                <li><a id="gis-view" data-toggle="pill" href="#gis-view-tab" role="tab" aria-controls="gis-view"
+                                        aria-selected="false">GIS 보기</a></li>
+                                <li><a id="system-view" data-toggle="pill" href="#system-view-tab" role="tab"
+                                        aria-controls="system-view" aria-selected="false">계통도 보기</a></li>
+                            </ul>
+                        </div>
+                        <div class="col pt-1 text-right">
+                            <button type="button" class="btn btn-primary">
+                                <span>Excel 저장</span>
+                                <i class="far fa-inbox-in pl-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- tab Contents -->
+                <section class="tab-content">
+                    <!-- 데이터보기 -->
+                    <div class="tab-pane fade show active" id="data-view-tab" role="tabpanel" aria-labelledby="data-view-tab">
+                        <article class="container">
+                            <div class="my-3">
+                                <nav aria-label="breadcrumb" class="display-inline">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><span class="badge badge-primary mr-1">대</span><span class="blockName">광역
+                                                5단계 하동분기</span></li>
+                                        <li class="breadcrumb-item"><span class="badge badge-warning mr-1">중</span><span class="blockName">일림
+                                                배수지</span></li>
+                                        <li class="breadcrumb-item active" aria-current="page"><span class="badge badge-success mr-1">소</span><span
+                                                class="blockName">일림 2</span></li>
+                                    </ol>
+                                </nav>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-9">
+                                    <article class="card mb-3" style="height:500px;">
+                                        <div class="card-header bg-white">
+                                            <div class="row">
+                                                <div class="col-6 d-flex align-items-center">유량 및 수압 데이터</div>
+                                                <div class="col-6 text-right"><button type="button" class="btn btn-sm btn-outline-primary">보조수압보기</button></div>
+                                            </div>
+                                        </div>
+                                        <div class="table-body">
+                                            <table id="data-fpvData"></table>
+                                        </div>
+                                    </article>
+                                    <article class="card mb-3" style="height:260px;">
+                                        <div class="card-header bg-white">
+                                            <div class="row">
+                                                <div class="col-6 d-flex align-items-center">유량 및 수압 그래프</div>
+                                                <div class="col-6 form-inline justify-content-end">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="checkbox" id="check-yr"
+                                                            checked>
+                                                        <label class="form-check-label" for="check-yr"><small>유량</small></label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="checkbox" id="check-sa">
+                                                        <label class="form-check-label" for="check-sa"><small>수압</small></label>
+                                                    </div>
+                                                    <div class="selectbox ml-4">
+                                                        <select class="form-control">
+                                                            <option selected="select">Option 1</option>
+                                                            <option>Option 2</option>
+                                                            <option>Option 3</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <!-- 이 위치에 그래프 삽입 -->
+                                            <div class="chart-wrapper">
+                                                <div id="highchart-container" style="height:200px;"></div>
+                                            </div>
+                                            <!-- // -->
+                                        </div>
+                                    </article>
+                                </div>
+                                <div class="col-3">
+                                    <article class="card mb-3">
+                                        <div class="card-header d-flex align-items-center">계측 정보</div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <h6>유량계</h6>
+                                                    <h6>수압계</h6>
+                                                </div>
+                                                <div class="col-8 text-right text-musted">
+                                                    <p class="m-0">초음파식 (Nivus)</p>
+                                                    <p class="m-0">다이아램 (Nivus)</p>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 pt-2 border-top">
+                                                <dl class="mb-0 text-secondary">
+                                                    <dt class="mb-2"><i class="fa fa-info-circle mr-2"></i>판정성필터링 경계치 판단 기준</dt>
+                                                    <dd class="mb-0 row">
+                                                        <span class="col-5"><small class="text-primary text-size-10 pr-2">●</small>유량(L/min)</span>
+                                                        <span class="col-7 text-right">0.00 ≤ data ≤ 99,999.00</span>
+                                                    </dd>
+                                                    <dd class="mb-0 row">
+                                                        <span class="col-5"><small class="text-success text-size-10 pr-2">●</small>수압(kgf/cm²)</span>
+                                                        <span class="col-7 text-right">0.00 ≤ data ≤ 100.00</span>
+                                                    </dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                    </article>
+                                    <article class="card mb-3">
+                                        <div class="card-header">데이터 통계정보</div>
+                                        <div class="card-body text-secondary">
+                                            <h6 class="pb-2">데이터 통계</h6>
+                                            <div class="table-overflow">
+                                                <table class="table table-bordered table-sm table-hover table-overflow">
+                                                    <colgroup>
+                                                        <col width="100">
+                                                        <col width="">
+                                                        <col width="">
+                                                        <col width="">
+                                                    </colgroup>
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center" colspan="2">구분</th>
+                                                            <th>유효 데이터<br>
+                                                                <small>(유효)</small>
+                                                            </th>
+                                                            <th>무효 데이터<br>
+                                                                <small>(유효+유효)</small>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td rowspan="3" class="text-center">유량(L/min)</td>
+                                                            <td class="text-center">평균</td>
+                                                            <td class="text-right">0.926</td>
+                                                            <td class="text-right">0.926</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">최대</td>
+                                                            <td class="text-right">0.926</td>
+                                                            <td class="text-right">0.926</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">최소</td>
+                                                            <td class="text-right">0.926</td>
+                                                            <td class="text-right">0.926</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td rowspan="3" class="text-center">수압(kgf/cm²)</td>
+                                                            <td class="text-center">평균</td>
+                                                            <td class="text-right">0.926</td>
+                                                            <td class="text-right">0.926</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">최대</td>
+                                                            <td class="text-right">0.926</td>
+                                                            <td class="text-right">0.926</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">최소</td>
+                                                            <td class="text-right">0.926</td>
+                                                            <td class="text-right">0.926</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="card-body text-secondary">
+                                            <h6 class="pb-2">데이터 요약</h6>
+                                            <table id="data-summary"></table>
+                                        </div>
+                                        <div class="card-body text-secondary">
+                                            <h6 class="pb-2">데이터 그래프(건수)</h6>
+                                            <div class="bg-primary text-white" style="width:100%; height:110px; text-align:center; line-height:160px;">
+                                                <p>그래프 영역</p>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                            <!-- //row -->
+                        </article>
+                        <!-- // .container -->
+                    </div>
+
+                    <!-- GIS보기 -->
+                    <div class="tab-pane fade full-h-contents" id="gis-view-tab" aria-labelledby="gis-view-tab" role="tabpanel" style="top:97px;">
+                        <div id="gisWrap" class="container-fluid">
+                            <!-- GIS Toolbar -->
+                            <header class="row gis-toolbar">
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-primary"><i class="far fa-search-plus"></i></button>
+                                    <button type="button" class="btn btn-primary"><i class="far fa-search-minus"></i></button>
+                                    <button type="button" class="btn btn-primary"><i class="far fa-hand-paper"></i></button>
+                                    <button type="button" class="btn btn-primary"><i class="far fa-globe-asia"></i></button>
+                                    <button type="button" class="btn btn-primary"><i class="far fa-expand-arrows-alt"></i></button>
+                                    <button type="button" class="btn btn-primary"><i class="far fa-compress-alt"></i></button>
+                                    <button type="button" class="btn btn-primary"><i class="far fa-arrow-left"></i></button>
+                                    <button type="button" class="btn btn-primary"><i class="far fa-arrow-right"></i></button>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">드롭다운</button>
+                                        <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">항목링크1</a>
+                                        <a class="dropdown-item" href="#">항목링크2</a>
+                                        <a class="dropdown-item" href="#">항목링크3</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">항목링크4</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </header>
+
+                            <!-- gis Layer widget (지점 선택시 위치별 레이어)-->
+                            <div class="layer-widget" style="top:300px;left:300px;z-index: 10;">
+                                <article class="card layer-card shadow-lg">
+                                    <div class="layer-header text-white bg-dark">
+                                        <div class="float-left">일림1</div>
+                                    </div>
+                                    <div class="p-2">
+                                        <table class="table table-borderless table-sm">
+                                            <colgroup>
+                                                <col style="width: 70px;">
+                                                <col>
+                                                <col style="width: 50px;">
+                                            </colgroup>
+                                            <tbody>
+                                                <tr>
+                                                    <th>평균유량</th>
+                                                    <td class="text-right text-primary"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                    <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>평균수압</th>
+                                                    <td class="text-right text-primary"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                    <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- gis Layer widget (지점 선택시 위치별 레이어)-->
+                            <div class="layer-widget" style="top:500px;left:500px;z-index: 10;">
+                                <article class="card layer-card shadow-lg">
+                                    <div class="layer-header text-white bg-dark">
+                                        <div class="float-left">일림2</div>
+                                    </div>
+                                    <div class="p-2">
+                                        <table class="table table-borderless table-sm">
+                                            <colgroup>
+                                                <col style="width: 70px;">
+                                                <col>
+                                                <col style="width: 50px;">
+                                            </colgroup>
+                                            <tbody>
+                                                <tr>
+                                                    <th>평균유량</th>
+                                                    <td class="text-right text-primary"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                    <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>평균수압</th>
+                                                    <td class="text-right text-primary"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                    <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                        <!-- // #gisWrap -->
+                    </div>
+                    
+                    <!-- 계통도보기 -->
+                    <div class="tab-pane fade full-h-contents" id="system-view-tab" aria-labelledby="system-view-tab" role="tabpanel" style="top:97px;">
+                        <div id="gisWrap" class="container-fluid">
+                            
+                            <!-- gis Layer widget 중블록 -->
+                            <div class="layer-widget" style="top:35%;left:50%; margin-top: -100px; margin-left: -100px; z-index: 10;">
+                                <article class="card layer-card shadow-lg mb-3">
+                                    <div class="layer-header text-white bg-warning">중블록명</div>
+                                    <div class="p-2">
+                                        <table class="table table-borderless table-sm">
+                                            <colgroup>
+                                                <col style="width: 70px;">
+                                                <col>
+                                                <col style="width: 50px;">
+                                            </colgroup>
+                                            <tbody>
+                                                <tr>
+                                                    <th>평균유량</th>
+                                                    <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                    <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>평균수압</th>
+                                                    <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                    <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </article>
+                                <article class="card layer-card shadow-lg">
+                                    <div class="p-2">
+                                        <table class="table table-borderless table-sm">
+                                            <colgroup>
+                                                <col style="width: 70px;">
+                                                <col>
+                                                <col style="width: 50px;">
+                                            </colgroup>
+                                            <tbody>
+                                                <tr>
+                                                    <th>평균손실량</th>
+                                                    <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                    <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>탄소배출량</th>
+                                                    <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                    <td class="text-right"><small class="text-muted">TCO2</small></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- 소블록 합계 -->
+                            <article class="gis-bottom-fixed">
+                                <div class="titlebar">소블록 합계<strong class="px-2 text-success">995</strong><small class="text-muted">m3/d</small></div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div class="col-2">
+                                        <!-- gis Layer 소블록 -->
+                                        <article class="card layer-card shadow-sm">
+                                            <div class="layer-header text-white bg-success">소블록명</div>
+                                            <div class="p-2">
+                                                <table class="table table-borderless table-sm">
+                                                    <colgroup>
+                                                        <col style="width: 70px;">
+                                                        <col>
+                                                        <col style="width: 50px;">
+                                                    </colgroup>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>평균유량</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">100</h5></td>
+                                                            <td class="text-right"><small class="text-muted">m3/d</small></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>평균수압</th>
+                                                            <td class="text-right"><h5 class="m-0 font-weight-bold">5.00</h5></td>
+                                                            <td class="text-right"><small class="text-muted">kgf/cm2</small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </article>
+                                    </div>
+                                </div>
+                            </article>                            
+                            <!-- /.row -->
+
+                        </div>
+                        <!-- // #gisWrap -->
+                    </div>
+                </section>
+                <!-- // tab Content End -->
+
+            </main>
+		</div>
+		<!-- // end -->
+
+
+        <!-- Bootstrap Js -->
+        <script src="js/egovframework/cmmn/momentjs/2.22.2/moment.min.js"></script>
+        <script src="js/egovframework/cmmn/bootstrap/4.1.3/bootstrap.min.js"></script>
+        <!-- Datetime Picker Js -->
+        <script src="js/egovframework/cmmn/bootstrap/4.1.3/bootstrap.bundle.min.js"></script>
+        <script src="js/egovframework/cmmn/bootstrap/4.1.3/bootstrap-datetimepicker.min.js"></script>
+        <script src="/html/suwon/js/locales/bootstrap-datetimepicker.ko.js" charset="utf-8"></script>
+
+        <!-- highcharts -->
+        <script src="js/egovframework/cmmn/highcharts/highcharts.src.js"></script>
+        <script src="js/egovframework/cmmn/highcharts/sample.js"></script>
+        <script src="js/egovframework/cmmn/trirand/data-list.js"></script>
+        <!-- Util -->
+        <script src="js/egovframework/cmmn/util.js"></script>
+        <!-- IE + HTML5 Supports  -->
+        <!-- <script src="js/egovframework/cmmn/modernizr/3.6.0/modernizr-custom.js"></script> -->
+
+    </body>
+
+</html>

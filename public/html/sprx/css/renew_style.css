@@ -1,0 +1,91 @@
+/***** common *****/
+
+img { border:none }
+html, body{ margin:0 ; padding:0; }
+table { margin:0; padding:0; border:0; border-spacing:0 }
+body, tr, td, select, input, div, ul, li, p, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, dt, dd, table, th, td, form, textarea, center, option, pre, blockquote {
+font-family: 'NanumGothic', '³ª´®°íµñ', "Dotum", "µ¸¿ò","Gulim", "±¼¸²", "Arial",;
+font-size:12px;
+line-height:150%;
+color:#555;
+text-decoration:none;
+border :0;
+}
+ul, li { padding:0; margin:0 }
+
+li{ list-style:none }
+a { text-decoration:none; cursor:pointer; }
+a:link, a:visited, a:active { color:#555; }
+a:hover { color:#0b7fe1 }
+
+/* ³ª´®ÆùÆ® */
+@font-face{font-family:NG;src:local(¡Ø),url(NanumGothic.woff) format('woff')}
+
+
+/* renew */
+
+.searchtext{width:125px; height:25px;   border-top:1px solid #ff468f; border-bottom:1px solid #ff468f;}
+body{text-align: center;}
+
+
+#renew_wrap{width:1000px; margin:0 auto; }
+#header{width:100%; margin:0 auto;}
+#header .header_wrap{ width:100%;}
+#header .top{width:1000px; margin: 0 auto; height:80px; text-align:center;}
+
+#header .top .top_left{width:240px; height:80px; text-align:left; float:left;}
+#header .top .logo{width:172px; height:29px; float:left; margin:20px 0 0 193px;}
+#header .top .top_right{float:right; width:270px;}
+#header .top .top_right ul li{float:left; padding:0 0 0 12px; margin:5px 0 0 0;}
+#header .top .top_search{float:right; margin:8px 0 0 0; }
+#header .top .top_search ul li{float:left; padding:0;}
+#header .gnb{clear:both; width:100%; height:45px; background-color:#ff468f; margin:0 auto; text-align:center;}
+#header .gnb .wrap{width:1000px;margin:0 auto;}
+#header .gnb li{float:left;}
+
+#contents{width:1000px; } 
+#contents .visual_gnb{width:1000px;float:left;display:block; position:relative; top:-42px; left:0; margin:0 0 -22px 0;}
+#contents .visual_gnb ul li{float:left;}
+#contents .visual_gnb ul li a{float:left; width:249px;vertical-align:middle; text-align:center; background: #000;filter:alpha(opacity=50); opacity:0.5; -moz-opacity:0.5; height:42px; font-size:11px; color:#fff; line-height:42px; border-right:1px solid #fff;}
+#contents .visual_gnb ul li a:hover{float:left; width:249px;vertical-align:middle; text-align:center; background: #ff1b7c;filter:alpha(opacity=100); opacity:1; -moz-opacity:1; height:42px; font-size:11px; color:#fff; line-height:42px; border-right:1px solid #fff;}
+#contents .days{width:1000px;}
+#contents .bestpro{width:750px; margin:20px 0 0 0; text-align:left; float:left;}
+#contents .maintitle{margin:0 0 15px 0;}
+#contents .notice{width:240px; margin:20px 0 0 10px; text-align:left; float:left;}
+#contents .notice .maintitle{width:240px; padding:0 0 15px 0; float:left; border-bottom:1px solid #ccc;}
+#contents .more{float:right; margin:-42px 0 0 0;}
+#contents .notice .post{width:230px; padding:0 10px; margin:-5px 0 0 0; clear:both; float:left; }
+#contents .post li {padding:2px 0; font-size:11px; color:#999;}
+#contents .post_bold{font-weight:bold; color:#888;}
+#contents .faq{width:240px; margin:20px 0 0 10px; text-align:left; float:left;}
+#contents .faq .maintitle{width:240px; padding:0 0 15px 0; float:left; border-bottom:1px solid #ccc;}
+#contents .more{float:right; margin:-42px 0 0 0;}
+#contents .faq .post{width:230px; padding:0 10px; margin:-5px 0 0 0; clear:both; float:left; }
+#contents .post li {padding:2px 0; font-size:11px; color:#999;}
+#contents .theimg{clear:both;padding:15px 0;}
+#contents .mainbanner{width:1000px;}
+#contents .mainbanner ul li{float:left;}
+#contents .mainbanner .arrow{padding-top:100px;}
+#contents .e_contents{padding:0;}
+#contents .e_contents .get {width:328px; margin:20px 8px 0 0; text-align:left; float:left;}
+#contents .e_contents .event {width:328px; margin:20px 8px 0 0; text-align:left; float:left;}
+#contents .e_contents .consulting {width:328px; margin:16px 0 0 0; text-align:left; float:left; }
+#contents .b_contents{margin:10px 0 0 0; padding:15px 0 30px 0; }
+#contents .banner{width:328px; float:left; padding:0 8px 8px 0;}
+#contents .banner_no{width:328px; float:left; padding:0px 0 8px 0;}
+
+#footer{width:100%;clear:both; padding:20px 0; margin:50px 0 0 0; border-top:1px solid #ccc;}
+#footer .foot_wrap{width:1000px; margin:0 auto;}
+#footer .foot_logo{width:146px; text-align:left; height:85px; float:left; padding:10px 30px 0 0;}
+
+#footer .foot_gnb .bar{float:left; padding:0 12px 8px 12px; background-image:url('../img/bar.png'); background-position:right top; background-repeat:no-repeat; }
+#footer .foot_gnb .no{float:left; padding:0 12px 8px 12px;  }
+#footer .add{float:left; padding:0 0 0 12px;}
+#footer .license{float:right; margin:-25px 0 0 0}
+
+
+
+
+
+
+

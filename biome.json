@@ -5,6 +5,8 @@
     "includes": [
       "**",
       "!**/public/fonts",
+      "!**/public/html",
+      "!**/public/files",
       "!**/src/styles/fonts.css",
       "!**/pnpm-lock.yaml",
       "!**/src/content",

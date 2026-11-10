@@ -1,0 +1,67 @@
+/* ---------------- Kor ---------------- */
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 100;
+    src: local('Noto Sans KR Thin'), local('NotoSansKR-Thin');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Noto Sans KR Light'), local('NotoSansKR-Light'),
+    url(../../../webfonts/egovframework/cmmn/NotoSansKR-Light-Hestia.woff) format('woff'),
+    url(../../../webfonts/egovframework/cmmn/NotoSansKR-Light-Hestia.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Noto Sans KR Regular'), local('NotoSansKR-Regular'),
+    url(../../../webfonts/egovframework/cmmn/NotoSansKR-Regular-Hestia.woff) format('woff'),
+    url(../../../webfonts/egovframework/cmmn/NotoSansKR-Regular-Hestia.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Noto Sans KR Medium'), local('NotoSansKR-Medium'),
+    url(../../../webfonts/egovframework/cmmn/NotoSansKR-Medium-Hestia.woff) format('woff'),
+    url(../../../webfonts/egovframework/cmmn/NotoSansKR-Medium-Hestia.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Noto Sans KR Bold'), local('NotoSansKR-Bold'),
+    url(../../../webfonts/egovframework/cmmn/NotoSansKR-Bold-Hestia.woff) format('woff'),
+    url(../../../webfonts/egovframework/cmmn/NotoSansKR-Bold-Hestia.otf) format('opentype');
+}
+
+
+
+/* ---------------- Eng ---------------- */
+@font-face {
+  font-family: 'Play';
+  font-style: normal;
+  font-weight: 400;
+   /* IE9 Compat Modes */
+  src: local('Play Regular'), local('Play-Regular'), /* IE6-IE8 */
+       url('../../../webfonts/egovframework/cmmn/play-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../../../webfonts/egovframework/cmmn/play-regular.woff') format('woff'), /* Modern Browsers */
+       url('../../../webfonts/egovframework/cmmn/play-regular.ttf') format('truetype'), /* Safari, Android; /* Legacy iOS */
+}
+@font-face {
+  font-family: 'Play';
+  font-style: normal;
+  font-weight: 700;
+   /* IE9 Compat Modes */
+  src: local('Play Bold'), local('Play-Bold'), /* IE6-IE8 */
+       url('../../../webfonts/egovframework/cmmn/play-Bold.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../../../webfonts/egovframework/cmmn/play-Bold.woff') format('woff'), /* Modern Browsers */
+       url('../../../webfonts/egovframework/cmmn/play-Bold.ttf') format('truetype'), /* Safari, Android; /* Legacy iOS */
+}

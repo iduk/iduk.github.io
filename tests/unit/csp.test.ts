@@ -8,6 +8,8 @@ const dist = process.env.DIST_DIR ?? join(import.meta.dirname, '../../dist');
 function htmlFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
     const full = join(dir, name);
+    // /html/* 은 Astro가 만든 페이지가 아니라 그대로 복사한 정적 데모다. 헤더 CSP는 S11(vercel.json)에서 다룬다.
+    if (dir === dist && name === 'html') return [];
     if (statSync(full).isDirectory()) return htmlFiles(full);
     return name.endsWith('.html') ? [full] : [];
   });

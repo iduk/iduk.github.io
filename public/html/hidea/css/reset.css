@@ -1,0 +1,133 @@
+
+
+@import 'https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700';
+@import 'font.css';
+
+
+html {
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+}
+body {
+	font-family: 'Roboto','Noto Sans KR', sans-serif;
+	font-weight: 100;
+	font-size: 14px;
+    word-break: keep-all;
+}
+*, *:before, *:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+input, textarea {
+	-webkit-appearance: none;
+	-webkit-border-radius: 0;
+}
+
+button, html input[type="button"],/* 1 */ input[type="reset"], input[type="submit"] {
+	-webkit-appearance: button;
+	cursor: pointer;
+ *overflow:visible;
+}
+
+input:focus::-webkit-input-placeholder,
+textarea:focus::-webkit-input-placeholder { /* WebKit browsers */
+  color:transparent;
+}
+
+input:focus:-moz-placeholder,
+textarea:focus:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color:transparent;
+}
+
+input:focus::-moz-placeholder,
+textarea:focus::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color:transparent;
+}
+
+input:focus:-ms-input-placeholder,
+textarea:focus:-ms-input-placeholder { /* Internet Explorer 10+ */
+  color:transparent;
+}
+
+body, img,.commentys-form input[type="text"],.commentys-form input[type="email"],.commentys-form input[type="url"],.commentys-form textarea {
+	transition: all .2s linear;
+	-o-transition: all .2s linear;
+	-moz-transition: all .2s linear;
+	-webkit-transition: all .2s linear;
+}
+
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video, input, main {
+
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	vertical-align: baseline;
+	border: 0;
+	outline: 0;
+	line-height:135%;
+	letter-spacing: -1px;
+}
+
+section, article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, img, main {
+	display: block;
+}
+
+audio, canvas, video {
+	display: inline-block;
+	*display:inline;
+	*zoom:1
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+
+.clear {
+	clear: both;
+	line-height: 0;
+	height: 0;
+}
+
+ul,ol,dl {
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+
+a {
+	text-decoration: none;
+	outline: none;
+	color: #010101;
+	transition-delay: 0s;
+	transition-duration: 0.6s;
+	transition-property: all;
+	transition-timing-function: ease;
+}
+
+a:focus, img:focus, button:focus, .btn:focus {outline: none;}
+::-moz-selection {color:#fff;text-shadow:none;}
+::selection {color: #fff;text-shadow: none;}
+@font-face {font-family: 'Roboto','Noto Sans KR', sans-serif;}
+
+
+
+h1,h2,h3,h4,h5,h6 {
+	font-weight:100;
+}
+
+/* Safari 9.0+ (iOS Only) */
+@supports (-webkit-text-size-adjust:none) and (not (-ms-accelerator:true))
+and (not (-moz-appearance:none))
+{
+
+��.safari_only {
+����color:#0000FF;
+����background-color:#CCCCCC;
+��}
+
+}

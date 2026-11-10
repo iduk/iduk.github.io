@@ -13,12 +13,16 @@ interface Props {
   /** 절대 주소. 있으면 og:image와 twitter 카드를 낸다. */
   ogImage?: string;
   ogType?: 'website' | 'article';
+  /** 검색에 노출하지 않는 페이지(404). canonical·alternate·og:url도 내지 않는다. */
+  noindex?: boolean;
+  /** 언어 전환 링크가 가리킬 경로. 기본은 현재 경로(404는 `/`). */
+  basePath?: string;
 }
 
-const { title, description, ogImage, ogType = 'website' } = Astro.props;
+const { title, description, ogImage, ogType = 'website', noindex = false } = Astro.props;
 const pathname = Astro.url.pathname;
 const locale: Locale = Astro.props.locale ?? localeFromPath(pathname);
-const basePath = stripLocale(pathname);
+const basePath = Astro.props.basePath ?? stripLocale(pathname);
 const site = Astro.site ?? new URL('https://iduk.co.kr');
 const abs = (loc: Locale) => new URL(localizedPath(loc, basePath), site).href;
 const ogLocale = { ko: 'ko_KR', en: 'en_US' } as const;
@@ -31,14 +35,15 @@ const other: Locale = locale === 'ko' ? 'en' : 'ko';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
-    <link rel="canonical" href={abs(locale)} />
-    <link rel="alternate" hreflang="ko" href={abs('ko')} />
-    <link rel="alternate" hreflang="en" href={abs('en')} />
-    <link rel="alternate" hreflang="x-default" href={abs('ko')} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {!noindex && <link rel="canonical" href={abs(locale)} />}
+    {!noindex && <link rel="alternate" hreflang="ko" href={abs('ko')} />}
+    {!noindex && <link rel="alternate" hreflang="en" href={abs('en')} />}
+    {!noindex && <link rel="alternate" hreflang="x-default" href={abs('ko')} />}
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:type" content={ogType} />
-    <meta property="og:url" content={abs(locale)} />
+    {!noindex && <meta property="og:url" content={abs(locale)} />}
     <meta property="og:site_name" content="iduk" />
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />

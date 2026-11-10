@@ -106,7 +106,7 @@ iduk.github.io/
 │  └─ styles/                 토큰, 글꼴
 ├─ public/
 │  ├─ html/                   기존 HTML 데모 4개 (메일·전화는 예시 값으로 교체, 07번 문서)
-│  ├─ files/                  PDF
+│  ├─ files/                  PDF (눈으로 검토한 파일만, 현재 없음)
 │  ├─ fonts/                  Pretendard 서브셋
 │  └─ robots.txt
 ├─ astro.config.mjs

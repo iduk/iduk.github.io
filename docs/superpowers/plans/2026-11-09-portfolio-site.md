@@ -29,7 +29,7 @@
 1. 360px 폭에서 긴 영문 제목이 목록 행, 이전·다음 링크, 히어로에서 잘리거나 가로 스크롤을 만든다. → Task 7, 11의 Playwright 검사.
 2. 영문 번역이 비어 있거나 초안 표시가 남은 글이 빌드를 통과한다. → Task 4 스키마 테스트, Task 11 CI 검사.
 3. 한글 파일명(NFC/NFD 혼재)과 이름이 겹치는 이미지가 누락되거나 덮어써진다. → Task 3 테스트.
-4. 비공개 글이나 접속 정보(`옛서버호스트`, `sftp`)가 변환 결과에 섞인다. → Task 4, 8, 11의 검사.
+4. 비공개 글이나 접속 정보(옛 서버 호스트 이름, `sftp`)가 변환 결과에 섞인다. → Task 4, 8, 11의 검사.
 5. 세로 8000px이 넘는 캡처가 WebP 한계(16383px)나 메모리 제한에서 실패한다. → Task 3 테스트.
 6. 자바스크립트를 끈 상태에서 내비게이션·태그 필터·언어 전환이 동작하지 않는다. → Task 7 검사.
 
@@ -198,7 +198,7 @@ tests/                      Vitest 단위, Playwright e2e
 
 - [ ] **Step 1:** 실패하는 테스트: 업체 메일·`02-XXXX-XXXX` 형태가 교체된다, `010-1234-1234`는 그대로, 교체 개수가 보고된다.
 - [ ] **Step 2:** 실행해서 실패 확인.
-- [ ] **Step 3:** `copy-demos.ts`: `.DS_Store`, `.vscode`, `*.map`, `.git` 제외하고 복사한 뒤 텍스트 파일(`html/css/js`)에 `sanitizeDemoText` 적용. 교체 보고서는 저장소 밖에 쓴다. 복사 후 `옛서버호스트`, `sftp`가 없는지 검사. PDF 3개는 파일명을 ASCII로 하고 작성자·회사 속성을 제거.
+- [ ] **Step 3:** `copy-demos.ts`: `.DS_Store`, `.vscode`, `*.map`, `.git` 제외하고 복사한 뒤 텍스트 파일(`html/css/js`)에 `sanitizeDemoText` 적용. 교체 보고서는 저장소 밖에 쓴다. 복사 후 옛 서버 호스트 이름(패턴은 저장소 밖 비공개 목록)과 `sftp`가 없는지 검사. PDF 3개는 파일명을 ASCII로 하고 작성자·회사 속성을 제거.
 - [ ] **Step 4:** 404는 한 페이지에 한글·영문 안내와 홈 링크.
 - [ ] **Step 5:** 검증: `/html/*` 모든 페이지가 200이고 깨진 내부 링크 0(링크 검사). **작업 상세 페이지의 데모 링크(`/html/atom/`, `/html/hidea/`)가 실제로 200인지 포함**(Task 5에서 404로 남겨 둠). 접속 정보 문자열 0. 데모 속 사라진 외부 주소 목록을 보고(대체 여부는 사용자 결정).
 - [ ] **Step 6:** 커밋 `S09: 404, 데모, PDF`.
@@ -237,7 +237,7 @@ tests/                      Vitest 단위, Playwright e2e
 
 - [ ] **Step 1:** 실패하는 테스트: 메일 형태 문자열이 있는 임시 파일을 넣으면 `check-privacy`가 1을 돌려준다(검사 자체의 시험). `status: draft-translation`이 있으면 공개 전 검사 모드가 실패한다.
 - [ ] **Step 2:** 실행해서 실패 확인.
-- [ ] **Step 3:** `check-privacy`: `docs/07` 6절 항목(메일, 전화, `/Users/`, `gmail|naver|kakao|옛서버호스트|sftp|옛계정ID`, `dist`의 `mailto:|tel:`, 이미지 GPS, 프로덕션 소스맵). `docs/`는 메일·전화·`/Users/` 패턴만 검사하고(`@scope/패키지` 표기는 허용 목록), `옛서버호스트|sftp|옛계정ID` 같은 키워드는 `src/`, `public/`, `dist/`에서만 검사한다(문서가 설명 목적으로 언급함). **dist의 모든 내부 `href`가 실제 파일로 해석되는지 검사**(데모 링크 포함), axe(두 언어 전 페이지 위반 0), 360/768/1280/1920 뷰포트 가로 스크롤 없음, 링크 검사, Lighthouse CI(모바일 95, JS·CSS·글꼴 예산). CI는 `permissions: contents: read`, 외부 액션은 커밋 SHA 고정, `--frozen-lockfile`. 주간 은폐 검사: 일반 방문자 헤더로 두 번 요청해 본문이 같은지와 허용 목록 밖 스크립트 주소를 비교.
+- [ ] **Step 3:** `check-privacy`: `docs/07` 6절 항목(메일, 전화, `/Users/`, `gmail|naver|kakao|sftp`, 그리고 옛 서버 호스트 이름·옛 계정 ID는 리터럴이 아니라 저장소 밖 비공개 목록 `$IDUK_PRIVATE_PATTERNS`(줄마다 정규식)에서 읽은 패턴으로, `dist`의 `mailto:|tel:`, 이미지 GPS, 프로덕션 소스맵). `docs/`는 메일·전화·`/Users/` 패턴만 검사하고(`@scope/패키지` 표기는 허용 목록), 비공개 패턴 목록은 문서를 포함한 저장소 전체와 `dist/`에 적용한다(문서에도 리터럴을 두지 않는다). **dist의 모든 내부 `href`가 실제 파일로 해석되는지 검사**(데모 링크 포함), axe(두 언어 전 페이지 위반 0), 360/768/1280/1920 뷰포트 가로 스크롤 없음, 링크 검사, Lighthouse CI(모바일 95, JS·CSS·글꼴 예산). CI는 `permissions: contents: read`, 외부 액션은 커밋 SHA 고정, `--frozen-lockfile`. 주간 은폐 검사: 일반 방문자 헤더로 두 번 요청해 본문이 같은지와 허용 목록 밖 스크립트 주소를 비교.
 - [ ] **Step 3b:** 일부러 `alt`를 비운 시험 변경이 CI에서 실패하는 것을 확인한 뒤 원복.
 - [ ] **Step 4:** 검증: `pnpm lint && pnpm check && pnpm vitest run && pnpm build && pnpm e2e` 전부 통과, `check-privacy` 0.
 - [ ] **Step 5:** 커밋 `S12: 품질 게이트와 CI`.

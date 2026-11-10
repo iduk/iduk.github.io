@@ -1,0 +1,162 @@
+/* xl */
+@media screen and (min-width: 1180px) {
+	.comments-reply li section{ width:88%}
+
+}
+
+/* lg */
+@media screen and (min-width: 992px) {
+
+	header[role="header"] nav ul{ padding-top:15%}
+	main[role="main-home-wrapper"] article[role="pge-title-content"],main[role="main-inner-wrapper"] article[role="pge-title-content"]{ padding-left:0}
+	main[role="main-home-wrapper"] article[role="pge-title-content"] header,main[role="main-inner-wrapper"] article[role="pge-title-content"] header{ padding-top:0}
+
+	/* history width size */
+	.history .imagebox li {
+		width:16.666%;
+	}
+
+}
+
+/* md */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+
+	header[role="header"] nav ul{ padding-top:15%}
+	header[role="header"] nav ul > li{ font-size:30px}
+	header[role="header"] nav ul > li > a{ line-height:55px}
+
+
+	/* 	main visual */
+	.main-visual .v-content {
+		position: relative;
+		overflow: hidden;
+		margin:50px auto;
+		text-align: center;
+		}
+	.main-visual .v-content .text-area {text-align: center;}
+	.main-visual .v-content .text-area > h2{
+		font-size:3em;
+		padding-bottom:10px;
+		}
+	.main-visual .v-content .text-area > h5{
+		font-size:2em;
+		margin-bottom:1.5em;
+	}
+	.main-visual .v-content .img-area {text-align: center;margin-top:20px;}
+	.main-visual .v-content .img-area img{display:inline-block;width:50%;}
+
+	/* play */
+	.play .play-box {width:100%;height:400px;}
+	.play .play-box > iframe {height:400px;}
+	.play .play-text {width:100%;height:400px;}
+
+	/* device */
+	.device .device-img{
+		width: 100%; height:auto;
+		float:none; padding:50px;
+	}
+	.device .device-text{
+		width: 100%; height:auto;
+		float:none; padding:30px 0;
+	}
+
+	/* history */
+	.history .imagebox li {
+		width:33.333%;
+	}
+	/* product */
+	.product .product-wrap li {
+		padding:60px 0;
+	}
+}
+
+
+/* sm */
+@media screen and (max-width: 767px) {
+
+	header[role="header"] h1 > a img {width:72px;}
+	header[role="header"] nav ul{ padding-top:15%}
+	header[role="header"] nav ul > li{ font-size:30px}
+	header[role="header"] nav ul > li > a{ line-height:55px}
+
+	/* main content header */
+	.content-header h2 {font-size:2.15em;}
+	.content-header p {font-size:0.9em;}
+
+	/* 	main visual */
+	.main-visual .v-content {
+		position: relative;
+		overflow: hidden;
+		margin:50px 0;
+		text-align: center;
+		}
+
+	.main-visual .v-content .text-area {text-align: center;}
+	.main-visual .v-content .text-area > h2{
+		font-size:2.5em;
+		padding-bottom:10px;
+	}
+	.main-visual .v-content .img-area {text-align: center;margin-top:30px;}
+	.main-visual .v-content .img-area img{display:inline-block;width:100%;margin-left:-25px;}
+
+
+	/* history width size */
+	.history .imagebox li {
+		width:33.333%;
+	}
+
+	/* service */
+	.service .service-item .item span {display:inline-block; margin-bottom: 15px;text-align: center;color:#e0072c;font-size:2.75em;}
+	.service .service-item .item p {font-size:1.15em; font-weight: 300; color:#e0072c;}
+
+	/* news */
+	.news {text-align:center;overflow:hidden;}
+	.news .newslist {margin:50px auto;}
+	.news .newslist .wrap {margin:10px auto;}
+	.news .newslist .wrap .box {margin:0;max-width:360px;min-height:350px;}
+	.news .newslist .wrap .box > dl {overflow: hidden}
+	.news .newslist .wrap .box > dl dt {overflow:hidden;height:220px;width:100%;background:#f5f5f5;}
+	.news .newslist .wrap .box > dl dt img{width:100%;min-height: 220px;}
+	.news .newslist .wrap .box > dl dd {margin:30px;}
+	.news .newslist .wrap .box > dl .title {padding-bottom: 15px;font-size:1.4em;}
+	.news .newslist .wrap .box > dl .title:hover {color:#e0072c;}
+	.news .newslist .wrap .box > dl .cnt {padding-bottom:10px;font-size:0.9em;color:#000;}
+
+	/* play */
+	.play .play-box {width:100%; height: 340px}
+	.play .play-box > iframe {height:340px;}
+	.play .play-text {width:100%;height: 340px}
+
+
+	/* device */
+	.device .device-img{
+		width: 100%; height:auto;
+		float:none; padding:30px;
+	}
+	.device .device-text{
+		width: 100%; height:auto;
+		float:none; padding:30px 0;
+	}
+	/* product */
+	.product .product-wrap li {
+		padding:60px 0;
+	}
+	.product .product-wrap li h2 strong{
+		font-size:1.6em; font-weight: 400;
+	}
+
+}
+
+
+
+/* xs */
+@media screen and (max-width: 479px) {
+	/* history width size */
+	.history .imagebox li {
+		width:50%;
+	}
+
+	/* footer */
+	.partners .p-logo img {width:100px;}
+
+}
