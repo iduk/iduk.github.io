@@ -82,7 +82,7 @@ allowBuilds:                   # 설치 스크립트를 허용할 패키지만 �
 | 빌드 도구용 | cheerio 1.2.0, sanitize-html 2.18.1 | | 변환 스크립트에서만. 사이트 번들에는 들어가지 않는다 |
 | 2단계 DB | drizzle-orm 0.45.4, drizzle-kit 0.31.11, @neondatabase/serverless 1.2.0 | | |
 
-직접 의존성은 15개 안쪽을 상한으로 둔다. 쓰지 않는 라이브러리는 넣지 않는다. 현재 15개(dependencies 6, devDependencies 9)다. S11에서 `@vercel/routing-utils`(devDependency, 6.2.0 고정)를 더했다: `vercel.json`을 Vercel이 쓰는 변환기로 라우트로 바꿔 시험하기 위해서다. 이 패키지의 새 버전들(6.4.1, 6.5.0, 6.6.1)은 `trustPolicy: no-downgrade`에 걸려 설치되지 않아(신뢰 등급 하락) 통과하는 6.2.0을 쓴다. 정책은 완화하지 않았다.
+직접 의존성은 17개 이하를 상한으로 둔다. 쓰지 않는 라이브러리는 넣지 않는다. 현재 16개(dependencies 6, devDependencies 10)다. S11에서 `@vercel/routing-utils`(devDependency, 6.2.0 고정)를 더했다: `vercel.json`을 Vercel이 쓰는 변환기로 라우트로 바꿔 시험하기 위해서다. 이 패키지의 새 버전들(6.4.1, 6.5.0, 6.6.1)은 `trustPolicy: no-downgrade`에 걸려 설치되지 않아(신뢰 등급 하락) 통과하는 6.2.0을 쓴다. 정책은 완화하지 않았다. S12에서 `@lhci/cli`(devDependency, 0.15.1 고정)를 더했다: Lighthouse CI로 모바일 점수와 예산을 검사하기 위해서다. 더 새 `lighthouse` 13.4 이상은 puppeteer-core 25 → chromium-bidi가 같은 신뢰 등급 하락에 걸려 설치되지 않는다(`@lhci/cli` 0.16.0은 `lighthouse@13.6.0`을 고정해 같은 이유로 불가). 0.15.1은 정책을 그대로 둔 채 설치되며 락 파일에 패키지가 284개 늘고(464 → 748), 설치 스크립트를 실행하는 패키지는 없다(`allowBuilds`는 그대로 `sharp`, `esbuild`).
 
 ## 4. 저장소 구조
 

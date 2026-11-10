@@ -23,7 +23,7 @@ const routes = transform(config);
 
 /** 정적 파일 시스템 흉내: dist가 있으면 실제 파일, 없으면 "존재한다"고 본다(404는 wp 경로 등 명시한 것만 확인). */
 const exists = (pathname: string): boolean => {
-  if (!existsSync(dist)) return !/wp-|\.php|nope/.test(pathname);
+  if (!existsSync(dist)) return !/wp-|\.php|nope|phpmyadmin/.test(pathname);
   const rel = pathname.replace(/^\//, '');
   const target = pathname.endsWith('/') ? join(dist, rel, 'index.html') : join(dist, rel);
   return existsSync(target) && statSync(target).isFile();

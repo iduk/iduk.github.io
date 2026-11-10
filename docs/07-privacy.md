@@ -81,8 +81,18 @@ git grep -niE "gmail\.com|naver\.com|kakao|sftp"
 # 빌드 결과
 grep -rEn "mailto:|tel:" dist
 # 이미지 위치 정보
-pnpm exec tsx scripts/check-exif.ts   # GPS 태그가 있으면 실패
+pnpm check-privacy   # S12부터 위 항목 전부와 이미지 GPS를 한 번에 검사한다(아래)
 ```
+
+**S12 구현(`scripts/check-privacy.ts`)** `pnpm check-privacy`가 위 항목 전부를 `git ls-files`(추적 파일 + 아직 추가하지 않은 새 파일)와 `dist/`에 돌린다. 종료 코드 0/1이고, 출력에는 일치한 값을 싣지 않는다(파일, 줄, 규칙, 개수만).
+
+- 메일, 전화, `/Users/` 경로, 접속 단어, 비밀 값 패턴은 `scripts/lib/privacy.ts`의 `scanText`를 쓴다. 데모(`public/html`, `dist/html`)는 확장 패턴 `scanDemoText`로 본다. `.map` 파일과 사이트가 만든 JS·CSS의 `sourceMappingURL`, `dist`의 `mailto:`·`tel:`, 이미지 GPS(EXIF·XMP, `src/assets/images`·`public`·`dist` 전부)도 실패 조건이다. 데모 CSS에 박힌 base64 소스맵은 풀어서 같은 패턴으로 본다.
+- 허용 목록은 `scripts/privacy-allow.txt`다. 한 줄에 `종류 | 경로 | 일치 값(정확히) | 이유`이고 이유가 없으면 검사가 실패한다. 쓰이지 않는 항목은 경고한다. 일치 값 `*`는 검사기·정화기의 시험 입력을 담은 파일에만 쓴다.
+- 옛 서버 호스트·계정 정규식은 저장소 밖 파일(`$IDUK_PRIVATE_PATTERNS`, 줄마다 정규식, `#` 주석)에서 읽어 문서를 포함한 저장소 전체(바이너리는 latin1로)와 `dist/`에 적용한다. 파일 이름에도 적용한다. 환경 변수가 없으면 CI(`CI=true`)에서는 실패하고, 로컬에서는 경고하며 `--require-private`를 주면 실패한다. 포크 PR은 `--allow-missing-private`로 크게 경고하고 넘어간다(docs/05 S12).
+- 비공개 글의 제목·슬러그는 원본 아카이브(`../iduk.design`이 이웃 폴더에 있으면 자동, 또는 `--archive 경로`)의 `posts.json`에서 공개 포트폴리오 글이 아닌 글(post)만 메모리로 뽑아 검사한다(제목 4자 이상, 슬러그 5자 이상이며 공개 글·태그 슬러그와 겹치지 않는 것). 워드프레스 고정 페이지(Intro, Contact 등)는 제목이 일반 단어라 뺀다. 아카이브가 없으면(CI) 건너뛴다.
+- 데모 치환 원본(`$TMPDIR/iduk-redact.json`, 저장소 밖)이 있으면 그 문자열의 모든 표기 변형이 저장소·`dist`에 없는지도 본다.
+- `dist`의 모든 HTML에서 `href`·`src`·`srcset`·`action`·`poster`와 `<link>`의 주소가 실제 파일로 해석되는지(`<base>`, 상대 경로, 슬래시, 쿼리, 사이트 페이지의 `#프래그먼트` 포함, 데모 포함), 사이트 페이지가 외부 자원(스크립트, 스타일, 이미지, iframe)을 부르지 않는지 본다. 외부 링크는 목록만 만들고 요청하지 않는다(`--list-external`).
+- `pnpm check-privacy --pre-publish`는 S13·S14 전에 사람이 돌린다. 기본 검사에 더해 `status: draft-translation`이 프로젝트나 태그에 남아 있으면 실패하고, 대표 작업이 6~8개인지, 모든 프로젝트의 태그가 `tags.json`에 있는지, 이미지 alt가 두 언어 모두 비어 있지 않은지 본다. CI는 기본 모드만 쓴다(번역 확인 전에도 녹색이어야 하므로).
 
 - 마크다운(`*.md`)은 위 첫 검사에서 제외하되, 문서에는 메일 형태의 문자열이 없어야 하므로 별도로 `docs/`에도 같은 검사를 돌린다(`@scope/패키지` 표기는 허용 목록).
 - 빌드 결과(`dist`)와 소스맵에도 개인정보가 없는지 확인한다. 프로덕션 소스맵은 만들지 않는다(`vite.build.sourcemap: false`).

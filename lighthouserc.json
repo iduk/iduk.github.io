@@ -1,0 +1,76 @@
+{
+  "ci": {
+    "collect": {
+      "staticDistDir": "./dist",
+      "url": [
+        "/index.html",
+        "/en/index.html",
+        "/work/index.html",
+        "/work/tag/web/index.html",
+        "/work/expressway/index.html",
+        "/work/telecare-service-app/index.html",
+        "/work/oyedu/index.html"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "chromeFlags": "--headless=new --no-sandbox"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": [
+          "error",
+          {
+            "minScore": 0.95
+          }
+        ],
+        "categories:accessibility": [
+          "error",
+          {
+            "minScore": 0.95
+          }
+        ],
+        "categories:best-practices": [
+          "error",
+          {
+            "minScore": 0.95
+          }
+        ],
+        "categories:seo": [
+          "error",
+          {
+            "minScore": 0.95
+          }
+        ],
+        "largest-contentful-paint": [
+          "error",
+          {
+            "maxNumericValue": 1800
+          }
+        ],
+        "cumulative-layout-shift": [
+          "error",
+          {
+            "maxNumericValue": 0.05
+          }
+        ],
+        "total-blocking-time": [
+          "error",
+          {
+            "maxNumericValue": 200
+          }
+        ],
+        "resource-summary:script:size": [
+          "error",
+          {
+            "maxNumericValue": 30720
+          }
+        ]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci/reports"
+    }
+  }
+}

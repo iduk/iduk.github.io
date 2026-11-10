@@ -1,0 +1,3 @@
+# 주간 은폐 검사(weekly-cloak-check)가 허용하는 외부 스크립트·스타일·iframe 주소.
+# 줄마다 호스트 이름(cdn.example.org) 또는 URL 접두(https://cdn.example.org/lib/). 사이트 자신의 호스트는 항상 허용.
+# 지금 사이트는 외부 자원을 쓰지 않으므로 비어 있다. 추가하기 전에 docs/03(CSP)을 먼저 바꾼다.

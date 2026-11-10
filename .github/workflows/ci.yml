@@ -1,0 +1,117 @@
+# 품질 게이트. 로컬에서는 같은 순서를 `pnpm gate`(Lighthouse 포함 `pnpm gate:full`)가 돌린다. 설명: docs/05-execution-plan.md S12.
+name: CI
+
+on:
+  push:
+    branches: [main, portfolio]
+  pull_request:
+  workflow_dispatch:
+
+# 읽기 전용. 쓰기 권한과 pull_request_target은 쓰지 않는다.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js (version from package.json engines)
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: package.json
+
+      - name: Enable pnpm (version from package.json packageManager)
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium (with system dependencies)
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type and template check
+        run: pnpm check
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      # 빌드 전에는 dist가 없어 dist를 읽는 시험(SEO, CSP, 상세 페이지 계약 등)이 건너뛰어진다. 빌드 뒤에 한 번 더 돌려 실제로 실행한다.
+      - name: Unit tests against the build (dist-dependent tests now run)
+        run: pnpm test
+
+      # 비공개 패턴(옛 서버 호스트·계정 정규식, 줄마다 하나)은 저장소 밖에 둔다. 저장소 비밀 값 IDUK_PRIVATE_PATTERNS_B64에
+      # 그 파일을 base64(한 줄)로 넣어 둔다. 한 줄이라 로그 마스킹이 값 전체에 걸린다. 내용은 어디에도 출력하지 않는다.
+      - name: Write private patterns to a temporary file
+        id: private
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork != true
+        shell: bash
+        env:
+          PATTERNS_B64: ${{ secrets.IDUK_PRIVATE_PATTERNS_B64 }}
+        run: |
+          set -euo pipefail
+          umask 077
+          if [ -n "$PATTERNS_B64" ]; then
+            file="$RUNNER_TEMP/private-patterns.txt"
+            printf '%s' "$PATTERNS_B64" | base64 -d > "$file"
+            echo "path=$file" >> "$GITHUB_OUTPUT"
+          fi
+
+      # 비밀 값이 없으면(설정 전) CI 모드에서 이 단계가 "not set in CI"로 실패한다. 의도한 동작이다.
+      - name: Privacy and link check
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork != true
+        shell: bash
+        env:
+          IDUK_PRIVATE_PATTERNS: ${{ steps.private.outputs.path }}
+        run: pnpm check-privacy
+
+      # 포크에서 온 PR에는 비밀 값이 전달되지 않는다. 비공개 패턴 없이 나머지 검사만 하고, 건너뛴 사실을 크게 경고한다.
+      # 병합 전에 관리자가 저장소 안의 브랜치로 옮겨 전체 검사를 돌려야 한다.
+      - name: Privacy and link check (fork PR, private patterns unavailable)
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == true
+        shell: bash
+        run: |
+          echo "::warning title=Private patterns NOT checked::This pull request comes from a fork, so repository secrets are unavailable. Old-server host/account patterns were not checked. Run the full check from a branch in this repository before merging."
+          pnpm check-privacy --allow-missing-private
+
+      - name: Remove private patterns file
+        if: always()
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/private-patterns.txt"
+
+      - name: Byte budgets (first load)
+        run: pnpm budgets
+
+      - name: End-to-end, accessibility and responsive tests
+        run: pnpm e2e
+
+      - name: Lighthouse (mobile)
+        run: pnpm lighthouse
+
+      # 보고서에는 시험 결과와 빌드된 공개 페이지 내용만 있다(비밀 값 없음).
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: reports
+          path: |
+            playwright-report/
+            test-results/
+            .lighthouseci/reports/
+          if-no-files-found: ignore
+          retention-days: 7

@@ -115,7 +115,7 @@
 - 패키지 매니저는 pnpm이다. 설치 스크립트는 허용 목록(sharp, esbuild)만 실행한다. 신규 릴리스는 3일 지난 것만 설치한다. 하위 의존성이 git 주소나 임의 파일이면 거부한다.
 - 잠금 파일을 커밋하고 `pnpm install --frozen-lockfile`로만 설치한다.
 - 갱신은 Renovate(`minimumReleaseAge`) 또는 Dependabot(`cooldown`)이 풀 리퀘스트로 제안한다. 보안 수정만 대기 없이 바로 받는다. 한 번에 한 묶음씩 병합하고, 병합 전에 CI와 미리보기를 확인한다.
-- 직접 의존성은 15개 안쪽을 지킨다.
+- 직접 의존성은 17개 이하를 지킨다(docs/02).
 - `pnpm audit --prod`를 CI에서 돌린다.
 - 프레임워크 보안 공지는 GitHub의 `withastro/astro` 저장소 알림으로 받는다. 적용 전에는 공식 공지로 수정 버전을 직접 확인한다.
 

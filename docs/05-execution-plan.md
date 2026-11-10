@@ -124,7 +124,7 @@
 **통과 기준**
 - `pnpm install --frozen-lockfile && pnpm build && pnpm check && pnpm lint` 성공.
 - `pnpm-lock.yaml` 커밋됨. `pnpm audit`에 높음 이상 취약점 없음.
-- 직접 의존성 15개 이하.
+- 직접 의존성 17개 이하(docs/02).
 
 **되돌리기** 이 스텝의 커밋을 되돌린다. 아직 푸시 전이다.
 
@@ -347,6 +347,44 @@
 8. Dependabot 대신 `pnpm outdated` 월 1회 수동 확인을 문서화한다(자동 병합 금지).
 
 **통과 기준** CI 전체 녹색. 일부러 `alt`를 비운 시험 커밋이 CI에서 실패하는 것을 확인한다.
+
+### S12 구현 메모
+
+**로컬에서 한 줄로** (CI와 같은 순서)
+
+```bash
+pnpm gate        # lint → check → test → build → check-privacy → budgets → e2e(axe, 반응형, 링크 포함)
+pnpm gate:full   # gate + Lighthouse(모바일)
+```
+
+개별 실행: `pnpm check-privacy`(기본 모드: 추적 파일 + `dist/`, 이미지 GPS, 소스맵, `mailto:`/`tel:`, 내부 링크), `pnpm check-privacy --pre-publish`(S13·S14 전에 사람이 실행: 번역 초안 표시가 남아 있으면 실패. CI는 기본 모드만 쓴다), `pnpm budgets`(첫 로드 바이트 예산), `pnpm lighthouse`(`--collect.numberOfRuns=1`로 빠르게), `pnpm e2e`. 비공개 패턴 파일이 있으면 `IDUK_PRIVATE_PATTERNS=/경로/파일 pnpm check-privacy --require-private`로 돌린다(없으면 로컬에서는 경고만). 이웃 폴더의 `../iduk.design`이 있으면 비공개 글 제목·슬러그 검사가 자동으로 켜진다. 자세한 규칙은 docs/07 6절.
+
+**CI 설정 (`.github/workflows/ci.yml`)**
+- 저장소 비밀 값 **`IDUK_PRIVATE_PATTERNS_B64`**를 한 번 만든다: 비공개 패턴 파일(줄마다 정규식)을 `base64 < 파일 | tr -d '\n'`으로 한 줄로 만들어 넣는다(한 줄이라 로그 마스킹이 값 전체에 걸린다). 워크플로는 이것을 러너 임시 파일로 풀어 `check-privacy`에 `$IDUK_PRIVATE_PATTERNS`로 넘기고 바로 지운다. 값은 어디에도 출력하지 않는다. 비밀 값이 없으면 CI에서 이 단계가 실패한다(의도).
+- 포크에서 온 PR에는 비밀 값이 전달되지 않는다. 그 경우에만 `--allow-missing-private`로 비공개 패턴 검사를 건너뛰고 `::warning`으로 크게 알린다. 병합 전에 관리자가 저장소 안의 브랜치로 옮겨 전체 검사를 돌린다. `pull_request_target`은 쓰지 않는다.
+- 외부 액션은 `actions/checkout`(v6.1.0), `actions/setup-node`(v6.5.0), `actions/upload-artifact`(v6.0.0)뿐이고 `git ls-remote`로 태그의 커밋 SHA를 확인해 고정했다(세 태그 모두 주석 없는 태그라 태그 값이 곧 커밋이다). 갱신할 때도 같은 방법으로 SHA를 확인하고 `# vX.Y.Z` 주석을 맞춘다. `tests/unit/ci-config.test.ts`가 SHA 고정, 권한, 순서, `--frozen-lockfile`, `run:` 안의 `${{ }}` 금지 등을 YAML 텍스트에서 검사한다.
+- Node는 `package.json`의 `engines.node`(24.x), pnpm은 `packageManager`(corepack)에서 온다. 시험 보고서(`playwright-report/`, `test-results/`, `.lighthouseci/reports/`)는 실패해도 올리며 비밀 값이 들어 있지 않다.
+- GitHub Actions는 푸시 전에는 돌 수 없다. 첫 푸시에서 처음 돌고, 로컬에서는 같은 단계를 `pnpm gate:full`로 돌려 본다.
+
+**주간 은폐 검사 (`weekly-cloak-check.yml`, `scripts/cloak-check.ts`)** 저장소 변수 `SITE_URL`(예: `https://iduk.co.kr`)을 정하면 매주 월요일에 운영 주소의 `/`, `/en/`, `/work/`를 일반 방문자(한글), 검색에서 온 방문자(Referer), 검색 로봇(User-Agent)으로 요청해 본문 유사도(0.98 미만이면 실패)와, 스크립트·스타일·iframe 주소가 사이트 자신 또는 `scripts/cloak-allow.txt` 밖인지 본다. 다른 호스트로의 리다이렉트와 200이 아닌 응답도 실패다. 변수가 없으면 알림만 남기고 성공한다(도메인 전환 전에도 무해). 실패 알림은 워크플로 실패 메일이고 이슈는 만들지 않는다(권한 `contents: read`만). 설치 없이 `node scripts/cloak-check.ts`로 돈다.
+
+**월 1회 수동 점검 (Dependabot, 자동 병합 없음)** 매월 첫 주에 `pnpm outdated`를 보고, 올릴 것은 한 번에 하나씩 `pnpm update <패키지>`로 올린 뒤 락 파일 diff를 사람이 읽고 `pnpm gate:full`을 통과시킨 다음 커밋한다. `minimumReleaseAge`, `trustPolicy`, `blockExoticSubdeps`, `allowBuilds`는 완화하지 않는다: 신뢰 등급 하락으로 설치가 막힌 버전은 올리지 않고 이유를 docs/02에 적는다(예: `@vercel/routing-utils`, `lighthouse` 13.4 이상).
+
+**측정 결과** (2026-11-10, 로컬 Chromium, Lighthouse 12.6.1 모바일 기본 프리셋, 각 페이지 3회 중앙값, LHCI 정적 서버는 HTTP/1.1)
+
+| 페이지 | 성능 | 접근성 | 권장사항 | SEO | LCP | CLS | TBT |
+|---|---|---|---|---|---|---|---|
+| 홈(ko) | 89 | 96 | 100 | 100 | 3.25s | 0 | 0 |
+| 홈(en) | 98 | 96 | 100 | 100 | 2.26s | 0 | 0 |
+| 목록 | 94 | 100 | 100 | 100 | 2.56s | 0 | 0 |
+| 태그(web) | 94 | 100 | 100 | 100 | 2.56s | 0 | 0 |
+| 상세 expressway(가장 무거움) | 93 | 100 | 100 | 100 | 2.94s | 0 | 0 |
+| 상세 telecare-service-app(LongShot) | 92 | 97 | 100 | 100 | 3.01s | 0 | 0 |
+| 상세 oyedu | 96 | 100 | 100 | 100 | 2.41s | 0 | 0 |
+
+- 접근성·권장사항·SEO는 기준(95)을 넘는다. 접근성 96~97은 스크롤로 나타나는 요소(`.reveal`)가 화면에 들어오는 순간의 중간 투명도를 Lighthouse가 대비 부족으로 잡은 것이다(axe로 끝까지 스크롤한 정적 상태는 위반 0).
+- **성능 95와 LCP 1.8초는 한글 페이지에서 미달이다.** 원인은 Pretendard 한글 동적 서브셋이다: 본문 글자가 걸리는 서브셋 10~11개(약 250~280KB)가 첫 로드에 내려가며, Lighthouse의 느린 4G 모사(1.6Mbps)에서 이 글꼴 전송이 FCP·LCP 계산에 들어가 LCP 이미지와 대역을 나눈다. 같은 dist에서 글꼴 선언만 지운 시험은 100점이었고, 영문 홈(필요한 서브셋이 적음)은 98이다. 스타일시트를 HTML에 넣는 시험(`inlineStylesheets: 'always'`)은 개선이 없어 되돌렸다. `favicon.ico` 404(콘솔 오류, 권장사항 96)는 파비콘 추가로 고쳤다. 남은 선택지: 사이트에서 쓰는 글자만 담은 한글 서브셋 하나로 줄이기(원본 Pretendard 가변 글꼴과 subsetting 도구 필요), 또는 S13에서 Vercel 미리보기(HTTP/2, CDN)로 다시 재서 기준을 정하기. `lighthouserc.json`의 성능·LCP 기준은 계획의 목표(95, 1.8초) 그대로 두었으므로 이 상태로는 CI의 Lighthouse 단계가 실패한다.
+- 결정적 예산(`pnpm budgets`, 81쪽, 모바일 412px·DPR 1.75): 첫 로드 JS gzip 0.6KB(상한 30KB), CSS gzip 최대 19.9KB(상한 26KB, 원본 71KB), 글꼴 파일 최대 11개·280KB(상한 14개·400KB), 즉시 불러오는 이미지 최대 44KB(상한 80KB). 글꼴 선택(unicode-range)은 `tests/e2e/budgets-fonts.spec.ts`가 실제 Chromium의 요청과 대표 24쪽에서 같음을 확인한다.
 
 ---
 

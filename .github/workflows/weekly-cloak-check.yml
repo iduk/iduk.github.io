@@ -1,0 +1,37 @@
+# 주간 은폐 검사: 운영 주소를 일반 방문자·검색 로봇 헤더로 요청해 본문이 같은지, 허용 목록(scripts/cloak-allow.txt) 밖의
+# 스크립트·스타일·iframe 주소가 없는지 본다. 실패하면 워크플로 실패 메일이 알림이다(이슈 생성 같은 쓰기 권한은 쓰지 않는다).
+# 저장소 변수 SITE_URL(예: https://iduk.co.kr)을 정하면 시작한다. 없으면 알림만 남기고 성공한다.
+name: Weekly cloak check
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weekly-cloak-check
+  cancel-in-progress: false
+
+jobs:
+  cloak:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js (version from package.json engines)
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: package.json
+
+      # 의존성 설치 없이 실행한다(스크립트는 Node 내장 기능만 쓴다).
+      - name: Compare responses for visitors and crawlers
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: node scripts/cloak-check.ts

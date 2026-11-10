@@ -8,7 +8,7 @@ export default defineConfig({
   timeout: 20_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  reporter: [['list']],
+  reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : [['list']],
   use: {
     baseURL: `http://127.0.0.1:${PORT}`,
     browserName: 'chromium',

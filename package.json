@@ -14,7 +14,13 @@
     "check": "astro check",
     "lint": "biome ci .",
     "test": "vitest run",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "check-privacy": "tsx scripts/check-privacy.ts",
+    "budgets": "tsx scripts/check-budgets.ts",
+    "lighthouse": "tsx scripts/lighthouse.ts",
+    "gate": "pnpm clean && pnpm lint && pnpm check && pnpm test && pnpm build && pnpm test && pnpm check-privacy && pnpm budgets && pnpm e2e",
+    "gate:full": "pnpm gate && pnpm lighthouse",
+    "clean": "node -e \"fs.rmSync('dist',{recursive:true,force:true})\""
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -28,6 +34,7 @@
     "@astrojs/check": "^0.9.12",
     "@axe-core/playwright": "^4.14.0",
     "@biomejs/biome": "^2.6.6",
+    "@lhci/cli": "0.15.1",
     "@playwright/test": "^1.65.0",
     "@vercel/routing-utils": "6.2.0",
     "parse5": "^8.1.0",
