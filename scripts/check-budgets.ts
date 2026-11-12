@@ -13,14 +13,14 @@ import { analyzePage, type Budgets, overBudget, type PageMetrics } from './lib/b
  *  - JS: docs 성능 목표 "첫 화면 JS gzip 30KB 이하".
  *  - CSS: 스타일시트를 HTML에 넣으므로(astro.config inlineStylesheets) 페이지마다 다시 받는 바이트다. Tailwind 토대,
  *    토큰, 글꼴 선언(92개 unicode-range)이 대부분이라 현재 값에 여유를 둔 상한을 둔다.
- *  - 글꼴: Pretendard 동적 서브셋 중 본문 글자가 걸리는 것만 받는다. 한글 제목이 많은 목록 페이지가 최대다.
+ *  - 글꼴: 사이트 전용 부분 글꼴(약 38KB, scripts/make-site-font.py) 한 개가 본문 글자를 모두 맡는다. 그래서 1개·60KB.
  *  - 이미지: 모바일 폭에서 즉시 불러오는 이미지 하나의 상한.
  */
 export const BUDGETS: Budgets = {
   jsGzipBytes: 30 * 1024,
-  cssGzipBytes: 26 * 1024,
-  fontFiles: 14,
-  fontBytes: 400 * 1024,
+  cssGzipBytes: 12 * 1024,
+  fontFiles: 1,
+  fontBytes: 60 * 1024,
   eagerImageBytes: 80 * 1024,
 };
 

@@ -71,7 +71,7 @@ allowBuilds:                   # 설치 스크립트를 허용할 패키지만 �
 | 프레임워크 | Astro | 7.4.2 | 정적 출력 |
 | 배포 어댑터 | @astrojs/vercel | 11.0.16 | 2단계에서 문의 API가 필요해질 때만 |
 | 스타일 | Tailwind CSS와 @tailwindcss/vite | 4.3.3 | 토큰은 CSS 변수 |
-| 글꼴 | pretendard | 1.3.9 | OFL 1.1, 동적 서브셋 |
+| 글꼴 | pretendard | 1.3.9 | OFL 1.1, 사이트 글자만 담은 부분 글꼴 1개(약 38KB) |
 | 이미지 | sharp | 0.35.5 | 빌드 때만 사용. 이전 버전의 SVG 처리 취약점 수정이 포함된 버전 |
 | 검증 | zod | 4.6.7 | 콘텐츠 스키마 |
 | 사이트맵 | @astrojs/sitemap | 3.7.4 | |
@@ -164,7 +164,7 @@ iduk.github.io/
 | INP | 150ms 이하 |
 | 첫 화면 JS | gzip 30KB 이하 |
 | 첫 화면 CSS | gzip 20KB 이하 |
-| 첫 화면 글꼴 | 150KB 이하 |
+| 첫 화면 글꼴 | 60KB 이하(실측 38KB, 파일 1개) |
 | Lighthouse 모바일 | 4개 항목 모두 95 이상 |
 
 예산은 CI에서 Lighthouse로 측정하고, 넘으면 실패시킨다. 달성 가능한지는 3단계 첫 페이지가 나온 시점에 처음 측정하고, 안 맞으면 목표를 조정한다.
