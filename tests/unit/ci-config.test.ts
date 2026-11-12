@@ -214,6 +214,26 @@ describe('CI 워크플로(정적 검사)', () => {
   });
 });
 
+describe('Lighthouse 기준을 풀지 않았다', () => {
+  const rc = JSON.parse(read('lighthouserc.json')).ci;
+  it('3회 중앙값으로 판정하고 기준은 계획의 목표 그대로이며 모두 error다', () => {
+    expect(rc.collect.numberOfRuns).toBeGreaterThanOrEqual(3);
+    // 기본값(optimistic)은 3회 중 가장 좋은 값만 통과해도 합격이라 약하다.
+    expect(rc.assert.aggregationMethod).toBe('median-run');
+    const a = rc.assert.assertions;
+    for (const c of ['performance', 'accessibility', 'best-practices', 'seo']) {
+      expect(a[`categories:${c}`]).toEqual(['error', { minScore: 0.95 }]);
+    }
+    expect(a['largest-contentful-paint']).toEqual(['error', { maxNumericValue: 1800 }]);
+    expect(a['cumulative-layout-shift']).toEqual(['error', { maxNumericValue: 0.05 }]);
+    expect(a['resource-summary:script:size']).toEqual(['error', { maxNumericValue: 30720 }]);
+    expect(Object.values(a).every((v) => (v as unknown[])[0] === 'error')).toBe(true);
+    // 모바일 기본 프리셋(데스크톱 프리셋·formFactor 변경 금지)
+    expect(rc.collect.settings.preset).toBeUndefined();
+    expect(rc.collect.settings.formFactor).toBeUndefined();
+  });
+});
+
 describe('공급망 규칙을 풀지 않았다', () => {
   const ws = read('pnpm-workspace.yaml');
   it('pnpm-workspace.yaml', () => {

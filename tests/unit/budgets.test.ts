@@ -120,6 +120,26 @@ describe('analyzePage', () => {
     expect(analyzePage(html(pic('lazy', true)), '/', read).eagerImages).toEqual([]);
   });
 
+  it('참조한 파일이 dist에 없으면 0바이트로 통과하지 않고 실패한다', () => {
+    const h = `<html><head><link rel="stylesheet" href="/gone.css"><script src="/gone.js"></script></head><body><p>abc</p><img src="/gone.png" srcset="/gone.png 640w" sizes="100vw" loading="eager"></body></html>`;
+    const m = analyzePage(h, '/', files({}));
+    expect(m.missing).toEqual(['/gone.css', '/gone.js', '/gone.png']);
+    expect(overBudget(m, BUDGETS).join()).toContain('missing from dist');
+    const fontCss = `<html><head><style>@font-face{font-family:F;src:url(/f/none.woff2);unicode-range:U+0020-007e}</style></head><body>abc</body></html>`;
+    expect(analyzePage(fontCss, '/', files({})).missing).toEqual(['/f/none.woff2']);
+    expect(
+      analyzePage(h, '/', files({ '/gone.css': 'a{}', '/gone.js': 'x', '/gone.png': 'p' })).missing,
+    ).toEqual([]);
+  });
+
+  it('외부 주소는 dist 파일로 찾지 않는다(missing에도 넣지 않는다)', () => {
+    const h =
+      '<html><head><script src="https://cdn.example.org/a.js"></script><script src="//cdn.example.org/b.js"></script></head><body></body></html>';
+    const m = analyzePage(h, '/', files({}));
+    expect(m.missing).toEqual([]);
+    expect(m.jsFiles).toBe(0);
+  });
+
   it('상대 경로는 페이지 위치 기준으로 푼다', () => {
     const h = '<html><head><script src="a.js"></script></head><body></body></html>';
     expect(analyzePage(h, '/x/y/', files({ '/x/y/a.js': 'var a=1;' })).jsFiles).toBe(1);
@@ -131,6 +151,7 @@ describe('overBudget', () => {
     jsGzip: 1,
     jsFiles: 1,
     jsRequests: [],
+    missing: [],
     cssRaw: 1,
     cssGzip: 1,
     fonts: ['a'],
@@ -170,5 +191,5 @@ describe.skipIf(!existsSync(join(dist, 'index.html')))('빌드 결과 전체', (
     expect(rows.length).toBeGreaterThan(70);
     const failures = rows.flatMap((r) => overBudget(r.m, BUDGETS).map((f) => `${r.page}: ${f}`));
     expect(failures).toEqual([]);
-  });
+  }, 120_000);
 });

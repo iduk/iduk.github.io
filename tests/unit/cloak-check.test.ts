@@ -164,6 +164,31 @@ describe('순수 함수', () => {
     expect(isAllowed('javascript:alert(1)', 'site.example.org', allow)).toBe(false);
   });
 
+  it('isAllowed: URL 접두 항목은 호스트 경계를 지킨다(문자열 접두 우회 방지)', () => {
+    const host = 'site.example.org';
+    for (const entry of ['https://cdn.example.org', 'https://cdn.example.org/']) {
+      const allow = [entry];
+      expect(isAllowed('https://cdn.example.org/a.js', host, allow), entry).toBe(true);
+      expect(isAllowed('https://cdn.example.org.evil.example.net/a.js', host, allow), entry).toBe(
+        false,
+      );
+      expect(
+        isAllowed(['https://cdn.example.org', '@', 'evil.example.net/a.js'].join(''), host, allow),
+        entry,
+      ).toBe(false);
+      expect(isAllowed('http://cdn.example.org/a.js', host, allow), entry).toBe(false);
+      expect(isAllowed('https://cdn.example.org:8443/a.js', host, allow), entry).toBe(false);
+    }
+    const dir = ['https://lib.example.org/v1/'];
+    expect(isAllowed('https://lib.example.org/v1/x/a.js', host, dir)).toBe(true);
+    expect(isAllowed('https://lib.example.org/v10/a.js', host, dir)).toBe(false);
+    expect(isAllowed('https://lib.example.org/v1/../v2/a.js', host, dir)).toBe(false);
+    const noSlash = ['https://lib.example.org/v1'];
+    expect(isAllowed('https://lib.example.org/v1/a.js', host, noSlash)).toBe(true);
+    expect(isAllowed('https://lib.example.org/v10/a.js', host, noSlash)).toBe(false);
+    expect(isAllowed('https://anything.example.org/a.js', host, ['not a url://'])).toBe(false);
+  });
+
   it('similarity', () => {
     expect(similarity('<p>a</p>', '<p>a</p>')).toBe(1);
     expect(similarity('<p>a</p> <p>b</p>', '<p>a</p>\n<p>b</p>')).toBe(1);

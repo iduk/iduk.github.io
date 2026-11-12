@@ -11,6 +11,10 @@ export type PageRefs = {
   refs: { url: string; attr: string }[];
   ids: Set<string>;
   base: string | undefined;
+  /** 인라인 `<style>` 본문과 `style=""` 속성 값 */
+  inlineStyles: string[];
+  /** 실행되는 인라인 `<script>` 본문(JSON·importmap 등 데이터 블록 제외) */
+  inlineScripts: string[];
 };
 
 const isElement = (n: Node): n is Element => 'tagName' in n;
@@ -44,7 +48,13 @@ const URL_ATTRS: Record<string, string[]> = {
 
 /** href/src/srcset/action/poster/data 와 meta의 og:image, `<base href>`, 요소 id·name. */
 export function extractPageRefs(html: string): PageRefs {
-  const out: PageRefs = { refs: [], ids: new Set(), base: undefined };
+  const out: PageRefs = {
+    refs: [],
+    ids: new Set(),
+    base: undefined,
+    inlineStyles: [],
+    inlineScripts: [],
+  };
   const walk = (node: Node) => {
     if (isElement(node)) {
       const tag = node.tagName;
@@ -53,6 +63,15 @@ export function extractPageRefs(html: string): PageRefs {
       const name = attr(node, 'name');
       if (name && tag === 'a') out.ids.add(name);
       if (tag === 'base' && out.base === undefined) out.base = attr(node, 'href');
+      const styleAttr = attr(node, 'style');
+      if (styleAttr) out.inlineStyles.push(styleAttr);
+      const inlineText = () =>
+        node.childNodes.map((c) => ('value' in c ? (c.value as string) : '')).join('');
+      if (tag === 'style') out.inlineStyles.push(inlineText());
+      if (tag === 'script' && !attr(node, 'src')) {
+        const type = attr(node, 'type');
+        if (!type || /javascript|module/i.test(type)) out.inlineScripts.push(inlineText());
+      }
       for (const a of URL_ATTRS[tag] ?? []) {
         const v = attr(node, a);
         if (v !== undefined && !(tag === 'base'))
@@ -77,9 +96,20 @@ export function extractPageRefs(html: string): PageRefs {
   return out;
 }
 
-/** CSS 안의 `url(...)` 주소(따옴표 제거). data: 는 호출 쪽이 건너뛴다. */
+/** 인라인 스크립트 안의 문자열 속 절대·프로토콜 상대 주소(`"https://x"`, `'//x'`, import("https://x"), fetch). */
+export function scriptUrls(js: string): string[] {
+  const out: string[] = [];
+  for (const m of js.matchAll(/["'`]((?:https?:)?\/\/[^\s"'`<>)\\]+)/g)) out.push(m[1] as string);
+  return out;
+}
+
+/** CSS 안의 `url(...)` 주소(따옴표 제거). data: 는 호출 쪽이 건너뛴다. `@import "x"`도 포함. */
 export function cssUrls(css: string): string[] {
   const out: string[] = [];
+  for (const m of css.matchAll(/@import\s+(?:url\(\s*)?(?:"([^"]*)"|'([^']*)')/gi)) {
+    const u = (m[1] ?? m[2] ?? '').trim();
+    if (u) out.push(u);
+  }
   for (const m of css.matchAll(/url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s]*))\s*\)/gi)) {
     const u = (m[1] ?? m[2] ?? m[3] ?? '').trim();
     if (u) out.push(u);

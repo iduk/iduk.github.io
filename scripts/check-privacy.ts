@@ -21,7 +21,7 @@ import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseRedactions, redactionForms } from './lib/demos';
 import { IMAGE_EXT, imageHasGps } from './lib/exif';
-import { classify, cssUrls, extractPageRefs, resolveFile } from './lib/links';
+import { classify, cssUrls, extractPageRefs, resolveFile, scriptUrls } from './lib/links';
 import { scanDemoText, scanText } from './lib/privacy';
 
 export type Options = {
@@ -46,10 +46,30 @@ const WORDS_RE = new RegExp(
 );
 const MAILTO_RE = /(?<![A-Za-z0-9_$])(?:mailto|tel):/gi;
 const MAP_URL_RE = /sourceMappingURL\s*=/;
-const TEXT_EXT =
-  /\.(?:md|ts|tsx|mts|mjs|cjs|js|json|astro|css|scss|ya?ml|txt|html?|svg|xml|webmanifest|toml|sh|map|csv|vue)$/i;
+// 알려진 바이너리(이미지, 글꼴, 문서, 압축, 미디어, 실행 파일)만 텍스트에서 뺀다. 그 밖의 확장자(.sql, .mdx, .jsonl,
+// .rss 등)는 텍스트로 보고 공개 패턴을 검사한다.
 const BINARY_EXT =
-  /\.(?:png|jpe?g|webp|avif|gif|ico|woff2?|ttf|otf|eot|pdf|zip|gz|mp4|webm|mov|mp3|psd|ai|heic|tiff?)$/i;
+  /\.(?:png|jpe?g|webp|avif|gif|ico|icns|bmp|woff2?|ttf|otf|eot|pdf|zip|gz|tgz|bz2|xz|7z|rar|tar|mp4|webm|mov|mp3|ogg|wav|flac|psd|ai|heic|heif|tiff?|wasm|bin|exe|dll|so|dylib|class|jar|docx|xlsx|pptx|key|numbers|pages|sqlite3?|db)$/i;
+
+/**
+ * 파일 내용을 텍스트로 풀어 돌려준다. 바이너리면 null. UTF-16(BOM 있음, 또는 BOM 없이 NUL이 번갈아 나오는 것)은 디코드한다.
+ */
+export function decodeText(buf: Buffer, rel: string): string | null {
+  if (BINARY_EXT.test(rel) || IMAGE_EXT.test(rel)) return null;
+  const head = buf.subarray(0, 8000);
+  if (head[0] === 0xff && head[1] === 0xfe) return buf.subarray(2).toString('utf16le');
+  if (head[0] === 0xfe && head[1] === 0xff)
+    return Buffer.from(buf.subarray(2)).swap16().toString('utf16le');
+  const nuls = head.reduce((n, b) => n + (b === 0 ? 1 : 0), 0);
+  if (nuls === 0) return buf.toString('utf8');
+  if (nuls >= head.length / 4) {
+    let odd = 0;
+    let even = 0;
+    for (let i = 0; i < head.length; i++) if (head[i] === 0) i % 2 ? odd++ : even++;
+    return odd >= even ? buf.toString('utf16le') : Buffer.from(buf).swap16().toString('utf16le');
+  }
+  return null;
+}
 
 // ------------------------------------------------------------------ 파일 목록
 
@@ -90,7 +110,6 @@ function trackedFiles(root: string): string[] {
 }
 
 const isDemo = (rel: string) => /^(?:public|dist)\/html\//.test(rel);
-const isBinaryName = (rel: string) => BINARY_EXT.test(rel);
 
 // ------------------------------------------------------------------ 허용 목록
 
@@ -333,14 +352,12 @@ export async function runCheck(opts: Options): Promise<Result> {
   ];
 
   const count = { repoText: 0, distText: 0, binary: 0, images: 0, gpsUnreadable: 0 };
-  const fileHasText = (rel: string) =>
-    TEXT_EXT.test(rel) ||
-    (!isBinaryName(rel) && !IMAGE_EXT.test(rel) && /(?:^|\/)[^./]+$/.test(rel));
 
   for (const f of all) {
     const rel = f.rel;
     const buf = readFileSync(f.abs);
-    const text = fileHasText(rel) && !buf.subarray(0, 8000).includes(0);
+    const decoded = decodeText(buf, rel);
+    const text = decoded !== null;
 
     // 이미지 GPS
     if (IMAGE_EXT.test(rel)) {
@@ -354,7 +371,7 @@ export async function runCheck(opts: Options): Promise<Result> {
     if (/\.map$/i.test(rel)) fail('source-map', rel, 'source map file');
 
     // 비공개 패턴(바이너리는 latin1로)
-    let body = text ? buf.toString('utf8') : buf.toString('latin1');
+    let body = decoded ?? buf.toString('latin1');
     if (text && body.includes('sourceMappingURL=data:')) body += decodeInlineMaps(body);
     if (text) f.where === 'repo' ? count.repoText++ : count.distText++;
     else count.binary++;
@@ -486,6 +503,13 @@ export async function runCheck(opts: Options): Promise<Result> {
     const p = pageOf(file);
     for (const r of p.refs) checkRef(file, r.url, pagePath, p.base, r.attr);
     if (!isDemo(`dist/${file}`)) {
+      // 인라인 <style>·style 속성(url(), @import)과 인라인 <script>(문자열 속 외부 주소)도 같은 규칙으로 본다.
+      for (const css of p.inlineStyles) {
+        for (const u of cssUrls(css)) checkRef(file, u, pagePath, p.base, 'inline-style[url]');
+      }
+      for (const js of p.inlineScripts) {
+        for (const u of scriptUrls(js)) checkRef(file, u, pagePath, p.base, 'inline-script[url]');
+      }
       // 사이트 페이지가 불러오는 CSS 안의 url()
       const css: string[] = [];
       for (const r of p.refs) {
@@ -518,6 +542,11 @@ export async function runCheck(opts: Options): Promise<Result> {
   // ---- 공개 전 검사
   if (opts.prePublish) preChecks(root, fail, info);
 
+  if (needles.length === 0) {
+    warn(
+      'archive needles: 0 - private post titles/slugs are NOT checked (no archive here, as in CI). In CI the private pattern file is the only protection; run locally with --archive ../iduk.design (docs/07 section 6).',
+    );
+  }
   for (const a of allow.filter((x) => !x.used)) {
     warn(`unused allow-list entry (privacy-allow.txt:${a.line}); remove it if no longer needed`);
   }

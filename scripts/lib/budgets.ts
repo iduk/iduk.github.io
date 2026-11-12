@@ -34,6 +34,8 @@ export type PageMetrics = {
   fonts: string[];
   fontBytes: number;
   eagerImages: { src: string; bytes: number }[];
+  /** HTML·CSS가 가리키지만 dist에 없는 파일(0바이트로 통과하지 않고 실패로 본다) */
+  missing: string[];
   largestEagerImage: number;
 };
 
@@ -212,9 +214,18 @@ export function analyzePage(html: string, pagePath: string, read: ReadDist): Pag
   let jsGzip = 0;
   let jsFiles = 0;
   const jsRequests: string[] = [];
+  const missing: string[] = [];
+  // 사이트 안 파일만 읽는다(외부 주소는 check-privacy가 막는다). 없으면 missing에 모은다.
+  const load = (url: string): Buffer | null => {
+    if (/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(url)) return null;
+    const path = pathOf(url, pagePath);
+    const b = read(path);
+    if (!b) missing.push(path);
+    return b;
+  };
   for (const s of c.scripts) {
     if (s.src) {
-      const b = read(pathOf(s.src, pagePath));
+      const b = load(s.src);
       if (b) {
         jsGzip += gz(b);
         jsFiles++;
@@ -228,7 +239,7 @@ export function analyzePage(html: string, pagePath: string, read: ReadDist): Pag
   let css = '';
   let cssGzip = 0;
   for (const s of c.styles) {
-    const text = s.inline ?? read(pathOf(s.href as string, pagePath))?.toString('utf8') ?? '';
+    const text = s.inline ?? load(s.href as string)?.toString('utf8') ?? '';
     css += text;
     cssGzip += gz(text);
   }
@@ -238,7 +249,7 @@ export function analyzePage(html: string, pagePath: string, read: ReadDist): Pag
     ...c.preloadFonts.map((u) => pathOf(u, pagePath)),
   ]);
   let fontBytes = 0;
-  for (const p of fontPaths) fontBytes += read(p)?.length ?? 0;
+  for (const p of fontPaths) fontBytes += load(p)?.length ?? 0;
 
   const eagerImages: PageMetrics['eagerImages'] = [];
   for (const { img, sources } of c.images) {
@@ -248,7 +259,7 @@ export function analyzePage(html: string, pagePath: string, read: ReadDist): Pag
     const set = (avif && attr(avif, 'srcset')) || attr(img, 'srcset');
     const url = set ? pickCandidate(set, sizes, MOBILE.dpr) : attr(img, 'src');
     if (!url) continue;
-    eagerImages.push({ src: url, bytes: read(pathOf(url, pagePath))?.length ?? 0 });
+    eagerImages.push({ src: url, bytes: load(url)?.length ?? 0 });
   }
   return {
     jsGzip,
@@ -259,12 +270,15 @@ export function analyzePage(html: string, pagePath: string, read: ReadDist): Pag
     fonts: [...fontPaths].sort(),
     fontBytes,
     eagerImages,
+    missing: [...new Set(missing)].sort(),
     largestEagerImage: Math.max(0, ...eagerImages.map((i) => i.bytes)),
   };
 }
 
 export function overBudget(m: PageMetrics, b: Budgets): string[] {
   const out: string[] = [];
+  if (m.missing.length > 0)
+    out.push(`referenced file(s) missing from dist: ${m.missing.join(', ')}`);
   if (m.jsGzip > b.jsGzipBytes) out.push(`JS gzip ${m.jsGzip} > ${b.jsGzipBytes}`);
   if (m.cssGzip > b.cssGzipBytes) out.push(`CSS gzip ${m.cssGzip} > ${b.cssGzipBytes}`);
   if (m.fonts.length > b.fontFiles) out.push(`font files ${m.fonts.length} > ${b.fontFiles}`);

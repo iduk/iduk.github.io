@@ -95,7 +95,19 @@ export function isAllowed(url: string, siteHost: string, allow: string[]): boole
   }
   if (u.protocol !== 'https:' && u.protocol !== 'http:') return false;
   if (u.host === siteHost) return true;
-  return allow.some((a) => (/^https?:\/\//i.test(a) ? url.startsWith(a) : u.hostname === a));
+  return allow.some((a) => {
+    if (!/^https?:\/\//i.test(a)) return u.hostname === a;
+    // URL 접두 항목: 출처(스킴+호스트+포트)가 같고 경로가 항목 경로 아래여야 한다.
+    // 문자열 접두 비교는 `https://cdn.x.org`가 `https://cdn.x.org.evil.com`을 통과시킨다.
+    let e: URL;
+    try {
+      e = new URL(a);
+    } catch {
+      return false;
+    }
+    const dir = e.pathname.endsWith('/') ? e.pathname : `${e.pathname}/`;
+    return u.origin === e.origin && (u.pathname === e.pathname || u.pathname.startsWith(dir));
+  });
 }
 
 const norm = (s: string) => s.replace(/>\s+</g, '><').replace(/\s+/g, ' ').trim();

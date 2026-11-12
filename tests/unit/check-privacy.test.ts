@@ -491,6 +491,137 @@ describe('내부 링크', () => {
   });
 });
 
+describe('인라인 스타일·스크립트의 외부 자원', () => {
+  const inStyle = (css: string) => page('<p>x</p>', `<style>${css}</style>`);
+  const inScript = (js: string) => page('<p>x</p>', `<script>${js}</script>`);
+
+  for (const [name, html] of [
+    ['인라인 style의 url()', inStyle('a{background:url(https://cdn.example.org/a.png)}')],
+    ['인라인 style의 @import 문자열', inStyle('@import "https://cdn.example.org/a.css";')],
+    ['인라인 style의 @import url()', inStyle("@import url('//cdn.example.org/a.css');")],
+    ['style 속성의 url()', page('<p style="background:url(https://cdn.example.org/a.png)">x</p>')],
+    ['인라인 script의 import()', inScript('import("https://cdn.example.org/m.js")')],
+    ['인라인 script의 http 주소', inScript("const u='http://cdn.example.org/a.js'")],
+    ['인라인 script의 fetch', inScript("fetch('//cdn.example.org/data.json')")],
+    [
+      '인라인 script의 src 문자열',
+      inScript("const s=document.createElement('script');s.src='https://cdn.example.org/a.js'"),
+    ],
+  ] as const) {
+    it(`${name}은 사이트 페이지에서 실패한다(값은 출력하지 않는다)`, async () => {
+      f.write('dist/index.html', html);
+      const r = await run(f);
+      expect(r.code).toBe(1);
+      expect(out(r)).toContain('[external-resource] dist/index.html');
+      expect(out(r)).not.toContain('cdn.example.org');
+    });
+  }
+
+  it('데모 페이지, 사이트 자신의 주소, 데이터 블록, data: 주소는 통과한다', async () => {
+    f.write('dist/html/demo/index.html', inScript('import("https://cdn.example.org/m.js")'));
+    f.write(
+      'dist/index.html',
+      page(
+        '<p style="background:url(data:image/png;base64,AAAA)">x</p>',
+        `<style>a{background:url(/work/)}</style><script>fetch("https://iduk.co.kr/work/")</script><script type="application/ld+json">{"url":"https://cdn.example.org/"}</script>`,
+      ),
+    );
+    expect((await run(f)).code).toBe(0);
+  });
+
+  it('인라인 스크립트의 깨진 내부 주소는 링크 검사가 잡는다', async () => {
+    f.write('dist/index.html', inScript("fetch('//iduk.co.kr/nope/')"));
+    expect(out(await run(f))).toContain('[broken-link] dist/index.html');
+  });
+});
+
+describe('알 수 없는 확장자와 UTF-16', () => {
+  for (const ext of ['sql', 'mdx', 'jsonl', 'rss', 'conf', 'env-sample']) {
+    it(`.${ext} 파일의 메일·전화도 공개 패턴으로 검사한다`, async () => {
+      f.write(`src/data.${ext}`, `row: ${personalMail}\n`);
+      const r = await run(f);
+      expect(r.code).toBe(1);
+      expect(out(r)).toContain(`[email] src/data.${ext}`);
+      expect(out(r)).not.toContain(personalMail);
+      f.write(`src/data.${ext}`, `call ${phone}\n`);
+      expect(out(await run(f))).toContain(`[phone] src/data.${ext}`);
+    });
+  }
+
+  it('UTF-16 파일(BOM 있음 LE/BE, BOM 없음)도 디코드해서 검사한다', async () => {
+    const le = Buffer.concat([
+      Buffer.from([0xff, 0xfe]),
+      Buffer.from(`mail ${personalMail}`, 'utf16le'),
+    ]);
+    const be = Buffer.concat([
+      Buffer.from([0xfe, 0xff]),
+      Buffer.from(`mail ${personalMail}`, 'utf16le').swap16(),
+    ]);
+    const bare = Buffer.from(`mail ${personalMail}`, 'utf16le');
+    // 한글이 대부분이면 NUL이 적어 BOM이 있어야만 UTF-16임을 알 수 있다.
+    const hangul = '가나다라마바사아자차'.repeat(30);
+    const leKo = Buffer.concat([
+      Buffer.from([0xff, 0xfe]),
+      Buffer.from(`${hangul} ${personalMail}`, 'utf16le'),
+    ]);
+    const beKo = Buffer.concat([
+      Buffer.from([0xfe, 0xff]),
+      Buffer.from(`${hangul} ${personalMail}`, 'utf16le').swap16(),
+    ]);
+    for (const [name, buf] of [
+      ['le-ko.txt', leKo],
+      ['be-ko.txt', beKo],
+      ['le.txt', le],
+      ['be.txt', be],
+      ['bare.dat', bare],
+    ] as const) {
+      f.write(`src/${name}`, buf);
+      const r = await run(f);
+      expect(r.code, name).toBe(1);
+      expect(out(r)).toContain(`[email] src/${name}`);
+      expect(out(r)).not.toContain(personalMail);
+      rmSync(join(f.root, 'src', name));
+    }
+  });
+
+  it('알려진 바이너리(글꼴, PDF)와 NUL이 많은 진짜 바이너리는 공개 패턴을 건너뛴다', async () => {
+    f.write('src/blob.woff2', Buffer.from(`\u0001${personalMail}\u0002`));
+    f.write('src/doc.pdf', Buffer.from(`%PDF ${personalMail}`));
+    // NUL이 드문(25% 미만) 진짜 바이너리: 텍스트로 읽지 않는다.
+    const raw = Buffer.from(`${'abcdefgh'.repeat(300)}${personalMail}`);
+    for (let i = 0; i < 400; i += 50) raw[i] = 0;
+    f.write('src/raw.dat', raw);
+    const r = await run(f);
+    expect(r.code).toBe(0);
+  });
+});
+
+describe('보호 범위 경고', () => {
+  it('아카이브가 없으면 출력에 한 줄 경고를 남긴다(실패는 아니다)', async () => {
+    const r = await run(f);
+    expect(r.code).toBe(0);
+    expect(out(r)).toContain('archive needles: 0 - private post titles/slugs are NOT checked');
+    expect(out(r)).toContain('--archive ../iduk.design');
+  });
+
+  it('아카이브를 쓰면 경고가 없다', async () => {
+    const archive = join(f.tmp, 'archive');
+    mkdirSync(join(archive, 'data'), { recursive: true });
+    writeFileSync(
+      join(archive, 'data/posts.json'),
+      JSON.stringify([
+        {
+          type: 'post',
+          status: 'private',
+          slug: 'zzprivate-slug-fixture',
+          title: 'Zzprivate Title Fixture',
+        },
+      ]),
+    );
+    expect(out(await run(f, { archive }))).not.toContain('archive needles: 0');
+  });
+});
+
 describe('--pre-publish', () => {
   const project = (slug: string, extra: Record<string, unknown> = {}) =>
     JSON.stringify({
@@ -586,5 +717,5 @@ describe('CLI', () => {
     expect(bad.status).toBe(1);
     expect(bad.stdout).not.toContain(personalMail);
     expect(cli(['--root', f.root, '--bogus'], { TMPDIR: f.tmp }).status).toBe(1);
-  });
+  }, 120_000);
 });

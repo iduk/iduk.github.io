@@ -357,7 +357,7 @@ pnpm gate        # lint → check → test → build → check-privacy → budge
 pnpm gate:full   # gate + Lighthouse(모바일)
 ```
 
-개별 실행: `pnpm check-privacy`(기본 모드: 추적 파일 + `dist/`, 이미지 GPS, 소스맵, `mailto:`/`tel:`, 내부 링크), `pnpm check-privacy --pre-publish`(S13·S14 전에 사람이 실행: 번역 초안 표시가 남아 있으면 실패. CI는 기본 모드만 쓴다), `pnpm budgets`(첫 로드 바이트 예산), `pnpm lighthouse`(`--collect.numberOfRuns=1`로 빠르게), `pnpm e2e`. 비공개 패턴 파일이 있으면 `IDUK_PRIVATE_PATTERNS=/경로/파일 pnpm check-privacy --require-private`로 돌린다(없으면 로컬에서는 경고만). 이웃 폴더의 `../iduk.design`이 있으면 비공개 글 제목·슬러그 검사가 자동으로 켜진다. 자세한 규칙은 docs/07 6절.
+개별 실행: `pnpm check-privacy`(기본 모드: 추적 파일 + `dist/`, 이미지 GPS, 소스맵, `mailto:`/`tel:`, 내부 링크), `pnpm check-privacy --pre-publish`(S13·S14 전에 사람이 실행: 번역 초안 표시가 남아 있으면 실패. CI는 기본 모드만 쓴다), `pnpm budgets`(첫 로드 바이트 예산), `pnpm lighthouse`(`--collect.numberOfRuns=1`로 빠르게), `pnpm e2e`. 비공개 패턴 파일이 있으면 `IDUK_PRIVATE_PATTERNS=/경로/파일 pnpm check-privacy --require-private`로 돌린다(없으면 로컬에서는 경고만). 이웃 폴더의 `../iduk.design`이 있으면 비공개 글 제목·슬러그 검사가 자동으로 켜진다. CI에서는 꺼지므로 푸시 전에는 반드시 로컬에서 `pnpm gate`(또는 `pnpm check-privacy --archive ../iduk.design`)를 한 번 돌린다(docs/07 6절). 자세한 규칙은 docs/07 6절.
 
 **CI 설정 (`.github/workflows/ci.yml`)**
 - 저장소 비밀 값 **`IDUK_PRIVATE_PATTERNS_B64`**를 한 번 만든다: 비공개 패턴 파일(줄마다 정규식)을 `base64 < 파일 | tr -d '\n'`으로 한 줄로 만들어 넣는다(한 줄이라 로그 마스킹이 값 전체에 걸린다). 워크플로는 이것을 러너 임시 파일로 풀어 `check-privacy`에 `$IDUK_PRIVATE_PATTERNS`로 넘기고 바로 지운다. 값은 어디에도 출력하지 않는다. 비밀 값이 없으면 CI에서 이 단계가 실패한다(의도).
@@ -367,6 +367,8 @@ pnpm gate:full   # gate + Lighthouse(모바일)
 - GitHub Actions는 푸시 전에는 돌 수 없다. 첫 푸시에서 처음 돌고, 로컬에서는 같은 단계를 `pnpm gate:full`로 돌려 본다.
 
 **주간 은폐 검사 (`weekly-cloak-check.yml`, `scripts/cloak-check.ts`)** 저장소 변수 `SITE_URL`(예: `https://iduk.co.kr`)을 정하면 매주 월요일에 운영 주소의 `/`, `/en/`, `/work/`를 일반 방문자(한글), 검색에서 온 방문자(Referer), 검색 로봇(User-Agent)으로 요청해 본문 유사도(0.98 미만이면 실패)와, 스크립트·스타일·iframe 주소가 사이트 자신 또는 `scripts/cloak-allow.txt` 밖인지 본다. 다른 호스트로의 리다이렉트와 200이 아닌 응답도 실패다. 변수가 없으면 알림만 남기고 성공한다(도메인 전환 전에도 무해). 실패 알림은 워크플로 실패 메일이고 이슈는 만들지 않는다(권한 `contents: read`만). 설치 없이 `node scripts/cloak-check.ts`로 돈다.
+
+**알려진 한계(메모)** `packageManager`는 `pnpm@12.18.0`만 적고 무결성 해시(`+sha512...`)는 붙이지 않았다. 해시 값을 이 환경에서 직접 확인할 수 없어 넣지 않았다. 알 수 없는 확장자(`.sql`, `.mdx`, `.jsonl`, `.rss`)와 UTF-16 파일도 `check-privacy`가 공개 패턴으로 본다.
 
 **월 1회 수동 점검 (Dependabot, 자동 병합 없음)** 매월 첫 주에 `pnpm outdated`를 보고, 올릴 것은 한 번에 하나씩 `pnpm update <패키지>`로 올린 뒤 락 파일 diff를 사람이 읽고 `pnpm gate:full`을 통과시킨 다음 커밋한다. `minimumReleaseAge`, `trustPolicy`, `blockExoticSubdeps`, `allowBuilds`는 완화하지 않는다: 신뢰 등급 하락으로 설치가 막힌 버전은 올리지 않고 이유를 docs/02에 적는다(예: `@vercel/routing-utils`, `lighthouse` 13.4 이상).
 
