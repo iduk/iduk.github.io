@@ -322,9 +322,10 @@ describe('검사기 자체 시험(고의로 깨뜨린 CSS)', () => {
 });
 
 const distMissing = !existsSync(dist);
-if (distMissing && process.env.CI) {
+// 빌드 뒤 단계만 REQUIRE_DIST=1로 dist 없음을 실패로 본다. 빌드 전 단계(CI의 첫 test)는 건너뛴다.
+if (distMissing && process.env.REQUIRE_DIST) {
   describe('빌드 결과 CSS', () => {
-    it('dist/가 있어야 한다(CI에서는 건너뛰지 않는다). 먼저 pnpm build를 실행한다', () => {
+    it('dist/가 있어야 한다(REQUIRE_DIST일 때 건너뛰지 않는다). 먼저 pnpm build를 실행한다', () => {
       expect(existsSync(dist), `${dist} 없음`).toBe(true);
     });
   });

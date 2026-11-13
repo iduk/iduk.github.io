@@ -394,7 +394,11 @@ describe('변형: 규칙이 실제로 잡는다', () => {
     ],
     [
       '빌드 뒤 단위 시험 제거',
-      (s) => s.replace(/(Unit tests against the build[^\n]*\n\s+run: )pnpm test/, '$1echo skipped'),
+      (s) =>
+        s.replace(
+          /(Unit tests against the build[^\n]*\n(?:\s+env:\n\s+[^\n]*\n)?\s+run: )pnpm test/,
+          '$1echo skipped',
+        ),
       'pnpm test must run again after the build',
     ],
     [

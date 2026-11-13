@@ -53,6 +53,8 @@ jobs:
 
       # 빌드 전에는 dist가 없어 dist를 읽는 시험(SEO, CSP, 상세 페이지 계약 등)이 건너뛰어진다. 빌드 뒤에 한 번 더 돌려 실제로 실행한다.
       - name: Unit tests against the build (dist-dependent tests now run)
+        env:
+          REQUIRE_DIST: "1"
         run: pnpm test
 
       # 비공개 패턴(옛 서버 호스트·계정 정규식, 줄마다 하나)은 저장소 밖에 둔다. 저장소 비밀 값 IDUK_PRIVATE_PATTERNS_B64에
