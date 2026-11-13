@@ -18,10 +18,9 @@
     "en": "Launch of \"TSP v3.2\", a telecare service platform for elderly people living alone"
   },
   "tags": [
-    "telecare",
-    "iot",
+    "healthcare",
     "app",
-    "responsive-web"
+    "web"
   ],
   "featured": true,
   "cover": {

@@ -39,5 +39,5 @@ S13 미리보기 배포의 점검 결과. 개인 정보와 배포 주소는 적�
 | atom 데모의 CSP 차단(worker, `data:` 오디오) | 옛 라이브러리의 기능 감지로 추정, 화면 영향 없음 | 사용자 결정(기본: 열지 않음) |
 | Lighthouse(Vercel 주소), Safari 실기기 | 보호 때문에 도구가 접근 불가 | 공개 후 점검 |
 | GitHub Actions 실행 | 첫 푸시 전 | 푸시 후 실행 결과 확인 |
-| `--pre-publish` | 번역 초안 24개 프로젝트와 14개 태그가 `draft-translation` | 검수 후 통과해야 공개(S14 전제) |
+| `--pre-publish` | 번역 초안 24개 프로젝트와 5개 태그(14개에서 정리)가 `draft-translation` | 검수 후 통과해야 공개(S14 전제) |
 | 보류 PDF 3개, 인물 이미지 검토, 파비콘 확정 | 사용자 결정 필요 | docs/manual-todo.md |

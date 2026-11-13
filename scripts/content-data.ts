@@ -32,22 +32,13 @@ export type ProjectMeta = {
   pairs?: [string, string][];
 };
 
-/** 쓰이는 태그만. 원문 태그(한글·영문 혼재)를 이 키로 정리한 제안안이다. */
+/** 쓰이는 태그만. 기준 두 개: 플랫폼(웹, 앱)과 분야·종류(헬스케어, 시스템, 그래픽). */
 export const tags: TagDef[] = [
   { id: 'web', name: l('웹', 'Web') },
-  { id: 'responsive-web', name: l('반응형 웹', 'Responsive web') },
   { id: 'app', name: l('모바일 앱', 'Mobile app') },
-  { id: 'dashboard', name: l('대시보드', 'Dashboard') },
-  { id: 'landing', name: l('랜딩 페이지', 'Landing page') },
-  { id: 'iot', name: l('IoT 서비스', 'IoT service') },
-  { id: 'smartfarm', name: l('스마트팜', 'Smart farm') },
-  { id: 'telecare', name: l('텔레케어', 'Telecare') },
-  { id: 'icon', name: l('아이콘', 'Icon design') },
-  { id: 'print', name: l('인쇄·전시', 'Print and exhibition') },
-  { id: 'mockup', name: l('목업', 'Mockup') },
-  { id: 'branding', name: l('브랜딩', 'Branding') },
-  { id: 'wordpress', name: l('워드프레스', 'WordPress') },
-  { id: 'publishing', name: l('퍼블리싱', 'Publishing') },
+  { id: 'healthcare', name: l('헬스케어', 'Healthcare') },
+  { id: 'system', name: l('시스템', 'Systems') },
+  { id: 'graphic', name: l('그래픽·인쇄', 'Graphic and print') },
 ];
 
 export const meta: Record<string, ProjectMeta> = {
@@ -84,7 +75,7 @@ export const meta: Record<string, ProjectMeta> = {
     title: l('COINGHOST Landing Web', 'COINGHOST Landing Web'),
     role: l('랜딩 웹 UI 디자인, 퍼블리싱', 'Landing web UI design, publishing'),
     summary: l('코인고스트 백서 랜딩페이지', 'Whitepaper landing page for COINGHOST'),
-    tags: ['landing', 'publishing'],
+    tags: ['web'],
     featured: false,
     coverAlt: l(
       'COINGHOST 랜딩 웹 – 가치 소개와 토큰 배분 섹션이 보이는 페이지',
@@ -104,7 +95,7 @@ export const meta: Record<string, ProjectMeta> = {
       "Jejuair Mobile Crew — 제주항공 모바일 크루 시스템 'J-CREW' UI Design.",
       "Jejuair Mobile Crew: UI design for 'J-CREW', Jeju Air's mobile crew system",
     ),
-    tags: ['app'],
+    tags: ['app', 'system'],
     featured: true,
     coverAlt: l(
       'JEJUair Mobile – J-CREW 앱 화면 목업',
@@ -124,7 +115,7 @@ export const meta: Record<string, ProjectMeta> = {
       'Desktop UI design (main screen and layout) and publishing',
     ),
     summary: l('한국도로공사 VMS 웹시스템', 'VMS web system for the Korea Expressway Corporation'),
-    tags: ['dashboard', 'web', 'publishing'],
+    tags: ['system', 'web'],
     featured: true,
     coverAlt: l(
       'ExpressWay – 도로 CCTV 채널 라이브뷰 모니터링 화면',
@@ -149,7 +140,7 @@ export const meta: Record<string, ProjectMeta> = {
       'Atom Engineering 건축사무소',
       'Responsive website for Atom Engineering, an architecture firm',
     ),
-    tags: ['responsive-web', 'publishing'],
+    tags: ['web'],
     featured: true,
     coverAlt: l(
       'Atom Engineering – "Are you in a safe building now?" 문구가 있는 메인 화면',
@@ -161,7 +152,7 @@ export const meta: Record<string, ProjectMeta> = {
     title: l('Smartfarm UI for Android', 'Smartfarm UI for Android'),
     role: l('모바일 UI 디자인', 'Mobile UI Design'),
     summary: l('스마트팜 IoT, 양돈', 'Smart farm IoT: pig farming'),
-    tags: ['smartfarm', 'iot', 'app'],
+    tags: ['app'],
     featured: false,
     coverAlt: l(
       'Smartfarm Android – 대시보드, 환경 설정, 개체 목록 화면 목업',
@@ -177,7 +168,7 @@ export const meta: Record<string, ProjectMeta> = {
       '스마트팜 IoT, 축산 농장 프로젝트, "양돈"',
       'Smart farm IoT project for a livestock farm, "Yangdon" (pig farming)',
     ),
-    tags: ['smartfarm', 'iot', 'dashboard'],
+    tags: ['system'],
     featured: true,
     coverAlt: l(
       'SmartFarm Dashboard – 관리자 대시보드 대표 화면',
@@ -198,7 +189,7 @@ export const meta: Record<string, ProjectMeta> = {
       '스마트팜 IoT 버섯농장 프로젝트, "첫걸음"',
       'Smart farm IoT project for a mushroom farm, "FirstSteps"',
     ),
-    tags: ['smartfarm', 'iot', 'dashboard'],
+    tags: ['system'],
     featured: false,
     coverAlt: l(
       'SmartFarm FirstSteps – 데스크탑 관리자 화면 대표 이미지',
@@ -219,7 +210,7 @@ export const meta: Record<string, ProjectMeta> = {
       'Home IoT + Healthcare 플랫폼 서비스 아이콘',
       'Service icons for a Home IoT + Healthcare platform',
     ),
-    tags: ['icon', 'iot'],
+    tags: ['graphic', 'healthcare'],
     featured: false,
     coverAlt: l(
       'Healthcare Icon Set – 서비스 아이콘 대표 이미지',
@@ -253,7 +244,7 @@ export const meta: Record<string, ProjectMeta> = {
     title: l('Products MockUp', 'Products MockUp'),
     role: l('제품 목업 스케치', 'Product mockup sketches'),
     summary: l('리본실버케어 주요제품 목업', 'Mockups of the main products of LivOn Silver Care'),
-    tags: ['mockup'],
+    tags: ['graphic'],
     featured: false,
     coverAlt: l(
       'Products MockUp – 제품 목업 대표 이미지',
@@ -276,7 +267,7 @@ export const meta: Record<string, ProjectMeta> = {
       '독거노인을 위한 텔레케어 서비스 플랫폼 "TSP v3.2" 런칭',
       'Launch of "TSP v3.2", a telecare service platform for elderly people living alone',
     ),
-    tags: ['telecare', 'iot', 'app', 'responsive-web'],
+    tags: ['healthcare', 'app', 'web'],
     featured: true,
     coverAlt: l(
       'Telecare Service Platform – TSP v3.2 앱 화면 대표 이미지',
@@ -303,7 +294,7 @@ export const meta: Record<string, ProjectMeta> = {
       'PAPS 체력측정시스템 기술개발 과제 — 학생감성평가 네이티브앱 및 반응형웹 화면 디자인 산출물',
       'PAPS fitness measurement system R&D project: design deliverables for a student emotion assessment native app and responsive web',
     ),
-    tags: ['app', 'responsive-web'],
+    tags: ['app', 'web'],
     featured: false,
     coverAlt: l('SmartBand App UI – 앱 화면 대표 이미지', 'SmartBand App UI – app cover image'),
     alts: {
@@ -324,7 +315,7 @@ export const meta: Record<string, ProjectMeta> = {
       '앱서비스 고도화를 위한 컨셉 시안 — LivOn TSP ver3.1, Concept Design',
       'Concept drafts for upgrading the app service (LivOn TSP ver3.1)',
     ),
-    tags: ['telecare', 'app'],
+    tags: ['healthcare', 'app'],
     featured: false,
     coverAlt: l(
       'Telecare Service Showcase – TSP ver3.1 컨셉 화면 대표 이미지',
@@ -344,7 +335,7 @@ export const meta: Record<string, ProjectMeta> = {
       '독일 뒤셀도르프 메디카 박람회 브로슈어 제작 — MEDICA 2016, World Forum for Medicine',
       'Brochure for MEDICA 2016, the World Forum for Medicine, in Düsseldorf, Germany',
     ),
-    tags: ['print'],
+    tags: ['graphic'],
     featured: false,
     coverAlt: l(
       'Exhibition Brochure – 브로슈어 대표 이미지',
@@ -389,7 +380,7 @@ export const meta: Record<string, ProjectMeta> = {
       '독일 뒤셀도르프 메디카 박람회 전시부스 판넬 디자인 — MEDICA 2016, World Forum for Medicine',
       'Booth panel design for MEDICA 2016, the World Forum for Medicine, in Düsseldorf, Germany',
     ),
-    tags: ['print'],
+    tags: ['graphic'],
     featured: false,
     coverAlt: l(
       'Exhibition Booth Design – 전시부스 대표 이미지',
@@ -413,7 +404,7 @@ export const meta: Record<string, ProjectMeta> = {
       '기업 반응형웹, 랜딩 페이지 템플릿',
       'Corporate responsive website and landing page template',
     ),
-    tags: ['responsive-web', 'landing'],
+    tags: ['healthcare', 'web'],
     featured: false,
     coverAlt: l(
       'Telecare Service Website – 반응형 웹사이트 대표 이미지',
@@ -437,7 +428,7 @@ export const meta: Record<string, ProjectMeta> = {
       '요식업계 컨셉의 템플릿 디자인 습작',
       'A template design study with a food business concept',
     ),
-    tags: ['landing', 'web'],
+    tags: ['web'],
     featured: false,
     coverAlt: l(
       'Cooking Landing Page Template – 요리 사진이 있는 MOMS RECIPY 랜딩 페이지',
@@ -472,7 +463,7 @@ export const meta: Record<string, ProjectMeta> = {
       '온라인 마케팅 기업 Jbro, 반응형 웹사이트',
       'Responsive website for Jbro, an online marketing company',
     ),
-    tags: ['responsive-web'],
+    tags: ['web'],
     featured: false,
     coverAlt: l(
       'J-bro 반응형 웹사이트 – 대표 이미지',
@@ -495,7 +486,7 @@ export const meta: Record<string, ProjectMeta> = {
       '마케팅 전문기업 "이레컴즈", 워드프레스 반응형 웹사이트 제작',
       'Responsive WordPress website for 7daycomz (이레컴즈), a marketing company',
     ),
-    tags: ['web', 'wordpress'],
+    tags: ['web'],
     featured: false,
     coverAlt: l(
       'AD Company WordPress – 워드프레스 사이트 대표 이미지',
@@ -522,7 +513,7 @@ export const meta: Record<string, ProjectMeta> = {
       '한류 뷰티 커뮤니티 플랫폼 서비스 "美丽思密达"',
       'Korean Wave beauty community platform for China, "美丽思密达"',
     ),
-    tags: ['web', 'app', 'publishing'],
+    tags: ['web', 'app'],
     featured: true,
     coverAlt: l(
       '중국 뷰티 플랫폼 – 웹 서비스 대표 이미지',
@@ -558,7 +549,7 @@ export const meta: Record<string, ProjectMeta> = {
       '카드 혜택을 비교하여 더 나은 카드를 제공하는 서비스 "카드덕"(Card Duck)',
       'A service that compares credit card benefits to offer better cards: "Card Duck"',
     ),
-    tags: ['web', 'branding'],
+    tags: ['web', 'graphic'],
     featured: true,
     coverAlt: l(
       'Card Duck – 카드 비교 서비스 대표 이미지',
@@ -590,7 +581,7 @@ export const meta: Record<string, ProjectMeta> = {
       '매트리스 수입/병행 기업 "BM Ultra" 웹사이트',
       'Website for BM Ultra, a mattress importer (parallel imports)',
     ),
-    tags: ['web', 'publishing'],
+    tags: ['web'],
     featured: false,
     coverAlt: l(
       'Bed Mattress Website – BM Ultra 메인 화면 대표 이미지',

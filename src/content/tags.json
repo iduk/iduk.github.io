@@ -8,14 +8,6 @@
     "status": "draft-translation"
   },
   {
-    "id": "responsive-web",
-    "name": {
-      "ko": "반응형 웹",
-      "en": "Responsive web"
-    },
-    "status": "draft-translation"
-  },
-  {
     "id": "app",
     "name": {
       "ko": "모바일 앱",
@@ -24,90 +16,26 @@
     "status": "draft-translation"
   },
   {
-    "id": "dashboard",
+    "id": "healthcare",
     "name": {
-      "ko": "대시보드",
-      "en": "Dashboard"
+      "ko": "헬스케어",
+      "en": "Healthcare"
     },
     "status": "draft-translation"
   },
   {
-    "id": "landing",
+    "id": "system",
     "name": {
-      "ko": "랜딩 페이지",
-      "en": "Landing page"
+      "ko": "시스템",
+      "en": "Systems"
     },
     "status": "draft-translation"
   },
   {
-    "id": "iot",
+    "id": "graphic",
     "name": {
-      "ko": "IoT 서비스",
-      "en": "IoT service"
-    },
-    "status": "draft-translation"
-  },
-  {
-    "id": "smartfarm",
-    "name": {
-      "ko": "스마트팜",
-      "en": "Smart farm"
-    },
-    "status": "draft-translation"
-  },
-  {
-    "id": "telecare",
-    "name": {
-      "ko": "텔레케어",
-      "en": "Telecare"
-    },
-    "status": "draft-translation"
-  },
-  {
-    "id": "icon",
-    "name": {
-      "ko": "아이콘",
-      "en": "Icon design"
-    },
-    "status": "draft-translation"
-  },
-  {
-    "id": "print",
-    "name": {
-      "ko": "인쇄·전시",
-      "en": "Print and exhibition"
-    },
-    "status": "draft-translation"
-  },
-  {
-    "id": "mockup",
-    "name": {
-      "ko": "목업",
-      "en": "Mockup"
-    },
-    "status": "draft-translation"
-  },
-  {
-    "id": "branding",
-    "name": {
-      "ko": "브랜딩",
-      "en": "Branding"
-    },
-    "status": "draft-translation"
-  },
-  {
-    "id": "wordpress",
-    "name": {
-      "ko": "워드프레스",
-      "en": "WordPress"
-    },
-    "status": "draft-translation"
-  },
-  {
-    "id": "publishing",
-    "name": {
-      "ko": "퍼블리싱",
-      "en": "Publishing"
+      "ko": "그래픽·인쇄",
+      "en": "Graphic and print"
     },
     "status": "draft-translation"
   }

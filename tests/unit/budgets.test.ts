@@ -188,7 +188,7 @@ describe('overBudget', () => {
 describe.skipIf(!existsSync(join(dist, 'index.html')))('빌드 결과 전체', () => {
   it('모든 사이트 페이지가 예산 안이다', () => {
     const rows = analyzeDist(dist);
-    expect(rows.length).toBeGreaterThan(70);
+    expect(rows.length).toBeGreaterThan(55); // 작업 24개 x 2언어 + 목록·태그·홈·404
     const failures = rows.flatMap((r) => overBudget(r.m, BUDGETS).map((f) => `${r.page}: ${f}`));
     expect(failures).toEqual([]);
   }, 120_000);
