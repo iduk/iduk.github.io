@@ -40,8 +40,8 @@ export const tags: TagDef[] = [
   { id: 'commerce', name: l('뷰티·커머스', 'Beauty and commerce') },
   { id: 'finance', name: l('금융·핀테크', 'Finance and fintech') },
   { id: 'corporate', name: l('마케팅·기업', 'Marketing and corporate') },
-  { id: 'ui-design', name: l('UX/UI', 'UX/UI design') },
-  { id: 'publishing', name: l('웹 퍼블리싱', 'Front-end development') },
+  { id: 'ui-design', name: l('UX/UI', 'UX/UI') },
+  { id: 'publishing', name: l('HTML/CSS', 'HTML/CSS') },
   { id: 'planning', name: l('서비스 기획', 'Service planning') },
   { id: 'graphic', name: l('아이콘·그래픽', 'Icon and graphic') },
 ];

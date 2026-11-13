@@ -51,15 +51,15 @@
     "id": "ui-design",
     "name": {
       "ko": "UX/UI",
-      "en": "UX/UI design"
+      "en": "UX/UI"
     },
     "status": "draft-translation"
   },
   {
     "id": "publishing",
     "name": {
-      "ko": "웹 퍼블리싱",
-      "en": "Front-end development"
+      "ko": "HTML/CSS",
+      "en": "HTML/CSS"
     },
     "status": "draft-translation"
   },
