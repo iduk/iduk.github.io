@@ -177,7 +177,17 @@
     },
     {
       "source": "/portfolio/",
-      "destination": "/work/",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/work/",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/work/",
+      "destination": "/en/",
       "statusCode": 301
     }
   ]

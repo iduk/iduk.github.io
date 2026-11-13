@@ -40,6 +40,9 @@ export function buildRedirects(projects: LegacyProject[]): Redirect[] {
     }
     rules.push(permanent(p.legacyPath, `/work/${p.slug}/`));
   }
-  rules.push(permanent('/portfolio/', '/work/'));
+  rules.push(permanent('/portfolio/', '/'));
+  // 첫 화면이 작업 목록이다. 옛 목록 주소는 첫 화면으로 보낸다.
+  rules.push(permanent('/work/', '/'));
+  rules.push(permanent('/en/work/', '/en/'));
   return rules;
 }

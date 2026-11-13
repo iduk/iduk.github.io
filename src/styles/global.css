@@ -150,16 +150,6 @@
   }
 }
 
-@keyframes hero-open {
-  from {
-    clip-path: inset(0 0 100% 0);
-  }
-  to {
-    /* 끝 모양은 가장자리를 약간 넘겨서 자간·내려긋기가 잘리지 않게 한다. 끝나면 clip-path는 none으로 돌아간다. */
-    clip-path: inset(-0.1em -0.1em -0.25em -0.1em);
-  }
-}
-
 @layer components {
   /* 확대 대상 이미지의 틀: 확대해도 넘치지 않는다. */
   .zoom {
@@ -178,16 +168,6 @@
         animation-timeline: view();
         animation-range: entry 0% entry 40%;
       }
-    }
-  }
-
-  /* 히어로: 줄 단위로 가려졌다 열린다. 문서가 새로 열릴 때 한 번만 재생된다(bfcache 복원 시 재생 안 됨). */
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-line {
-      animation: hero-open 800ms var(--ease) backwards;
-    }
-    .hero-line:nth-child(2) {
-      animation-delay: 120ms;
     }
   }
 
@@ -240,7 +220,6 @@
 /* 인쇄: 스크린 모션의 숨김·이동·확대가 인쇄물에 남지 않게 한다. */
 @media print {
   .reveal,
-  .hero-line,
   .zoom .pic {
     animation: none !important;
     transition: none !important;

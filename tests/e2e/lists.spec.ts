@@ -10,7 +10,6 @@ interface P {
   year: number;
   order: number;
   tags: string[];
-  featured?: boolean;
   title: { ko: string; en: string };
 }
 const projects: P[] = readdirSync(join(root, 'src/content/projects'))
@@ -18,7 +17,6 @@ const projects: P[] = readdirSync(join(root, 'src/content/projects'))
   .map((f) => read(`src/content/projects/${f}`));
 const tags: { id: string; name: { ko: string; en: string } }[] = read('src/content/tags.json');
 const usedTags = tags.filter((t) => projects.some((p) => p.tags.includes(t.id)));
-const featured = projects.filter((p) => p.featured);
 
 const locales = [
   { loc: 'ko', prefix: '' },
@@ -42,34 +40,18 @@ test.describe('JS 없이', () => {
   test.use({ javaScriptEnabled: false });
 
   for (const { loc, prefix } of locales) {
-    test(`${loc} 홈: 대표 작업 행 6~8개, 히어로, 전체 보기 링크`, async ({ page }) => {
+    test(`${loc} 홈: 24개 행, 연도별 그룹, 연도 내림차순`, async ({ page }) => {
       await page.goto(`${prefix}/`);
-      expect(featured.length).toBeGreaterThanOrEqual(6);
-      expect(featured.length).toBeLessThanOrEqual(8);
-      await expect(rows(page)).toHaveCount(featured.length);
-      expect(await hrefsOf(page)).toEqual(expectedHrefs(prefix, featured));
       await expect(page.locator('h1')).toHaveCount(1);
-      await expect(page.locator('h1')).toHaveText('iduk');
-      await expect(page.locator('.lede')).toHaveText(loc === 'ko' ? '대표 작업' : 'Selected Work');
-      const all = page.locator('a[data-all-work]');
-      await expect(all).toHaveAttribute('href', `${prefix}/work/`);
+      await expect(page.locator('h1')).toHaveText(loc === 'ko' ? '작업' : 'Work');
+      // 헤더 로고는 장식 그림이고 링크 이름이 홈을 말한다
+      await expect(page.locator('a.logo')).toHaveAttribute('aria-label', /^iduk, /);
       // 행 링크의 접근 가능한 이름에 제목이 정확히 한 번만 들어간다(이미지는 장식)
-      for (const p of featured) {
+      for (const p of projects) {
         const snap = await page.locator(`a[href="${prefix}/work/${p.slug}/"]`).ariaSnapshot();
-        const name = snap.match(/link "(.*)"/)?.[1] ?? '';
+        const name = (snap.match(/link "(.*)"/)?.[1] ?? '').replaceAll('\\"', '"'); // 스냅샷은 따옴표를 이스케이프한다
         expect(name.split(p.title[loc]).length - 1, `${p.slug}: ${name}`).toBe(1);
       }
-      // 첫 번째 이미지만 eager
-      const loading = await rows(page)
-        .locator('img')
-        .evaluateAll((imgs) => imgs.map((i) => i.getAttribute('loading')));
-      expect(loading[0]).toBe('eager');
-      expect(loading.slice(1).every((l) => l === 'lazy')).toBe(true);
-    });
-
-    test(`${loc} /work/: 24개 행, 연도별 그룹, 연도 내림차순`, async ({ page }) => {
-      await page.goto(`${prefix}/work/`);
-      await expect(page.locator('h1')).toHaveCount(1);
       await expect(rows(page)).toHaveCount(24);
       const years = await page
         .locator('h2[data-year]')
@@ -131,7 +113,7 @@ test.describe('JS 없이', () => {
   }
 
   test('태그 필터와 언어 전환 링크를 눌러 이동한다', async ({ page }) => {
-    await page.goto('/work/');
+    await page.goto('/');
     const tag = usedTags[0];
     await page.locator(`nav[data-tag-filter] a[href="/work/tag/${tag.id}/"]`).click();
     await expect(page).toHaveURL(new RegExp(`/work/tag/${tag.id}/$`));
@@ -139,21 +121,21 @@ test.describe('JS 없이', () => {
     await expect(page).toHaveURL(new RegExp(`/en/work/tag/${tag.id}/$`));
     await expect(page.locator('h1')).toHaveText(tag.name.en);
     await page.locator('nav[data-tag-filter] a[data-filter-all]').click();
-    await expect(page).toHaveURL(/\/en\/work\/$/);
+    await expect(page).toHaveURL((u) => u.pathname === '/en/');
     await expect(rows(page)).toHaveCount(24);
     await page.locator('footer a[hreflang="ko"]').click();
-    await expect(page).toHaveURL(/\/work\/$/);
+    await expect(page).toHaveURL((u) => u.pathname === '/');
   });
 
   test('목록 행에서 상세로 이동한다', async ({ page }) => {
-    await page.goto('/work/');
+    await page.goto('/');
     await page.locator('a[data-work-link]').first().click();
     await expect(page).toHaveURL(/\/work\/[a-z0-9-]+\/$/);
     await expect(page.locator('h1')).toHaveCount(1);
   });
 });
 
-const listPages = ['/', '/work/', ...usedTags.map((t) => `/work/tag/${t.id}/`)].flatMap((p) =>
+const listPages = ['/', ...usedTags.map((t) => `/work/tag/${t.id}/`)].flatMap((p) =>
   locales.map(({ prefix }) => (p === '/' ? `${prefix}/` : `${prefix}${p}`)),
 );
 
@@ -187,9 +169,7 @@ test.describe('360px', () => {
   }
 
   const touchPages = locales.flatMap(({ prefix }) =>
-    ['/', '/work/', '/work/tag/healthcare/'].map((p) =>
-      p === '/' ? `${prefix}/` : `${prefix}${p}`,
-    ),
+    ['/', '/work/tag/healthcare/'].map((p) => (p === '/' ? `${prefix}/` : `${prefix}${p}`)),
   );
   for (const url of touchPages) {
     test(`${url} 터치 대상은 가로세로 44px 이상`, async ({ page }) => {
@@ -247,7 +227,7 @@ test.describe('콘솔과 CSP, 내부 링크', () => {
 
 test.describe('태그 페이지 설명', () => {
   for (const { loc, prefix } of locales) {
-    test(`${loc} 14개 태그의 meta description이 모두 다르고 이름과 개수를 담는다`, async ({
+    test(`${loc} 모든 태그의 meta description이 모두 다르고 이름과 개수를 담는다`, async ({
       request,
     }) => {
       const descs: string[] = [];
@@ -271,7 +251,7 @@ test.describe('호버 미리보기', () => {
   test('hover:hover 1440px에서 호버하면 보이고 평소엔 숨는다', async ({ browser }) => {
     const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     const page = await ctx.newPage();
-    await page.goto('/work/');
+    await page.goto('/');
     expect(await page.evaluate(() => matchMedia('(hover: hover)').matches)).toBe(true);
     await expect(preview(page)).toBeHidden();
     await firstLink(page).hover();
@@ -282,7 +262,7 @@ test.describe('호버 미리보기', () => {
   test('64rem 미만에서는 호버해도 보이지 않는다', async ({ browser }) => {
     const ctx = await browser.newContext({ viewport: { width: 900, height: 900 } });
     const page = await ctx.newPage();
-    await page.goto('/work/');
+    await page.goto('/');
     await firstLink(page).hover();
     await expect(preview(page)).toBeHidden();
     await ctx.close();
@@ -295,7 +275,7 @@ test.describe('호버 미리보기', () => {
       hasTouch: true,
     });
     const page = await ctx.newPage();
-    await page.goto('/work/');
+    await page.goto('/');
     expect(await page.evaluate(() => matchMedia('(hover: none)').matches)).toBe(true);
     await firstLink(page).focus();
     await firstLink(page).hover();

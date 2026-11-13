@@ -144,9 +144,9 @@ function hidesOrMoves(p: string, rawValue: string): boolean {
 const ruleSummary = (r: Rule, p: string, v: string) =>
   `${r.selector} { ${p}: ${v} } (게이트: ${r.gates.join(' > ') || '없음'})`;
 
-const TARGETS = /\.(reveal|hero-line)\b/;
+const TARGETS = /\.reveal\b/;
 
-/** `.reveal`·`.hero-line` 규칙 중 게이트 밖에서 숨기거나 옮기는 것. */
+/** `.reveal` 규칙 중 게이트 밖에서 숨기거나 옮기는 것. */
 function ungatedViolations(rules: Rule[]): string[] {
   const out: string[] = [];
   for (const r of rules) {
@@ -175,13 +175,13 @@ function zoomViolations(rules: Rule[]): string[] {
 
 const MOTION_ELEMENT = /<[a-z0-9-]+\b[^>]*\bclass="([^"]*)"/g;
 
-/** 빌드된 HTML에서 reveal/hero-line/zoom과 같은 요소에 붙은 다른 클래스를 모은다. */
+/** 빌드된 HTML에서 reveal/zoom과 같은 요소에 붙은 다른 클래스를 모은다. */
 function motionClasses(htmls: string[]): Set<string> {
   const found = new Set<string>();
   for (const html of htmls) {
     for (const m of html.matchAll(MOTION_ELEMENT)) {
       const classes = m[1].split(/\s+/).filter(Boolean);
-      if (!classes.some((c) => c === 'reveal' || c === 'hero-line' || c === 'zoom')) continue;
+      if (!classes.some((c) => c === 'reveal' || c === 'zoom')) continue;
       for (const c of classes) found.add(c);
       if (classes.includes('zoom')) found.add('pic'); // .zoom .pic: 안쪽 이미지
     }
@@ -242,7 +242,7 @@ describe('검사기 자체 시험(고의로 깨뜨린 CSS)', () => {
     expect(ungatedViolations(parseRules('.reveal{opacity:0}')).length).toBe(1);
   });
   it('게이트 밖 translate/transform/clip-path를 잡는다', () => {
-    expect(ungatedViolations(parseRules('.hero-line{clip-path:inset(0 0 100% 0)}')).length).toBe(1);
+    expect(ungatedViolations(parseRules('.reveal{clip-path:inset(0 0 100% 0)}')).length).toBe(1);
     expect(ungatedViolations(parseRules('.a .reveal{transform:translateY(24px)}')).length).toBe(1);
     expect(ungatedViolations(parseRules('@layer c{.reveal{translate:0 24px}}')).length).toBe(1);
   });
@@ -343,22 +343,19 @@ describe.skipIf(distMissing)('빌드 결과 CSS: 지원하지 않는 브라우�
         walkFiles(dist, (n) => n.endsWith('.html')).map((f) => readFileSync(f, 'utf8')),
       );
 
-  it('.reveal·.hero-line 규칙이 실제로 존재하고 게이트 안에 있다', () => {
+  it('.reveal 규칙이 실제로 존재하고 게이트 안에 있다', () => {
     const screen = rules.filter((r) => !r.gates.includes('@media print'));
     const reveal = screen.filter((r) => /\.reveal\b/.test(r.selector));
-    const hero = screen.filter((r) => /\.hero-line\b/.test(r.selector));
     expect(reveal.length).toBeGreaterThan(0);
-    expect(hero.length).toBeGreaterThan(0);
     expect(reveal.every((r) => motionGated(r, true))).toBe(true);
-    expect(hero.every((r) => motionGated(r, false))).toBe(true);
   });
 
-  it('게이트 밖에서 .reveal·.hero-line이 숨겨지거나 옮겨지지 않는다', () => {
+  it('게이트 밖에서 .reveal이 숨겨지거나 옮겨지지 않는다', () => {
     expect(ungatedViolations(rules)).toEqual([]);
   });
 
   it('HTML에서 모션 요소가 쓰는 모든 클래스가 게이트 밖에서 숨기거나 옮기지 않는다', () => {
-    for (const c of ['reveal', 'hero-line', 'zoom', 'text-block', 'pic', 'name', 'tags']) {
+    for (const c of ['reveal', 'zoom', 'text-block', 'pic', 'name', 'tags']) {
       expect(classes.has(c), `${c}가 HTML에서 모션 요소와 함께 쓰이지 않음`).toBe(true);
     }
     expect(classViolations(rules, classes)).toEqual([]);

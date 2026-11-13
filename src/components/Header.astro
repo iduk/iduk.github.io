@@ -23,10 +23,8 @@ const labels = {
 <header class="site-header">
   <a class="logo" href={localizedPath(locale, '/')} aria-label={`iduk, ${t(locale, 'nav.home')}`}>
     <Fragment set:html={mark} />
-    <span>iduk</span>
   </a>
   <nav class="nav" aria-label={t(locale, 'nav.primary')}>
-    <a href={localizedPath(locale, '/work/')}>{t(locale, 'nav.work')}</a>
     <button
       type="button"
       class="theme-toggle"

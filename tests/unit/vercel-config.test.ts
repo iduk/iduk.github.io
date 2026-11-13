@@ -246,11 +246,17 @@ describe('리다이렉트가 콘텐츠 JSON과 일치', () => {
   it('vercel.json의 redirects는 생성기 출력과 같다(손으로 고치지 않는다)', () => {
     expect(rules).toEqual(buildRedirects(projects));
   });
-  it('글 24개가 정확히 한 번씩 덮이고 /portfolio/ 하나만 더 있다(총 25개)', () => {
-    expect(rules).toHaveLength(25);
+  it('글 24개가 정확히 한 번씩 덮이고, 첫 화면으로 가는 규칙 3개만 더 있다(총 27개)', () => {
+    expect(rules).toHaveLength(27);
     const bySlug = new Map(rules.map((r) => [r.destination, r.source]));
     for (const p of projects) expect(bySlug.get(`/work/${p.slug}/`), p.slug).toBe(p.legacyPath);
-    expect(rules.find((r) => r.destination === '/work/')?.source).toBe('/portfolio/');
+    // 첫 화면이 작업 목록이라 옛 목록 주소들은 모두 첫 화면으로 간다.
+    const toHome = rules.filter((r) => r.destination === '/' || r.destination === '/en/');
+    expect(toHome.map((r) => [r.source, r.destination]).sort()).toEqual([
+      ['/en/work/', '/en/'],
+      ['/portfolio/', '/'],
+      ['/work/', '/'],
+    ]);
     expect(new Set(rules.map((r) => r.source)).size).toBe(rules.length);
   });
   it('모든 리다이렉트는 301이고 permanent(308)나 임시 코드를 쓰지 않는다', () => {
@@ -260,7 +266,9 @@ describe('리다이렉트가 콘텐츠 JSON과 일치', () => {
     }
   });
   it('목적지는 사이트 안의 한글 주소(슬래시로 끝남), 쿼리 없음', () => {
-    for (const r of rules) expect(r.destination, r.source).toMatch(/^\/work\/(?:[a-z0-9-]+\/)?$/);
+    for (const r of rules) {
+      expect(r.destination, r.source).toMatch(/^(?:\/|\/en\/|\/work\/[a-z0-9-]+\/)$/);
+    }
   });
   it('변환된 라우트에서 모든 리다이렉트 규칙에 실제로 도달한다(앞선 라우트가 가리지 않는다)', () => {
     for (const r of rules) {
@@ -282,9 +290,10 @@ describe('리다이렉트가 콘텐츠 JSON과 일치', () => {
       location: '/work/jejuair-mobile/',
     });
     expect(go('/portfolio/1812').hops.map((h) => h.status)).toEqual([308, 301]);
-    expect(go('/portfolio/').hops).toEqual([
-      { from: '/portfolio/', status: 301, location: '/work/' },
-    ]);
+    expect(go('/portfolio/').hops).toEqual([{ from: '/portfolio/', status: 301, location: '/' }]);
+    expect(go('/work/').hops).toEqual([{ from: '/work/', status: 301, location: '/' }]);
+    expect(go('/en/work/').hops).toEqual([{ from: '/en/work/', status: 301, location: '/en/' }]);
+    expect(go('/work').hops.map((h) => h.status)).toEqual([308, 301]);
     expect(go('/portfolio').hops.map((h) => h.status)).toEqual([308, 301]);
     expect(go('/work/oyedu').hops).toEqual([
       { from: '/work/oyedu', status: 308, location: '/work/oyedu/' },
@@ -306,8 +315,10 @@ describe('리다이렉트가 콘텐츠 JSON과 일치', () => {
     }
     expect(config.redirects.some((r) => r.source === '/')).toBe(false);
   });
-  it('영문 옛 주소는 없다', () => {
-    expect(rules.some((r) => r.source.startsWith('/en'))).toBe(false);
+  it('영문 옛 주소는 목록 하나뿐이다(/en/work/ -> /en/)', () => {
+    expect(rules.filter((r) => r.source.startsWith('/en')).map((r) => r.source)).toEqual([
+      '/en/work/',
+    ]);
   });
   it('워드프레스 경로는 정적 404로 끝난다(리다이렉트·재작성·예외 없음)', () => {
     const wp = [

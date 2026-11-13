@@ -33,11 +33,10 @@ const locales = [
   { loc: 'en', prefix: '/en' },
 ] as const;
 
-/** 두 언어의 모든 페이지: 홈, 목록, 태그, 상세, 그리고 404. */
+/** 두 언어의 모든 페이지: 홈(= 작업 목록), 태그, 상세, 그리고 404. */
 export const allPages: SitePage[] = [
   ...locales.flatMap(({ loc, prefix }) => [
     { path: `${prefix}/`, kind: 'home' as const, loc },
-    { path: `${prefix}/work/`, kind: 'list' as const, loc },
     ...usedTagIds.map((id) => ({
       path: `${prefix}/work/tag/${id}/`,
       kind: 'tag' as const,
@@ -83,12 +82,12 @@ export const representativeSlugs = [
   ]),
 ];
 
-/** 대표 페이지(두 언어): 홈, 목록, 가장 큰 태그 둘, 대표 상세, 404. */
+/** 대표 페이지(두 언어): 홈(= 작업 목록), 가장 큰 태그 둘, 대표 상세, 404. */
 export const representativePages: SitePage[] = (() => {
   const tagSize = (id: string) => projects.filter((p) => p.tags.includes(id)).length;
   const bigTags = [...usedTagIds].sort((a, b) => tagSize(b) - tagSize(a)).slice(0, 2);
   const wanted = new Set<string>([
-    ...locales.flatMap(({ prefix }) => [`${prefix}/`, `${prefix}/work/`]),
+    ...locales.map(({ prefix }) => `${prefix}/`),
     ...locales.flatMap(({ prefix }) => bigTags.map((id) => `${prefix}/work/tag/${id}/`)),
     ...locales.flatMap(({ prefix }) => representativeSlugs.map((s) => `${prefix}/work/${s}/`)),
     '/__not-found__/',
@@ -96,13 +95,11 @@ export const representativePages: SitePage[] = (() => {
   return allPages.filter((p) => wanted.has(p.path));
 })();
 
-/** 라이트/다크 쌍으로 도는 더 작은 집합: 홈, 목록, 상세 하나(가장 긴 캡처), 두 언어. */
+/** 라이트/다크 쌍으로 도는 더 작은 집합: 홈(= 작업 목록), 상세 하나(가장 긴 캡처), 두 언어. */
 export const themePages: SitePage[] = allPages.filter(
   (p) =>
     p.path === '/' ||
     p.path === '/en/' ||
-    p.path === '/work/' ||
-    p.path === '/en/work/' ||
     p.path === `/work/${longshotSlugs[0]}/` ||
     p.path === `/en/work/${longshotSlugs[0]}/` ||
     p.path === '/__not-found__/',

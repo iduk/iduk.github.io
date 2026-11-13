@@ -128,7 +128,7 @@ test.describe('리다이렉트', () => {
     }
   });
 
-  test('/portfolio/1812 → jejuair-mobile, /portfolio → /work/ (두 번 이동)', async ({
+  test('/portfolio/1812 → jejuair-mobile, /portfolio → 첫 화면, 옛 목록 /work/ → 첫 화면', async ({
     dist: s,
     request,
   }) => {
@@ -138,8 +138,11 @@ test.describe('리다이렉트', () => {
     };
     expect(await get('/portfolio/1812/')).toEqual([301, '/work/jejuair-mobile/']);
     expect(await get('/portfolio/1812')).toEqual([308, '/portfolio/1812/']);
-    expect(await get('/portfolio/')).toEqual([301, '/work/']);
+    expect(await get('/portfolio/')).toEqual([301, '/']);
     expect(await get('/portfolio')).toEqual([308, '/portfolio/']);
+    // 첫 화면이 작업 목록이라 옛 목록 주소는 첫 화면으로 간다.
+    expect(await get('/work/')).toEqual([301, '/']);
+    expect(await get('/en/work/')).toEqual([301, '/en/']);
   });
 
   test('/?p=ID, /?page_id=ID는 이동 없이 홈 200 (canonical이 /를 가리킨다)', async ({
@@ -147,7 +150,7 @@ test.describe('리다이렉트', () => {
     request,
     page,
   }) => {
-    for (const url of ['/?p=1833', '/?page_id=77', '/', '/?utm_source=x', '/work/?p=1']) {
+    for (const url of ['/?p=1833', '/?page_id=77', '/', '/?utm_source=x']) {
       expect((await request.get(`${s.origin}${url}`, { maxRedirects: 0 })).status(), url).toBe(200);
     }
     await page.goto(`${s.origin}/?p=1833`);
@@ -228,13 +231,7 @@ test.describe('응답 헤더', () => {
 });
 
 test.describe('콘솔 CSP 위반 0 (헤더 CSP + meta CSP 동시 적용)', () => {
-  const pages = [
-    '/',
-    '/work/',
-    `/work/tag/${tags[0]}/`,
-    `/work/${projects[0].slug}/`,
-    '/not-a-page/',
-  ];
+  const pages = ['/', `/work/tag/${tags[0]}/`, `/work/${projects[0].slug}/`, '/not-a-page/'];
   for (const prefix of ['', '/en']) {
     for (const p of pages) {
       const url = prefix && p === '/not-a-page/' ? p : `${prefix}${p}`;

@@ -44,13 +44,13 @@ const movingAnimations = (page: Page) =>
 test.describe('모션 줄이기(reduce)', () => {
   test.use({ reducedMotion: 'reduce' });
 
-  for (const path of ['/', '/work/', `/work/${sample}/`, '/en/', `/en/work/${sample}/`]) {
+  for (const path of ['/', `/work/${sample}/`, '/en/', `/en/work/${sample}/`]) {
     test(`${path}: 이동·확대·마스크 애니메이션 없음, 모두 보임`, async ({ page }) => {
       await page.goto(path);
       await page.waitForTimeout(300);
       expect(await movingAnimations(page)).toEqual([]);
       const state = await page.evaluate(() => {
-        const sel = '.reveal, .hero-line';
+        const sel = '.reveal';
         const els = [...document.querySelectorAll(sel)];
         return {
           count: els.length,
@@ -67,13 +67,13 @@ test.describe('모션 줄이기(reduce)', () => {
             .map((e) => e.className),
         };
       });
-      expect(state.count, 'reveal/hero 요소가 있어야 시험이 의미가 있다').toBeGreaterThan(0);
+      expect(state.count, 'reveal 요소가 있어야 시험이 의미가 있다').toBeGreaterThan(0);
       expect(state.bad).toEqual([]);
     });
   }
 
   test('호버해도 확대되지 않는다', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(`/work/${sample}/`);
     const img = page.locator('.zoom .pic').first();
     await img.scrollIntoViewIfNeeded();
     await img.hover();
@@ -120,7 +120,7 @@ test.describe('모션 줄이기(reduce)', () => {
       reducedMotion: 'reduce',
     });
     const page = await ctx.newPage();
-    await reduceTransition(page, '/work/', `a[href="/work/${projects[3].slug}/"]`);
+    await reduceTransition(page, '/', `a[href="/work/${projects[3].slug}/"]`);
     await ctx.close();
   });
 });
@@ -193,12 +193,12 @@ const uniqueNames = (page: Page) =>
   });
 
 test.describe('인쇄', () => {
-  for (const path of ['/', '/work/', `/work/${sample}/`]) {
+  for (const path of ['/', `/work/${sample}/`]) {
     test(`${path}: 인쇄 미디어에서는 숨김·이동·마스크가 없다`, async ({ page }) => {
       await page.goto(path);
       await page.emulateMedia({ media: 'print' });
       const bad = await page.evaluate(() =>
-        [...document.querySelectorAll('.reveal, .hero-line, .zoom .pic')]
+        [...document.querySelectorAll('.reveal, .zoom .pic')]
           .map((e) => {
             const c = getComputedStyle(e);
             return {
@@ -220,7 +220,7 @@ test.describe('인쇄', () => {
           ),
       );
       expect(bad).toEqual([]);
-      expect(await page.locator('.reveal, .hero-line').count()).toBeGreaterThan(0);
+      expect(await page.locator('.reveal').count()).toBeGreaterThan(0);
     });
   }
 
@@ -241,7 +241,7 @@ test.describe('인쇄', () => {
 
 /** 모든 엔진: 스크롤 등장 요소는 보이는 위치에서는 항상 완전히 보인다(미지원이면 처음부터). */
 test.describe('모든 엔진: 내용이 항상 보인다', () => {
-  for (const path of ['/', '/work/', `/work/${sample}/`]) {
+  for (const path of ['/', `/work/${sample}/`]) {
     test(`${path}: .reveal을 하나씩 가운데로 가져오면 불투명하고 제자리`, async ({ page }) => {
       await page.goto(path);
       const els = page.locator('.reveal');
@@ -265,7 +265,7 @@ test.describe('@supports 미지원 에뮬레이션(Chromium)', () => {
   test.skip(({ browserName }) => browserName !== 'chromium', 'Chromium 전용 에뮬레이션');
 
   // 실제 Safari/Firefox 대신, 스타일시트의 @supports 조건을 거짓으로 바꿔서 같은 경로를 만든다.
-  for (const path of ['/', '/work/', `/work/${sample}/`]) {
+  for (const path of ['/', `/work/${sample}/`]) {
     test(`${path}: 처음부터 전부 보이고 애니메이션이 없다`, async ({ page }) => {
       let rewritten = 0;
       const unsupported = (css: string) =>
@@ -349,7 +349,7 @@ test.describe('모션 허용(Chromium)', () => {
   ];
   for (const { loc, prefix } of locales) {
     for (const vp of viewports) {
-      test(`${loc} ${vp.name}px: 최종 LCP 요소는 애니메이션 밖의 이미지다(홈·상세)`, async ({
+      test(`${loc} ${vp.name}px: 최종 LCP 요소는 애니메이션 밖의 이미지다(상세; 홈은 텍스트 목록)`, async ({
         page,
       }) => {
         await page.setViewportSize({ width: vp.width, height: vp.height });
@@ -361,10 +361,10 @@ test.describe('모션 허용(Chromium)', () => {
               w.__lcp.push(e as PerformanceEntry & { element?: Element });
           }).observe({ type: 'largest-contentful-paint', buffered: true });
         });
-        for (const path of [`${prefix}/`, `${prefix}/work/${sample}/`]) {
+        for (const path of [`${prefix}/work/${sample}/`]) {
           await page.goto(path);
           await page.waitForLoadState('load');
-          await page.waitForTimeout(1500); // 이미지·히어로 애니메이션이 끝나도록
+          await page.waitForTimeout(1500); // 이미지 애니메이션이 끝나도록
           // 사용자 입력이 오면 브라우저는 LCP 보고를 멈춘다. 그때까지의 마지막 항목이 최종이다.
           await page.mouse.click(1, 1);
           const res = await page.evaluate(() => {
@@ -377,7 +377,7 @@ test.describe('모션 허용(Chromium)', () => {
               entries: w.__lcp.length,
               tag: el.tagName,
               cls: el.className,
-              inMotion: !!el.closest('.reveal, .hero-line'),
+              inMotion: !!el.closest('.reveal'),
               animations: chain.flatMap((n) => n.getAnimations().map((a) => a.playState)),
               inCover: !!el.closest('[data-work-row] .cover, figure.cover'),
             };
@@ -392,123 +392,8 @@ test.describe('모션 허용(Chromium)', () => {
     }
   }
 
-  for (const rate of [1, 4]) {
-    test(`히어로 줄: 800ms 열림(CPU ${rate}x), 한 번만, clip-path가 사라지고 다시 열리지 않는다`, async ({
-      page,
-      context,
-    }) => {
-      if (rate > 1) {
-        const cdp = await context.newCDPSession(page);
-        await cdp.send('Emulation.setCPUThrottlingRate', { rate });
-      }
-      // 문서 파싱 직후(애니메이션이 끝나기 전)의 값을 기록하고, 이후 animationstart 횟수를 센다.
-      await page.addInitScript(() => {
-        const w = window as unknown as { __hero: unknown; __starts: string[] };
-        w.__starts = [];
-        addEventListener(
-          'animationstart',
-          (e) => w.__starts.push((e as AnimationEvent).animationName),
-          true,
-        );
-        document.addEventListener('DOMContentLoaded', () => {
-          w.__hero = [...document.querySelectorAll('.hero-line')].map((e) => {
-            const c = getComputedStyle(e);
-            return {
-              name: c.animationName,
-              duration: c.animationDuration,
-              delay: c.animationDelay,
-              iterations: c.animationIterationCount,
-              fill: c.animationFillMode,
-              ease: c.animationTimingFunction,
-            };
-          });
-        });
-      });
-      await page.goto('/', { waitUntil: 'commit' });
-      await page.waitForFunction(() => !!(window as unknown as { __hero?: unknown }).__hero);
-      const hero = await page.evaluate(() => (window as unknown as { __hero: unknown }).__hero);
-      expect(hero).toEqual([
-        {
-          name: 'hero-open',
-          duration: '0.8s',
-          delay: '0s',
-          iterations: '1',
-          fill: 'backwards',
-          ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
-        },
-        {
-          name: 'hero-open',
-          duration: '0.8s',
-          delay: '0.12s',
-          iterations: '1',
-          fill: 'backwards',
-          ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
-        },
-      ]);
-      // 끝날 때까지 기다린다(애니메이션이 사라지면 끝난 것).
-      await page.waitForFunction(
-        () =>
-          [...document.querySelectorAll('.hero-line')].every((e) => e.getAnimations().length === 0),
-        undefined,
-        { timeout: 10_000 },
-      );
-      await page.waitForTimeout(1200); // 다시 시작하지 않는지 지켜본다
-      const after = await page.evaluate(() => ({
-        starts: (window as unknown as { __starts: string[] }).__starts.filter(
-          (n) => n === 'hero-open',
-        ),
-        clip: [...document.querySelectorAll('.hero-line')].map((e) => getComputedStyle(e).clipPath),
-        running: [...document.querySelectorAll('.hero-line')].flatMap((e) => e.getAnimations())
-          .length,
-      }));
-      expect(after.starts).toHaveLength(2);
-      expect(after.clip).toEqual(['none', 'none']);
-      expect(after.running).toBe(0);
-      // 본문에 실제 텍스트로 남고 이중으로 읽히지 않는다
-      await expect(page.locator('h1')).toHaveText('iduk');
-      await expect(page.locator('.hero-line[aria-hidden]')).toHaveCount(0);
-      await expect(page.locator('.hero-line')).toHaveCount(2);
-    });
-  }
-
-  test('뒤로 가기(bfcache)로 돌아와도 히어로가 다시 열리지 않는다', async ({ page }) => {
-    await page.goto('/');
-    await page.waitForTimeout(1100);
-    await page.evaluate(() => {
-      (window as unknown as { __bf: number }).__bf = 1;
-      window.addEventListener('pageshow', (e) => {
-        sessionStorage.setItem('persisted', String((e as PageTransitionEvent).persisted));
-      });
-    });
-    await page.goto(`/work/${sample}/`);
-    await page.goBack();
-    await page.waitForLoadState('load');
-    const state = await page.evaluate(() => ({
-      persisted: sessionStorage.getItem('persisted'),
-      running: [...document.querySelectorAll('.hero-line')].flatMap((e) =>
-        e.getAnimations().filter((a) => a.playState === 'running'),
-      ).length,
-      restored: (window as unknown as { __bf?: number }).__bf === 1,
-    }));
-    if (state.restored) {
-      // bfcache에서 복원된 경우: 이미 끝난 상태 그대로여야 한다.
-      expect(state.running).toBe(0);
-    } else {
-      // 새 문서로 다시 열린 경우(bfcache 꺼짐): 한 번만 재생되고 끝난다.
-      await page.waitForTimeout(1100);
-      expect(
-        await page.evaluate(
-          () =>
-            [...document.querySelectorAll('.hero-line')].flatMap((e) =>
-              e.getAnimations().filter((a) => a.playState === 'running'),
-            ).length,
-        ),
-      ).toBe(0);
-    }
-  });
-
   test('호버 가능한 환경에서만 이미지가 1.03배로 확대된다', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(`/work/${sample}/`);
     const img = page.locator('.zoom .pic').first();
     await img.scrollIntoViewIfNeeded();
     expect(await img.evaluate((e) => getComputedStyle(e).scale)).toBe('none');
@@ -583,12 +468,12 @@ test.describe('모션 허용(Chromium)', () => {
     const page = await ctx.newPage();
     const slug = projects[3].slug;
     const list = await (async () => {
-      await page.goto('/work/');
+      await page.goto('/');
       return uniqueNames(page);
     })();
     expect(new Set(list).size).toBe(list.length);
     expect(list.filter((n) => n === `work-${slug}`)).toHaveLength(1);
-    const info = await captureTransition(page, '/work/', `a[href="/work/${slug}/"]`);
+    const info = await captureTransition(page, '/', `a[href="/work/${slug}/"]`);
     expect(info.hasTransition).toBe(true);
     expect(info.names.filter((n) => n === `work-${slug}`)).toHaveLength(1);
     expect(new Set(info.names).size).toBe(info.names.length);
@@ -650,7 +535,6 @@ test.describe('가로 스크롤과 콘솔 오류 없음(360px, 모션 켬)', () 
   const paths = [
     ...locales.flatMap(({ prefix }) => [
       `${prefix}/`,
-      `${prefix}/work/`,
       ...tags.map((t) => `${prefix}/work/tag/${t.id}/`),
       ...projects.map((p) => `${prefix}/work/${p.slug}/`),
     ]),
