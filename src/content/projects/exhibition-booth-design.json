@@ -4,7 +4,7 @@
   "period": {
     "start": "2016-10"
   },
-  "order": 17,
+  "order": 15,
   "title": {
     "ko": "Exhibition Booth Design",
     "en": "Exhibition Booth Design"
@@ -18,6 +18,7 @@
     "en": "Booth panel design for MEDICA 2016, the World Forum for Medicine, in Düsseldorf, Germany"
   },
   "tags": [
+    "healthcare",
     "graphic"
   ],
   "featured": false,

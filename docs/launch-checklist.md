@@ -16,7 +16,7 @@ S13 미리보기 배포의 점검 결과. 개인 정보와 배포 주소는 적�
 | 항목 | 결과 |
 |---|---|
 | 외부 접근 | 고유 주소 302(로그인), 별칭 404 |
-| `/`, `/en/`, `/work/`, `/work/tag/web/` | 200 |
+| `/`, `/en/`, `/work/`, `/work/tag/healthcare/` | 200 |
 | `/nope/` | 404 |
 | `/portfolio/oyedu/`, `/portfolio/1812/` | 301, `/work/oyedu/`, `/work/jejuair-mobile/` |
 | `/portfolio/oyedu` | 308 후 301 |

@@ -145,7 +145,7 @@ describe('보안 헤더', () => {
     '/og/a.jpg',
     '/robots.txt',
     '/work/oyedu/',
-    '/en/work/tag/web/',
+    '/en/work/tag/healthcare/',
     '/files/a.pdf',
     '/nope/',
     '/en/html/',

@@ -187,7 +187,9 @@ test.describe('360px', () => {
   }
 
   const touchPages = locales.flatMap(({ prefix }) =>
-    ['/', '/work/', '/work/tag/web/'].map((p) => (p === '/' ? `${prefix}/` : `${prefix}${p}`)),
+    ['/', '/work/', '/work/tag/healthcare/'].map((p) =>
+      p === '/' ? `${prefix}/` : `${prefix}${p}`,
+    ),
   );
   for (const url of touchPages) {
     test(`${url} 터치 대상은 가로세로 44px 이상`, async ({ page }) => {

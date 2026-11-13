@@ -4,7 +4,7 @@
   "period": {
     "start": "2017-09"
   },
-  "order": 12,
+  "order": 11,
   "title": {
     "ko": "J-bro Company Responsive Website",
     "en": "J-bro Company Responsive Website"
@@ -18,7 +18,8 @@
     "en": "Responsive website for Jbro, an online marketing company"
   },
   "tags": [
-    "web"
+    "corporate",
+    "ui-design"
   ],
   "featured": false,
   "cover": {

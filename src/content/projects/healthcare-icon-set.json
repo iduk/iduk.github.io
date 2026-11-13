@@ -4,7 +4,7 @@
   "period": {
     "start": "2016-10"
   },
-  "order": 15,
+  "order": 17,
   "title": {
     "ko": "Healthcare Icon Set",
     "en": "Healthcare Icon Set"
@@ -18,8 +18,8 @@
     "en": "Service icons for a Home IoT + Healthcare platform"
   },
   "tags": [
-    "graphic",
-    "healthcare"
+    "healthcare",
+    "graphic"
   ],
   "featured": false,
   "cover": {

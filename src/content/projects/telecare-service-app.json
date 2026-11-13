@@ -4,7 +4,7 @@
   "period": {
     "start": "2017-09"
   },
-  "order": 11,
+  "order": 10,
   "title": {
     "ko": "Telecare Service Platform APP",
     "en": "Telecare Service Platform APP"
@@ -19,8 +19,8 @@
   },
   "tags": [
     "healthcare",
-    "app",
-    "web"
+    "ui-design",
+    "publishing"
   ],
   "featured": true,
   "cover": {

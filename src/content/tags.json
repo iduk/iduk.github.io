@@ -1,21 +1,5 @@
 [
   {
-    "id": "web",
-    "name": {
-      "ko": "웹",
-      "en": "Web"
-    },
-    "status": "draft-translation"
-  },
-  {
-    "id": "app",
-    "name": {
-      "ko": "모바일 앱",
-      "en": "Mobile app"
-    },
-    "status": "draft-translation"
-  },
-  {
     "id": "healthcare",
     "name": {
       "ko": "헬스케어",
@@ -24,18 +8,74 @@
     "status": "draft-translation"
   },
   {
-    "id": "system",
+    "id": "smartfarm",
     "name": {
-      "ko": "시스템",
-      "en": "Systems"
+      "ko": "스마트팜",
+      "en": "Smart farm"
+    },
+    "status": "draft-translation"
+  },
+  {
+    "id": "transport",
+    "name": {
+      "ko": "교통·항공",
+      "en": "Transport and aviation"
+    },
+    "status": "draft-translation"
+  },
+  {
+    "id": "commerce",
+    "name": {
+      "ko": "뷰티·커머스",
+      "en": "Beauty and commerce"
+    },
+    "status": "draft-translation"
+  },
+  {
+    "id": "finance",
+    "name": {
+      "ko": "금융·핀테크",
+      "en": "Finance and fintech"
+    },
+    "status": "draft-translation"
+  },
+  {
+    "id": "corporate",
+    "name": {
+      "ko": "마케팅·기업",
+      "en": "Marketing and corporate"
+    },
+    "status": "draft-translation"
+  },
+  {
+    "id": "ui-design",
+    "name": {
+      "ko": "UI 디자인",
+      "en": "UI design"
+    },
+    "status": "draft-translation"
+  },
+  {
+    "id": "publishing",
+    "name": {
+      "ko": "웹 퍼블리싱",
+      "en": "Web publishing"
+    },
+    "status": "draft-translation"
+  },
+  {
+    "id": "planning",
+    "name": {
+      "ko": "서비스 기획",
+      "en": "Service planning"
     },
     "status": "draft-translation"
   },
   {
     "id": "graphic",
     "name": {
-      "ko": "그래픽·인쇄",
-      "en": "Graphic and print"
+      "ko": "아이콘·그래픽",
+      "en": "Icon and graphic"
     },
     "status": "draft-translation"
   }

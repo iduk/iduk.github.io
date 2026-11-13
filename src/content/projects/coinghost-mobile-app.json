@@ -4,7 +4,7 @@
   "period": {
     "start": "2020-03"
   },
-  "order": 2,
+  "order": 3,
   "title": {
     "ko": "COINGHOST Mobile App",
     "en": "COINGHOST Mobile App"
@@ -18,7 +18,8 @@
     "en": "Mobile app for COINGHOST"
   },
   "tags": [
-    "app"
+    "finance",
+    "ui-design"
   ],
   "featured": false,
   "cover": {

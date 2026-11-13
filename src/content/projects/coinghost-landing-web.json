@@ -4,7 +4,7 @@
   "period": {
     "start": "2020-03"
   },
-  "order": 3,
+  "order": 2,
   "title": {
     "ko": "COINGHOST Landing Web",
     "en": "COINGHOST Landing Web"
@@ -18,7 +18,9 @@
     "en": "Whitepaper landing page for COINGHOST"
   },
   "tags": [
-    "web"
+    "finance",
+    "ui-design",
+    "publishing"
   ],
   "featured": false,
   "cover": {

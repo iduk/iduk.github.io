@@ -32,13 +32,18 @@ export type ProjectMeta = {
   pairs?: [string, string][];
 };
 
-/** 쓰이는 태그만. 기준 두 개: 플랫폼(웹, 앱)과 분야·종류(헬스케어, 시스템, 그래픽). */
+/** 쓰이는 태그만. 기준 두 개: 분야(어디서)와 한 일(무엇을). 카드에는 분야, 한 일 순서로 나온다. */
 export const tags: TagDef[] = [
-  { id: 'web', name: l('웹', 'Web') },
-  { id: 'app', name: l('모바일 앱', 'Mobile app') },
   { id: 'healthcare', name: l('헬스케어', 'Healthcare') },
-  { id: 'system', name: l('시스템', 'Systems') },
-  { id: 'graphic', name: l('그래픽·인쇄', 'Graphic and print') },
+  { id: 'smartfarm', name: l('스마트팜', 'Smart farm') },
+  { id: 'transport', name: l('교통·항공', 'Transport and aviation') },
+  { id: 'commerce', name: l('뷰티·커머스', 'Beauty and commerce') },
+  { id: 'finance', name: l('금융·핀테크', 'Finance and fintech') },
+  { id: 'corporate', name: l('마케팅·기업', 'Marketing and corporate') },
+  { id: 'ui-design', name: l('UI 디자인', 'UI design') },
+  { id: 'publishing', name: l('웹 퍼블리싱', 'Web publishing') },
+  { id: 'planning', name: l('서비스 기획', 'Service planning') },
+  { id: 'graphic', name: l('아이콘·그래픽', 'Icon and graphic') },
 ];
 
 export const meta: Record<string, ProjectMeta> = {
@@ -49,7 +54,7 @@ export const meta: Record<string, ProjectMeta> = {
       "OliveYoung Education & Community — 올리브영 매장 직원들을 위한 '소통' 프로젝트",
       "OliveYoung Education & Community: a 'communication' project for Olive Young store staff",
     ),
-    tags: ['web', 'app'],
+    tags: ['commerce', 'ui-design'],
     featured: true,
     coverAlt: l(
       'OY Education – 스마트폰 화면에 담은 앱 디자인 목업',
@@ -61,7 +66,7 @@ export const meta: Record<string, ProjectMeta> = {
     title: l('COINGHOST Mobile App', 'COINGHOST Mobile App'),
     role: l('앱 UI 디자인', 'App UI design'),
     summary: l('코인고스트 모바일앱', 'Mobile app for COINGHOST'),
-    tags: ['app'],
+    tags: ['finance', 'ui-design'],
     featured: false,
     coverAlt: l('COINGHOST 모바일 앱 – 대표 화면', 'COINGHOST Mobile App – cover screen'),
     alts: {
@@ -75,7 +80,7 @@ export const meta: Record<string, ProjectMeta> = {
     title: l('COINGHOST Landing Web', 'COINGHOST Landing Web'),
     role: l('랜딩 웹 UI 디자인, 퍼블리싱', 'Landing web UI design, publishing'),
     summary: l('코인고스트 백서 랜딩페이지', 'Whitepaper landing page for COINGHOST'),
-    tags: ['web'],
+    tags: ['finance', 'ui-design', 'publishing'],
     featured: false,
     coverAlt: l(
       'COINGHOST 랜딩 웹 – 가치 소개와 토큰 배분 섹션이 보이는 페이지',
@@ -95,7 +100,7 @@ export const meta: Record<string, ProjectMeta> = {
       "Jejuair Mobile Crew — 제주항공 모바일 크루 시스템 'J-CREW' UI Design.",
       "Jejuair Mobile Crew: UI design for 'J-CREW', Jeju Air's mobile crew system",
     ),
-    tags: ['app', 'system'],
+    tags: ['transport', 'ui-design'],
     featured: true,
     coverAlt: l(
       'JEJUair Mobile – J-CREW 앱 화면 목업',
@@ -115,7 +120,7 @@ export const meta: Record<string, ProjectMeta> = {
       'Desktop UI design (main screen and layout) and publishing',
     ),
     summary: l('한국도로공사 VMS 웹시스템', 'VMS web system for the Korea Expressway Corporation'),
-    tags: ['system', 'web'],
+    tags: ['transport', 'ui-design', 'publishing'],
     featured: true,
     coverAlt: l(
       'ExpressWay – 도로 CCTV 채널 라이브뷰 모니터링 화면',
@@ -140,7 +145,7 @@ export const meta: Record<string, ProjectMeta> = {
       'Atom Engineering 건축사무소',
       'Responsive website for Atom Engineering, an architecture firm',
     ),
-    tags: ['web'],
+    tags: ['corporate', 'ui-design', 'publishing'],
     featured: true,
     coverAlt: l(
       'Atom Engineering – "Are you in a safe building now?" 문구가 있는 메인 화면',
@@ -152,7 +157,7 @@ export const meta: Record<string, ProjectMeta> = {
     title: l('Smartfarm UI for Android', 'Smartfarm UI for Android'),
     role: l('모바일 UI 디자인', 'Mobile UI Design'),
     summary: l('스마트팜 IoT, 양돈', 'Smart farm IoT: pig farming'),
-    tags: ['app'],
+    tags: ['smartfarm', 'ui-design'],
     featured: false,
     coverAlt: l(
       'Smartfarm Android – 대시보드, 환경 설정, 개체 목록 화면 목업',
@@ -168,7 +173,7 @@ export const meta: Record<string, ProjectMeta> = {
       '스마트팜 IoT, 축산 농장 프로젝트, "양돈"',
       'Smart farm IoT project for a livestock farm, "Yangdon" (pig farming)',
     ),
-    tags: ['system'],
+    tags: ['smartfarm', 'ui-design'],
     featured: true,
     coverAlt: l(
       'SmartFarm Dashboard – 관리자 대시보드 대표 화면',
@@ -189,7 +194,7 @@ export const meta: Record<string, ProjectMeta> = {
       '스마트팜 IoT 버섯농장 프로젝트, "첫걸음"',
       'Smart farm IoT project for a mushroom farm, "FirstSteps"',
     ),
-    tags: ['system'],
+    tags: ['smartfarm', 'ui-design'],
     featured: false,
     coverAlt: l(
       'SmartFarm FirstSteps – 데스크탑 관리자 화면 대표 이미지',
@@ -210,7 +215,7 @@ export const meta: Record<string, ProjectMeta> = {
       'Home IoT + Healthcare 플랫폼 서비스 아이콘',
       'Service icons for a Home IoT + Healthcare platform',
     ),
-    tags: ['graphic', 'healthcare'],
+    tags: ['healthcare', 'graphic'],
     featured: false,
     coverAlt: l(
       'Healthcare Icon Set – 서비스 아이콘 대표 이미지',
@@ -244,7 +249,7 @@ export const meta: Record<string, ProjectMeta> = {
     title: l('Products MockUp', 'Products MockUp'),
     role: l('제품 목업 스케치', 'Product mockup sketches'),
     summary: l('리본실버케어 주요제품 목업', 'Mockups of the main products of LivOn Silver Care'),
-    tags: ['graphic'],
+    tags: ['healthcare', 'graphic'],
     featured: false,
     coverAlt: l(
       'Products MockUp – 제품 목업 대표 이미지',
@@ -267,7 +272,7 @@ export const meta: Record<string, ProjectMeta> = {
       '독거노인을 위한 텔레케어 서비스 플랫폼 "TSP v3.2" 런칭',
       'Launch of "TSP v3.2", a telecare service platform for elderly people living alone',
     ),
-    tags: ['healthcare', 'app', 'web'],
+    tags: ['healthcare', 'ui-design', 'publishing'],
     featured: true,
     coverAlt: l(
       'Telecare Service Platform – TSP v3.2 앱 화면 대표 이미지',
@@ -294,7 +299,7 @@ export const meta: Record<string, ProjectMeta> = {
       'PAPS 체력측정시스템 기술개발 과제 — 학생감성평가 네이티브앱 및 반응형웹 화면 디자인 산출물',
       'PAPS fitness measurement system R&D project: design deliverables for a student emotion assessment native app and responsive web',
     ),
-    tags: ['app', 'web'],
+    tags: ['healthcare', 'ui-design', 'publishing'],
     featured: false,
     coverAlt: l('SmartBand App UI – 앱 화면 대표 이미지', 'SmartBand App UI – app cover image'),
     alts: {
@@ -315,7 +320,7 @@ export const meta: Record<string, ProjectMeta> = {
       '앱서비스 고도화를 위한 컨셉 시안 — LivOn TSP ver3.1, Concept Design',
       'Concept drafts for upgrading the app service (LivOn TSP ver3.1)',
     ),
-    tags: ['healthcare', 'app'],
+    tags: ['healthcare', 'ui-design'],
     featured: false,
     coverAlt: l(
       'Telecare Service Showcase – TSP ver3.1 컨셉 화면 대표 이미지',
@@ -335,7 +340,7 @@ export const meta: Record<string, ProjectMeta> = {
       '독일 뒤셀도르프 메디카 박람회 브로슈어 제작 — MEDICA 2016, World Forum for Medicine',
       'Brochure for MEDICA 2016, the World Forum for Medicine, in Düsseldorf, Germany',
     ),
-    tags: ['graphic'],
+    tags: ['healthcare', 'graphic'],
     featured: false,
     coverAlt: l(
       'Exhibition Brochure – 브로슈어 대표 이미지',
@@ -380,7 +385,7 @@ export const meta: Record<string, ProjectMeta> = {
       '독일 뒤셀도르프 메디카 박람회 전시부스 판넬 디자인 — MEDICA 2016, World Forum for Medicine',
       'Booth panel design for MEDICA 2016, the World Forum for Medicine, in Düsseldorf, Germany',
     ),
-    tags: ['graphic'],
+    tags: ['healthcare', 'graphic'],
     featured: false,
     coverAlt: l(
       'Exhibition Booth Design – 전시부스 대표 이미지',
@@ -404,7 +409,7 @@ export const meta: Record<string, ProjectMeta> = {
       '기업 반응형웹, 랜딩 페이지 템플릿',
       'Corporate responsive website and landing page template',
     ),
-    tags: ['healthcare', 'web'],
+    tags: ['healthcare', 'ui-design', 'publishing'],
     featured: false,
     coverAlt: l(
       'Telecare Service Website – 반응형 웹사이트 대표 이미지',
@@ -428,7 +433,7 @@ export const meta: Record<string, ProjectMeta> = {
       '요식업계 컨셉의 템플릿 디자인 습작',
       'A template design study with a food business concept',
     ),
-    tags: ['web'],
+    tags: ['ui-design'],
     featured: false,
     coverAlt: l(
       'Cooking Landing Page Template – 요리 사진이 있는 MOMS RECIPY 랜딩 페이지',
@@ -443,7 +448,7 @@ export const meta: Record<string, ProjectMeta> = {
       '마케팅 전문기업 이레컴즈 웹사이트 메인화면 리뉴얼',
       'Main page renewal for the website of 7daycomz (이레컴즈), a marketing company',
     ),
-    tags: ['web'],
+    tags: ['corporate', 'ui-design'],
     featured: false,
     coverAlt: l(
       'AD Website Renewal Design – 리뉴얼 메인 화면 대표 이미지',
@@ -463,7 +468,7 @@ export const meta: Record<string, ProjectMeta> = {
       '온라인 마케팅 기업 Jbro, 반응형 웹사이트',
       'Responsive website for Jbro, an online marketing company',
     ),
-    tags: ['web'],
+    tags: ['corporate', 'ui-design'],
     featured: false,
     coverAlt: l(
       'J-bro 반응형 웹사이트 – 대표 이미지',
@@ -486,7 +491,7 @@ export const meta: Record<string, ProjectMeta> = {
       '마케팅 전문기업 "이레컴즈", 워드프레스 반응형 웹사이트 제작',
       'Responsive WordPress website for 7daycomz (이레컴즈), a marketing company',
     ),
-    tags: ['web'],
+    tags: ['corporate', 'ui-design', 'publishing'],
     featured: false,
     coverAlt: l(
       'AD Company WordPress – 워드프레스 사이트 대표 이미지',
@@ -513,7 +518,7 @@ export const meta: Record<string, ProjectMeta> = {
       '한류 뷰티 커뮤니티 플랫폼 서비스 "美丽思密达"',
       'Korean Wave beauty community platform for China, "美丽思密达"',
     ),
-    tags: ['web', 'app'],
+    tags: ['commerce', 'ui-design', 'planning'],
     featured: true,
     coverAlt: l(
       '중국 뷰티 플랫폼 – 웹 서비스 대표 이미지',
@@ -549,7 +554,7 @@ export const meta: Record<string, ProjectMeta> = {
       '카드 혜택을 비교하여 더 나은 카드를 제공하는 서비스 "카드덕"(Card Duck)',
       'A service that compares credit card benefits to offer better cards: "Card Duck"',
     ),
-    tags: ['web', 'graphic'],
+    tags: ['finance', 'ui-design', 'publishing'],
     featured: true,
     coverAlt: l(
       'Card Duck – 카드 비교 서비스 대표 이미지',
@@ -581,7 +586,7 @@ export const meta: Record<string, ProjectMeta> = {
       '매트리스 수입/병행 기업 "BM Ultra" 웹사이트',
       'Website for BM Ultra, a mattress importer (parallel imports)',
     ),
-    tags: ['web'],
+    tags: ['commerce', 'ui-design', 'publishing'],
     featured: false,
     coverAlt: l(
       'Bed Mattress Website – BM Ultra 메인 화면 대표 이미지',

@@ -18,7 +18,9 @@
     "en": "Website for BM Ultra, a mattress importer (parallel imports)"
   },
   "tags": [
-    "web"
+    "commerce",
+    "ui-design",
+    "publishing"
   ],
   "featured": false,
   "cover": {

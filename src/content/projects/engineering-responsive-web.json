@@ -5,7 +5,7 @@
     "start": "2019-05",
     "end": "2019-05"
   },
-  "order": 5,
+  "order": 4,
   "title": {
     "ko": "Engineering Responsive Web",
     "en": "Engineering Responsive Web"
@@ -19,7 +19,9 @@
     "en": "Responsive website for Atom Engineering, an architecture firm"
   },
   "tags": [
-    "web"
+    "corporate",
+    "ui-design",
+    "publishing"
   ],
   "featured": true,
   "cover": {

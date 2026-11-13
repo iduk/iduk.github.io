@@ -239,7 +239,7 @@ function convertPost(
     },
     status: 'draft-translation' as const,
   };
-  return { project, sortKey: periodStartKey(period.start), published: post.publishedAt };
+  return { project, sortKey: periodStartKey(period.start) };
 }
 
 function collectStrings(v: unknown, out: string[] = []): string[] {
@@ -336,7 +336,13 @@ async function main() {
     legacyExtras: [],
   };
   const converted = publicPosts.map((p) => convertPost(p, images, source, report));
-  converted.sort((a, b) => b.sortKey - a.sortKey || (a.published < b.published ? 1 : -1));
+  // 글 작성일은 보지 않는다(본문 기간만). 같은 기간이면 대표작을 앞에 두고 그다음 슬러그 순으로 정한다.
+  converted.sort(
+    (a, b) =>
+      b.sortKey - a.sortKey ||
+      Number(b.project.featured) - Number(a.project.featured) ||
+      a.project.slug.localeCompare(b.project.slug),
+  );
   converted.forEach((c, i) => {
     c.project.order = i + 1;
   });

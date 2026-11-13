@@ -5,7 +5,7 @@
     "start": "2019-05",
     "end": "2019-07"
   },
-  "order": 4,
+  "order": 5,
   "title": {
     "ko": "JEJUair Mobile",
     "en": "JEJUair Mobile"
@@ -19,8 +19,8 @@
     "en": "Jejuair Mobile Crew: UI design for 'J-CREW', Jeju Air's mobile crew system"
   },
   "tags": [
-    "app",
-    "system"
+    "transport",
+    "ui-design"
   ],
   "featured": true,
   "cover": {
