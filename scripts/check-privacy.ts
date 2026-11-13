@@ -295,7 +295,12 @@ export async function runCheck(opts: Options): Promise<Result> {
       const publicSlugs = new Set<string>();
       const projDir = join(root, 'src/content/projects');
       if (existsSync(projDir)) {
-        for (const f of readdirSync(projDir)) publicSlugs.add(f.replace(/\.json$/, ''));
+        for (const f of readdirSync(projDir)) {
+          const slug = f.replace(/\.json$/, '');
+          publicSlugs.add(slug);
+          // 공개 작업 슬러그의 낱말(smartfarm-dashboard의 dashboard)은 이미 공개된 일반 단어라 비공개 글 슬러그와 같아도 식별자가 아니다.
+          for (const word of slug.split('-')) publicSlugs.add(word);
+        }
       }
       const tagsFile = join(root, 'src/content/tags.json');
       if (existsSync(tagsFile)) {

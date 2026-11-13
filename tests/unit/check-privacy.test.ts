@@ -239,6 +239,29 @@ describe('비공개 패턴 ($IDUK_PRIVATE_PATTERNS)', () => {
 });
 
 describe('저장소 밖 목록', () => {
+  it('공개 작업 슬러그의 낱말과 같은 비공개 글 슬러그는 식별자로 보지 않는다', async () => {
+    const archive = join(f.tmp, 'archive');
+    mkdirSync(join(archive, 'data'), { recursive: true });
+    writeFileSync(
+      join(archive, 'data/posts.json'),
+      JSON.stringify([
+        { type: 'post', status: 'private', slug: 'dashboard', title: 'Zz', categories: [] },
+        {
+          type: 'post',
+          status: 'private',
+          slug: 'zzonly-private-slug',
+          title: 'Zz2',
+          categories: [],
+        },
+      ]),
+    );
+    f.write('src/content/projects/smartfarm-dashboard.json', '{}\n');
+    f.write('src/readme.txt', 'a dashboard for the smartfarm\n');
+    expect((await run(f, { archive })).code).toBe(0);
+    f.write('src/readme.txt', 'see zzonly-private-slug here\n');
+    expect((await run(f, { archive })).code).toBe(1);
+  });
+
   it('아카이브의 비공개 글 제목·슬러그를 메모리로만 검사하고 값을 출력하지 않는다', async () => {
     const archive = join(f.tmp, 'archive');
     mkdirSync(join(archive, 'data'), { recursive: true });
