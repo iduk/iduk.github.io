@@ -7,7 +7,7 @@
   "order": 22,
   "title": {
     "ko": "중국 한류 뷰티 플랫폼 서비스",
-    "en": "Beauty platform service for CHINA"
+    "en": "Korean Wave Beauty Platform Service for China"
   },
   "role": {
     "ko": "UI 전반 디자인 및 서비스 기획, 프로젝트 총괄",
@@ -27,7 +27,7 @@
     "image": "chinese-community/01-thum-meilismd",
     "alt": {
       "ko": "중국 뷰티 플랫폼 – 웹 서비스 대표 이미지",
-      "en": "Beauty platform service for CHINA – web service cover image"
+      "en": "Korean Wave Beauty Platform Service for China – web service cover image"
     }
   },
   "blocks": [
@@ -38,14 +38,14 @@
           "image": "chinese-community/02-meilismd-pc-browser",
           "alt": {
             "ko": "중국 뷰티 플랫폼 – PC 브라우저 메인 화면",
-            "en": "Beauty platform service for CHINA – desktop browser main page"
+            "en": "Korean Wave Beauty Platform Service for China – desktop browser main page"
           }
         },
         {
           "image": "chinese-community/03-meilismd-pc-browser-mypage",
           "alt": {
             "ko": "중국 뷰티 플랫폼 – PC 브라우저 마이페이지 화면",
-            "en": "Beauty platform service for CHINA – desktop browser My Page"
+            "en": "Korean Wave Beauty Platform Service for China – desktop browser My Page"
           }
         }
       ]
@@ -55,7 +55,7 @@
       "image": "chinese-community/04-meilismd-ui",
       "alt": {
         "ko": "중국 뷰티 플랫폼 – 웹·모바일 UI 전체 캡처",
-        "en": "Beauty platform service for CHINA – full-length capture of the web and mobile UI"
+        "en": "Korean Wave Beauty Platform Service for China – full-length capture of the web and mobile UI"
       }
     },
     {

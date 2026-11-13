@@ -78,13 +78,13 @@ export const meta: Record<string, ProjectMeta> = {
   },
   'coinghost-landing-web': {
     title: l('COINGHOST Landing Web', 'COINGHOST Landing Web'),
-    role: l('랜딩 웹 UI 디자인, 퍼블리싱', 'Landing web UI design, publishing'),
+    role: l('랜딩 웹 UI 디자인, 퍼블리싱', 'Landing page UI design and HTML/CSS markup'),
     summary: l('코인고스트 백서 랜딩페이지', 'Whitepaper landing page for COINGHOST'),
     tags: ['finance', 'ui-design', 'publishing'],
     featured: false,
     coverAlt: l(
       'COINGHOST 랜딩 웹 – 가치 소개와 토큰 배분 섹션이 보이는 페이지',
-      'COINGHOST Landing Web – page showing the value section and token allocation chart',
+      'COINGHOST Landing Web – page showing the value introduction and token allocation sections',
     ),
     alts: {},
     text: l(
@@ -117,7 +117,7 @@ export const meta: Record<string, ProjectMeta> = {
     title: l('ExpressWay', 'ExpressWay'),
     role: l(
       '데스크탑 UI 메인,레이아웃 디자인 및 퍼블리싱',
-      'Desktop UI design (main screen and layout) and publishing',
+      'Desktop UI design (main screen and layout) and HTML/CSS markup',
     ),
     summary: l('한국도로공사 VMS 웹시스템', 'VMS web system for the Korea Expressway Corporation'),
     tags: ['transport', 'ui-design', 'publishing'],
@@ -140,7 +140,7 @@ export const meta: Record<string, ProjectMeta> = {
   },
   'engineering-responsive-web': {
     title: l('Engineering Responsive Web', 'Engineering Responsive Web'),
-    role: l('반응형웹 UI 디자인 및 퍼블리싱', 'Responsive web UI design and publishing'),
+    role: l('반응형웹 UI 디자인 및 퍼블리싱', 'Responsive web UI design and HTML/CSS markup'),
     summary: l(
       'Atom Engineering 건축사무소',
       'Responsive website for Atom Engineering, an architecture firm',
@@ -155,7 +155,7 @@ export const meta: Record<string, ProjectMeta> = {
   },
   'smartfarm-android': {
     title: l('Smartfarm UI for Android', 'Smartfarm UI for Android'),
-    role: l('모바일 UI 디자인', 'Mobile UI Design'),
+    role: l('모바일 UI 디자인', 'Mobile UI design'),
     summary: l('스마트팜 IoT, 양돈', 'Smart farm IoT: pig farming'),
     tags: ['smartfarm', 'ui-design'],
     featured: false,
@@ -206,7 +206,7 @@ export const meta: Record<string, ProjectMeta> = {
         'SmartFarm Dashboard "FirstSteps" – full-length capture of the mushroom farm admin screens',
       ),
     },
-    text: l('<p>41 Page / Desktop Admin Design.</p>', '<p>41 Page / Desktop Admin Design.</p>'),
+    text: l('<p>41 pages / Desktop admin design.</p>', '<p>41 pages / Desktop admin design.</p>'),
   },
   'healthcare-icon-set': {
     title: l('Healthcare Icon Set', 'Healthcare Icon Set'),
@@ -266,7 +266,7 @@ export const meta: Record<string, ProjectMeta> = {
     title: l('Telecare Service Platform APP', 'Telecare Service Platform APP'),
     role: l(
       '앱 서비스 디자인, 반응형 웹 퍼블리싱, 다국어 대응',
-      'App service design, responsive web publishing and multilingual support',
+      'App service design, responsive web HTML/CSS markup and multilingual support',
     ),
     summary: l(
       '독거노인을 위한 텔레케어 서비스 플랫폼 "TSP v3.2" 런칭',
@@ -286,18 +286,18 @@ export const meta: Record<string, ProjectMeta> = {
     },
     text: l(
       '<ul><li>Android/iOS 앱서비스 전반 디자인</li><li>반응형웹 화면 퍼블리싱(MaterializeCSS Customize)</li><li>영어, 일본어, 독일어 등 다국어 대응</li></ul><p><a href="http://family.livoncare.com">Web Service 바로가기</a></p><p><a href="https://play.google.com/store/apps/details?id=com.ionicframework.livonapp397686">Play Store 바로가기</a></p>',
-      '<ul><li>Overall design of the Android/iOS app service</li><li>Responsive web screen publishing (customized MaterializeCSS)</li><li>Multilingual support: English, Japanese, German and more</li></ul><p><a href="http://family.livoncare.com">Go to the web service</a></p><p><a href="https://play.google.com/store/apps/details?id=com.ionicframework.livonapp397686">Go to the Play Store</a></p>',
+      '<ul><li>Overall design of the Android/iOS app service</li><li>Responsive web screen HTML/CSS markup (customized MaterializeCSS)</li><li>Multilingual support: English, Japanese, German and more</li></ul><p><a href="http://family.livoncare.com">Go to the web service</a></p><p><a href="https://play.google.com/store/apps/details?id=com.ionicframework.livonapp397686">Go to the Play Store</a></p>',
     ),
   },
   'smartband-app-ui': {
     title: l('SmartBand App UI', 'SmartBand App UI'),
     role: l(
       '네이티브앱·반응형웹 UI 디자인, 웹화면 퍼블리싱',
-      'Native app and responsive web UI design, web screen publishing',
+      'Native app and responsive web UI design, web screen HTML/CSS markup',
     ),
     summary: l(
       'PAPS 체력측정시스템 기술개발 과제 — 학생감성평가 네이티브앱 및 반응형웹 화면 디자인 산출물',
-      'PAPS fitness measurement system R&D project: design deliverables for a student emotion assessment native app and responsive web',
+      'PAPS physical fitness measurement system technology development project: screen design deliverables for the student emotional assessment native app and responsive web',
     ),
     tags: ['healthcare', 'ui-design', 'publishing'],
     featured: false,
@@ -338,7 +338,7 @@ export const meta: Record<string, ProjectMeta> = {
     role: l('브로슈어 제작', 'Brochure design'),
     summary: l(
       '독일 뒤셀도르프 메디카 박람회 브로슈어 제작 — MEDICA 2016, World Forum for Medicine',
-      'Brochure for MEDICA 2016, the World Forum for Medicine, in Düsseldorf, Germany',
+      'Brochure design for the MEDICA 2016 trade fair (World Forum for Medicine) in Düsseldorf, Germany',
     ),
     tags: ['healthcare', 'graphic'],
     featured: false,
@@ -383,7 +383,7 @@ export const meta: Record<string, ProjectMeta> = {
     role: l('전시부스 판넬 디자인', 'Exhibition booth panel design'),
     summary: l(
       '독일 뒤셀도르프 메디카 박람회 전시부스 판넬 디자인 — MEDICA 2016, World Forum for Medicine',
-      'Booth panel design for MEDICA 2016, the World Forum for Medicine, in Düsseldorf, Germany',
+      'Booth panel design for the MEDICA 2016 trade fair (World Forum for Medicine) in Düsseldorf, Germany',
     ),
     tags: ['healthcare', 'graphic'],
     featured: false,
@@ -404,7 +404,7 @@ export const meta: Record<string, ProjectMeta> = {
   },
   'telecare-service-website': {
     title: l('Telecare Service Website', 'Telecare Service Website'),
-    role: l('반응형 웹사이트', 'Responsive Website'),
+    role: l('반응형 웹사이트', 'Responsive website'),
     summary: l(
       '기업 반응형웹, 랜딩 페이지 템플릿',
       'Corporate responsive website and landing page template',
@@ -446,7 +446,7 @@ export const meta: Record<string, ProjectMeta> = {
     role: l('웹사이트 UI 디자인', 'Website UI design'),
     summary: l(
       '마케팅 전문기업 이레컴즈 웹사이트 메인화면 리뉴얼',
-      'Main page renewal for the website of 7daycomz (이레컴즈), a marketing company',
+      'Main page renewal for the website of 7daycomz (이레컴즈), a marketing specialist firm',
     ),
     tags: ['corporate', 'ui-design'],
     featured: false,
@@ -489,7 +489,7 @@ export const meta: Record<string, ProjectMeta> = {
     ),
     summary: l(
       '마케팅 전문기업 "이레컴즈", 워드프레스 반응형 웹사이트 제작',
-      'Responsive WordPress website for 7daycomz (이레컴즈), a marketing company',
+      'Responsive WordPress website for 7daycomz (이레컴즈), a marketing specialist firm',
     ),
     tags: ['corporate', 'ui-design', 'publishing'],
     featured: false,
@@ -509,7 +509,7 @@ export const meta: Record<string, ProjectMeta> = {
     ),
   },
   'chinese-community': {
-    title: l('중국 한류 뷰티 플랫폼 서비스', 'Beauty platform service for CHINA'),
+    title: l('중국 한류 뷰티 플랫폼 서비스', 'Korean Wave Beauty Platform Service for China'),
     role: l(
       'UI 전반 디자인 및 서비스 기획, 프로젝트 총괄',
       'Overall UI design, service planning and project lead',
@@ -522,20 +522,20 @@ export const meta: Record<string, ProjectMeta> = {
     featured: true,
     coverAlt: l(
       '중국 뷰티 플랫폼 – 웹 서비스 대표 이미지',
-      'Beauty platform service for CHINA – web service cover image',
+      'Korean Wave Beauty Platform Service for China – web service cover image',
     ),
     alts: {
       'meilismd-pc-browser': l(
         '중국 뷰티 플랫폼 – PC 브라우저 메인 화면',
-        'Beauty platform service for CHINA – desktop browser main page',
+        'Korean Wave Beauty Platform Service for China – desktop browser main page',
       ),
       'meilismd-pc-browser-mypage': l(
         '중국 뷰티 플랫폼 – PC 브라우저 마이페이지 화면',
-        'Beauty platform service for CHINA – desktop browser My Page',
+        'Korean Wave Beauty Platform Service for China – desktop browser My Page',
       ),
       'meilismd-ui': l(
         '중국 뷰티 플랫폼 – 웹·모바일 UI 전체 캡처',
-        'Beauty platform service for CHINA – full-length capture of the web and mobile UI',
+        'Korean Wave Beauty Platform Service for China – full-length capture of the web and mobile UI',
       ),
     },
     pairs: [['meilismd-pc-browser', 'meilismd-pc-browser-mypage']],
@@ -552,7 +552,7 @@ export const meta: Record<string, ProjectMeta> = {
     ),
     summary: l(
       '카드 혜택을 비교하여 더 나은 카드를 제공하는 서비스 "카드덕"(Card Duck)',
-      'A service that compares credit card benefits to offer better cards: "Card Duck"',
+      '"Card Duck" (카드덕), a service that compares card benefits to offer better cards',
     ),
     tags: ['finance', 'ui-design', 'publishing'],
     featured: true,
@@ -581,7 +581,7 @@ export const meta: Record<string, ProjectMeta> = {
   },
   'bed-mattress-website': {
     title: l('Bed Mattress Website', 'Bed Mattress Website'),
-    role: l('데스크탑 UI 디자인 + 웹 퍼블리싱', 'Desktop UI design and web publishing'),
+    role: l('데스크탑 UI 디자인 + 웹 퍼블리싱', 'Desktop UI design and HTML/CSS markup'),
     summary: l(
       '매트리스 수입/병행 기업 "BM Ultra" 웹사이트',
       'Website for BM Ultra, a mattress importer (parallel imports)',

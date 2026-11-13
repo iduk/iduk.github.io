@@ -11,11 +11,11 @@
   },
   "role": {
     "ko": "네이티브앱·반응형웹 UI 디자인, 웹화면 퍼블리싱",
-    "en": "Native app and responsive web UI design, web screen publishing"
+    "en": "Native app and responsive web UI design, web screen HTML/CSS markup"
   },
   "summary": {
     "ko": "PAPS 체력측정시스템 기술개발 과제 — 학생감성평가 네이티브앱 및 반응형웹 화면 디자인 산출물",
-    "en": "PAPS fitness measurement system R&D project: design deliverables for a student emotion assessment native app and responsive web"
+    "en": "PAPS physical fitness measurement system technology development project: screen design deliverables for the student emotional assessment native app and responsive web"
   },
   "tags": [
     "healthcare",
