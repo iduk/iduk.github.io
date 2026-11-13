@@ -14,7 +14,13 @@ const labels = {
 };
 ---
 <header class="site-header">
-  <a class="logo" href={localizedPath(locale, '/')} aria-label={`iduk, ${t(locale, 'nav.home')}`}>iduk</a>
+  <a class="logo" href={localizedPath(locale, '/')} aria-label={`iduk, ${t(locale, 'nav.home')}`}>
+    <picture>
+      <source media="(prefers-reduced-motion: reduce)" srcset="/favicon.svg" />
+      <img class="logo-mark" src="/brand/pixelduk.svg" alt="" width="32" height="32" />
+    </picture>
+    <span>iduk</span>
+  </a>
   <nav class="nav" aria-label={t(locale, 'nav.primary')}>
     <a href={localizedPath(locale, '/work/')}>{t(locale, 'nav.work')}</a>
     <button
@@ -89,11 +95,27 @@ const labels = {
   .logo {
     display: inline-flex;
     align-items: center;
+    gap: 0.5rem;
     min-height: var(--tap-min);
     font-size: 1.5rem;
     font-weight: var(--fw-hero);
     letter-spacing: var(--ls-sub);
     text-decoration: none;
+  }
+  .logo picture {
+    display: block;
+  }
+  /* 로고는 화면 높이에 비례한다(letsby는 8vh). 모바일은 세로가 길어 상한을 낮게, 데스크톱은 크게, 폭이 좁은 태블릿 세로는 폭 기준(7vw)으로 줄인다. */
+  .logo-mark {
+    display: block;
+    width: clamp(2.5rem, 6vh, 3rem);
+    height: clamp(2.5rem, 6vh, 3rem);
+  }
+  @media (min-width: 48rem) {
+    .logo-mark {
+      width: clamp(3.5rem, min(8vh, 7vw), 6rem);
+      height: clamp(3.5rem, min(8vh, 7vw), 6rem);
+    }
   }
   .nav {
     display: flex;

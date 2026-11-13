@@ -7,6 +7,7 @@
       "!**/public/fonts",
       "!**/public/html",
       "!**/public/files",
+      "!**/scripts/brand-source",
       "!**/src/styles/fonts.css",
       "!**/pnpm-lock.yaml",
       "!**/src/content",
