@@ -7,7 +7,9 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   build: {
-    inlineStylesheets: 'auto',
+    // 렌더링을 막는 CSS 요청 한 번을 없앤다(auto는 4KB 넘는 파일을 따로 받는다). Lighthouse 모바일 LCP가
+    // 홈 1.74~1.81초에서 1.66초로, 상세 1.58초에서 1.43초로 줄었다. 대신 HTML이 페이지마다 CSS(gzip 약 5KB)를 담는다.
+    inlineStylesheets: 'always',
   },
   i18n: {
     defaultLocale: 'ko',

@@ -268,14 +268,24 @@ test.describe('@supports 미지원 에뮬레이션(Chromium)', () => {
   for (const path of ['/', '/work/', `/work/${sample}/`]) {
     test(`${path}: 처음부터 전부 보이고 애니메이션이 없다`, async ({ page }) => {
       let rewritten = 0;
-      await page.route('**/_astro/*.css', async (route) => {
-        const res = await route.fetch();
-        const css = (await res.text()).replaceAll(
+      const unsupported = (css: string) =>
+        css.replaceAll(
           '@supports (animation-timeline:view())',
           '@supports (animation-timeline:view-unsupported())',
         );
-        rewritten += css.includes('view-unsupported') ? 1 : 0;
-        await route.fulfill({ response: res, body: css });
+      // 스타일은 HTML에 들어 있다(inlineStylesheets: always). 내용을 바꾸면 메타 CSP의 해시가 깨지므로
+      // 이 에뮬레이션에서만 그 메타를 뺀다. 연결된 CSS가 있으면 그것도 바꾼다.
+      await page.route('**/*', async (route) => {
+        const type = route.request().resourceType();
+        if (type !== 'document' && type !== 'stylesheet') return route.continue();
+        const res = await route.fetch();
+        const text = await res.text();
+        let body = unsupported(text);
+        if (type === 'document') {
+          body = body.replace(/<meta http-equiv="content-security-policy"[^>]*>/i, '');
+        }
+        rewritten += body.includes('view-unsupported') ? 1 : 0;
+        await route.fulfill({ response: res, body });
       });
       await page.goto(path);
       expect(rewritten, '스타일시트가 바뀌어야 시험이 의미가 있다').toBeGreaterThan(0);

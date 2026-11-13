@@ -1,4 +1,5 @@
 ---
+import logoSvg from '../../public/brand/pixelduk.svg?raw';
 import type { Locale } from '../lib/i18n';
 import { localizedPath, t } from '../lib/i18n';
 
@@ -6,6 +7,12 @@ interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+// 요청을 늘리지 않으려고 HTML에 직접 넣는다. CSP 때문에 SVG 안의 <style>은 빼고 CSS는 아래 style에 둔다.
+// 링크 이름(aria-label)이 있으므로 그림은 장식으로 숨긴다.
+const mark = logoSvg
+  .replace(/<style>[\s\S]*?<\/style>/, '')
+  .replace('<title>iduk</title>', '')
+  .replace('<svg ', '<svg class="logo-mark" aria-hidden="true" focusable="false" ');
 const labels = {
   toggle: t(locale, 'theme.toggle'),
   system: t(locale, 'theme.system'),
@@ -15,10 +22,7 @@ const labels = {
 ---
 <header class="site-header">
   <a class="logo" href={localizedPath(locale, '/')} aria-label={`iduk, ${t(locale, 'nav.home')}`}>
-    <picture>
-      <source media="(prefers-reduced-motion: reduce)" srcset="/favicon.svg" />
-      <img class="logo-mark" src="/brand/pixelduk.svg" alt="" width="32" height="32" />
-    </picture>
+    <Fragment set:html={mark} />
     <span>iduk</span>
   </a>
   <nav class="nav" aria-label={t(locale, 'nav.primary')}>
@@ -102,19 +106,36 @@ const labels = {
     letter-spacing: var(--ls-sub);
     text-decoration: none;
   }
-  .logo picture {
-    display: block;
-  }
   /* 로고는 화면 높이에 비례한다(letsby는 8vh). 모바일은 세로가 길어 상한을 낮게, 데스크톱은 크게, 폭이 좁은 태블릿 세로는 폭 기준(7vw)으로 줄인다. */
-  .logo-mark {
+  .logo :global(.logo-mark) {
     display: block;
     width: clamp(2.5rem, 6vh, 3rem);
     height: clamp(2.5rem, 6vh, 3rem);
   }
   @media (min-width: 48rem) {
-    .logo-mark {
+    .logo :global(.logo-mark) {
       width: clamp(3.5rem, min(8vh, 7vw), 6rem);
       height: clamp(3.5rem, min(8vh, 7vw), 6rem);
+    }
+  }
+  /* 눈 깜빡임. 모션 줄임 설정이면 멈춘다. */
+  .logo :global(.logo-mark .b) {
+    animation: logo-blink 2s linear infinite;
+  }
+  @keyframes logo-blink {
+    0%,
+    45%,
+    55%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(1px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .logo :global(.logo-mark .b) {
+      animation: none;
     }
   }
   .nav {

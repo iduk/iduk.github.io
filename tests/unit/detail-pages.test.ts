@@ -30,8 +30,7 @@ describe.skipIf(!existsSync(dist))('작업 상세 48개 페이지 계약', () =>
         const html = readFileSync(join(dist, url, 'index.html'), 'utf8');
         const doc = parse(html) as unknown as Node;
         expect(find(doc, 'h1')).toHaveLength(1);
-        // 헤더의 로고는 옆 글자(iduk)가 이름이라 alt가 비어 있는 장식 이미지다. 본문 이미지만 계약을 본다.
-        const imgs = find(doc, 'img').filter((i) => attr(i, 'class') !== 'logo-mark');
+        const imgs = find(doc, 'img');
         expect(imgs.length).toBeGreaterThan(0);
         for (const img of imgs) {
           expect(attr(img, 'alt')?.trim(), 'alt').toBeTruthy();
