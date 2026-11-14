@@ -521,8 +521,9 @@ test.describe('JS 라우터 없음', () => {
       gz += gzipSync(body).length;
     }
     expect(n).toBeLessThanOrEqual(2);
-    expect(raw).toBeLessThanOrEqual(347 + 678);
-    expect(gz).toBeLessThanOrEqual(266 + 395);
+    // 전환 취소 예외를 받아 처리하는 코드(theme-init.js)만큼 늘었다: 약 +600B raw, +250B gzip. 전체 JS 예산(30KB gzip)에 비하면 작다.
+    expect(raw).toBeLessThanOrEqual(347 + 678 + 620);
+    expect(gz).toBeLessThanOrEqual(266 + 395 + 260);
   });
 });
 
