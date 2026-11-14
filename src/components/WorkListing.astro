@@ -31,7 +31,7 @@ const tags = usedTags(
           <a
             href={localizedPath(locale, '/')}
             aria-current={activeTag ? undefined : 'page'}
-            data-filter-all>{t(locale, 'work.filter.all')}</a
+            data-filter-all><span class="hl">{t(locale, 'work.filter.all')}</span></a
           >
         </li>
         {
@@ -39,7 +39,7 @@ const tags = usedTags(
             <li>
               <a
                 href={localizedPath(locale, `/work/tag/${tag.id}/`)}
-                aria-current={tag.id === activeTag ? 'page' : undefined}>{tag.name[locale]}</a
+                aria-current={tag.id === activeTag ? 'page' : undefined}><span class="hl">{tag.name[locale]}</span></a
               >
             </li>
           ))
@@ -94,31 +94,71 @@ const tags = usedTags(
     align-items: center;
     justify-content: center;
     min-width: var(--tap-min);
-    min-height: var(--tap-min);
+    /* 카테고리는 여러 줄로 접히므로 줄 간격이 곧 높이다. 36px로 줄인다(WCAG 2.2 AA 최소 24px 이상). */
+    min-height: 2.25rem;
     padding: 0 0.75rem;
     color: var(--color-muted);
     text-decoration: none;
   }
-  .filter a:hover {
-    color: var(--color-accent);
+  .filter a:hover,
+  .filter a:focus-visible {
+    color: var(--color-text);
   }
   .filter a[aria-current='page'] {
     color: var(--color-text);
-    font-weight: 700;
-    text-decoration: underline;
+  }
+  .filter a[aria-current='page'] :global(.hl) {
+    --hl-w: 100%;
   }
   .year-group {
     margin-top: clamp(2rem, 1rem + 4vw, 5rem);
   }
   .year {
     color: var(--color-muted);
-    font-size: var(--fs-meta);
-    font-weight: var(--fw-meta);
-    letter-spacing: var(--ls-meta);
+    font-family: var(--font-pixel);
+    font-size: 1.375rem; /* 22px = 11px의 2배: 픽셀이 번지지 않는다 */
+    font-weight: 400;
+    letter-spacing: 0.04em;
     margin-bottom: 0.5rem;
   }
   .rows {
     margin: 0;
     padding: 0;
+  }
+  /* 처음 열릴 때 첫 화면의 행이 위로 살짝 올라오며 45ms 간격으로 이어진다. 투명도는 건드리지 않아 LCP에 영향이 없다. */
+  @media (prefers-reduced-motion: no-preference) {
+    .year-group:first-of-type :global(.row:nth-child(-n + 8)) {
+      animation: row-in 420ms var(--ease) backwards;
+      animation-delay: calc(var(--n, 0) * 45ms);
+    }
+    .year-group:first-of-type :global(.row:nth-child(1)) {
+      --n: 0;
+    }
+    .year-group:first-of-type :global(.row:nth-child(2)) {
+      --n: 1;
+    }
+    .year-group:first-of-type :global(.row:nth-child(3)) {
+      --n: 2;
+    }
+    .year-group:first-of-type :global(.row:nth-child(4)) {
+      --n: 3;
+    }
+    .year-group:first-of-type :global(.row:nth-child(5)) {
+      --n: 4;
+    }
+    .year-group:first-of-type :global(.row:nth-child(6)) {
+      --n: 5;
+    }
+    .year-group:first-of-type :global(.row:nth-child(7)) {
+      --n: 6;
+    }
+    .year-group:first-of-type :global(.row:nth-child(8)) {
+      --n: 7;
+    }
+  }
+  @keyframes row-in {
+    from {
+      transform: translateY(14px);
+    }
   }
 </style>

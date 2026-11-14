@@ -171,6 +171,46 @@
     }
   }
 
+  /*
+   * 형광펜: 호버·포커스하면 글자 뒤로 복숭아 띠가 번진다. 글자색은 그대로라 빨강 글자 없이 눈에 띈다.
+   * 띠는 글자 아래쪽 절반이고, 여러 줄이어도 줄마다 그려진다(box-decoration-break).
+   * 모션 허용일 때만 계단(steps) 6단계로 번진다. 줄이기 설정에서는 바로 나타난다.
+   */
+  .hl,
+  .demo-link,
+  .pager .name,
+  .links a,
+  .full {
+    background-image: linear-gradient(var(--color-hl), var(--color-hl));
+    background-repeat: no-repeat;
+    background-position: 0 92%;
+    background-size: var(--hl-w, 0%) 52%;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  a:hover .hl,
+  a:focus-visible .hl,
+  a:hover.demo-link,
+  a:focus-visible.demo-link,
+  .pager a:hover .name,
+  .pager a:focus-visible .name,
+  .links a:hover,
+  .links a:focus-visible,
+  .full:hover,
+  .full:focus-visible,
+  .hl[data-on] {
+    --hl-w: 100%;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hl,
+    .demo-link,
+    .pager .name,
+    .links a,
+    .full {
+      transition: background-size 240ms steps(6, end);
+    }
+  }
+
   /* 이미지 호버: 마우스처럼 호버 가능한 입력에서만. */
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
     .zoom .pic {

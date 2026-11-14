@@ -182,12 +182,14 @@ test.describe('360px', () => {
               t: el.textContent?.trim() || el.getAttribute('aria-label'),
               w: r.width,
               h: r.height,
+              // 카테고리 링크는 여러 줄로 접혀 줄 간격이 곧 높이라 36px까지 허용한다(그 밖은 44px).
+              min: el.closest('nav[data-tag-filter]') ? 36 : 44,
             };
           })
           .filter((x) => x.w > 0 && x.h > 0),
       );
       expect(targets.length).toBeGreaterThan(10);
-      expect(targets.filter((x) => x.w < 44 - 0.5 || x.h < 44 - 0.5)).toEqual([]);
+      expect(targets.filter((x) => x.w < x.min - 0.5 || x.h < x.min - 0.5)).toEqual([]);
     });
   }
 });

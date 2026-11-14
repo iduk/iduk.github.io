@@ -3,22 +3,32 @@
   color-scheme: light;
 
   /* color (light) */
-  --color-bg: #fafaf8;
-  --color-text: #111111;
-  --color-muted: #6b6b66;
-  --color-accent: #d93036;
+  --color-bg: #fbf8f2;
+  --color-text: #1c1a17;
+  --color-muted: #6a655c;
+  /* 포커스 링 등 글자·윤곽선에 쓰는 색. 밝은 모드에서는 글자색과 같다(대비 16). */
+  --color-accent: #1c1a17;
+  /* 형광펜 띠(장식). 캐릭터의 복숭아색. 글자색으로는 쓰지 않는다(밝은 배경에서 대비 1.9). 위의 검은 글자는 8.8. */
+  --color-hl: #fca192;
 
   /* type */
   --font-sans: "Pretendard Variable", system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  /* 연도 숫자용 픽셀 글꼴(숫자 0-9만 담았다). 11px의 배수 크기(22px)에서 가장 또렷하다. */
+  --font-pixel: "Galmuri11 Digits", var(--font-sans);
   --fs-hero: clamp(3.25rem, 1rem + 10vw, 11rem);
   --fs-title: clamp(2.5rem, 1rem + 6vw, 7rem);
   --fs-sub: clamp(1.75rem, 1rem + 2.5vw, 3.5rem);
   --fs-body: clamp(1rem, 0.95rem + 0.25vw, 1.1875rem);
-  --fs-meta: 0.8125rem;
+  --fs-meta: clamp(
+    0.9375rem,
+    0.9rem +
+    0.2vw,
+    1.0625rem
+  ); /* 15~17px. 작은 글자를 키워 큰 글자와의 대비를 줄인다 */
 
-  --fw-hero: 800;
-  --fw-title: 700;
-  --fw-sub: 600;
+  --fw-hero: 600;
+  --fw-title: 600;
+  --fw-sub: 500;
   --fw-body: 400;
   --fw-meta: 500;
 
@@ -28,9 +38,9 @@
   --lh-body: 1.7;
   --lh-meta: 1.4;
 
-  --ls-hero: -0.045em;
-  --ls-title: -0.035em;
-  --ls-sub: -0.025em;
+  --ls-hero: -0.04em;
+  --ls-title: -0.03em;
+  --ls-sub: -0.02em;
   --ls-body: 0;
   --ls-meta: 0.02em;
 
@@ -49,23 +59,25 @@
 }
 
 :root:lang(en) {
-  --ls-hero: -0.04em;
+  --ls-hero: -0.035em;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --color-bg: #0e0e0e;
-    --color-text: #f2f2ee;
-    --color-muted: #9a9a94;
-    --color-accent: #f97272;
+    --color-bg: #151311;
+    --color-text: #f3ede3;
+    --color-muted: #a39d92;
+    --color-accent: #ff9d87; /* 어두운 배경에서 대비 9.2라 글자·윤곽선에 쓸 수 있다 */
+    --color-hl: #7a4a3d; /* 어두운 복숭아 띠. 위의 밝은 글자는 6.3 */
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-bg: #0e0e0e;
-  --color-text: #f2f2ee;
-  --color-muted: #9a9a94;
-  --color-accent: #f97272;
+  --color-bg: #151311;
+  --color-text: #f3ede3;
+  --color-muted: #a39d92;
+  --color-accent: #ff9d87;
+  --color-hl: #7a4a3d;
 }

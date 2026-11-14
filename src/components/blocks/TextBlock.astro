@@ -25,5 +25,9 @@ const { html } = Astro.props;
   }
   .text-block :global(a) {
     color: var(--color-accent);
+    text-decoration-color: var(--color-hl);
+    text-decoration-thickness: 0.3em;
+    text-underline-offset: -0.12em;
+    text-decoration-skip-ink: none;
   }
 </style>

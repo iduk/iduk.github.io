@@ -52,5 +52,7 @@ const { width, height } = intrinsicSize(entry, fallbackWidth);
        srcset의 w 기술자는 sizes 기준으로 본래 크기를 정하므로 width:auto로는 막을 수 없다. */
     width: 100%;
     height: auto;
+    /* 열이 원본 폭보다 넓으면 남는 공간이 한쪽에 몰리지 않도록 가운데에 둔다. */
+    margin-inline: auto;
   }
 </style>

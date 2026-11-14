@@ -75,6 +75,10 @@ const href = (p: Project) => localizedPath(locale, `/work/${p.slug}/`);
   </article>
 
   <nav class="pager reveal" aria-label={t(locale, 'work.nav')}>
+    <a class="back" href={localizedPath(locale, '/')} data-back>
+      <span aria-hidden="true">←</span>
+      <span class="hl">{t(locale, 'work.back')}</span>
+    </a>
     {
       prev ? (
         <a class="prev" href={href(prev)} rel="prev">
@@ -108,22 +112,39 @@ const href = (p: Project) => localizedPath(locale, `/work/${p.slug}/`);
     letter-spacing: var(--ls-title);
     overflow-wrap: anywhere;
   }
+  /* 모바일: 라벨 | 값을 한 줄씩. 값이 길어도 값 열 안에서만 줄바꿈되어 제목 쪽으로 올라가지 않는다. */
   .meta {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-    gap: 1rem 2rem;
-    margin-top: clamp(1.5rem, 1rem + 2vw, 3rem);
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.25rem 1.5rem;
+    margin-top: clamp(2rem, 1.25rem + 3vw, 3.5rem);
     font-size: var(--fs-meta);
     font-weight: var(--fw-meta);
     line-height: var(--lh-meta);
     letter-spacing: var(--ls-meta);
   }
+  .meta > div {
+    display: contents;
+  }
   .meta dt {
     color: var(--color-muted);
   }
   .meta dd {
-    margin-top: 0.25rem;
+    min-width: 0;
     overflow-wrap: anywhere;
+  }
+  @media (min-width: 48rem) {
+    /* 데스크톱: 라벨이 값 위에 오는 세 칸 */
+    .meta {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+      gap: 1rem 2rem;
+    }
+    .meta > div {
+      display: block;
+    }
+    .meta dd {
+      margin-top: 0.25rem;
+    }
   }
   .stack {
     display: grid;
@@ -138,6 +159,21 @@ const href = (p: Project) => localizedPath(locale, `/work/${p.slug}/`);
     gap: 2rem;
     margin-top: var(--section-gap);
     padding: 0 var(--gutter) var(--section-gap);
+  }
+  .pager .back {
+    grid-column: 1 / -1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: var(--tap-min);
+    color: var(--color-muted);
+    font-size: var(--fs-meta);
+    font-weight: var(--fw-meta);
+    letter-spacing: var(--ls-meta);
+  }
+  .pager .back:hover,
+  .pager .back:focus-visible {
+    color: var(--color-text);
   }
   .pager a {
     display: block;
@@ -154,14 +190,11 @@ const href = (p: Project) => localizedPath(locale, `/work/${p.slug}/`);
   .pager .name {
     display: block;
     margin-top: 0.5rem;
-    font-size: var(--fs-sub);
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
     font-weight: var(--fw-sub);
     line-height: var(--lh-sub);
     letter-spacing: var(--ls-sub);
     overflow-wrap: anywhere;
-  }
-  .pager a:hover .name {
-    color: var(--color-accent);
   }
   @media (min-width: 48rem) {
     .pager {

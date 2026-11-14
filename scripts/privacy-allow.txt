@@ -44,3 +44,7 @@ secret | tests/unit/redos.test.ts | * | 정규식 폭주 시험이 만든 입력
 
 # --- dist의 데모(복사한 서드파티 코드) ---------------------------------------------------------
 mailto-tel | dist/html/suwon/js/**/jquery.jqGrid.js | mailto: | jqGrid 셀 서식 함수가 셀 값으로 링크를 만드는 코드 문자열이며 주소는 없다
+
+# --- 글꼴 라이선스 원문 --------------------------------------------------------------------------
+email | public/fonts/Galmuri-OFL-LICENSE.txt | quiple@quiple.dev | 글꼴 저작자의 공개 저작권 표기(OFL은 원문 보존을 요구한다. 사이트 운영자의 정보가 아님)
+email | dist/fonts/Galmuri-OFL-LICENSE.txt | quiple@quiple.dev | 위 파일의 빌드 복사본

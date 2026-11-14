@@ -17,8 +17,10 @@ describe('사이트 전용 글꼴', () => {
     expect(statSync(file).size).toBeLessThan(60 * 1024);
   });
 
-  it('@font-face는 사이트 글꼴 하나뿐이고 굵기 범위가 400~800이다', () => {
-    expect(faces).toHaveLength(1);
+  it('@font-face는 사이트 글꼴과 연도용 픽셀 숫자 글꼴 둘뿐이고 사이트 글꼴의 굵기 범위가 400~800이다', () => {
+    expect(faces).toHaveLength(2);
+    const digits = faces.find((f) => f.urls[0]?.endsWith('Galmuri11.digits.woff2'));
+    expect(digits?.ranges).toEqual([[0x30, 0x39]]);
     expect(css).toContain('font-weight: 400 800');
   });
 

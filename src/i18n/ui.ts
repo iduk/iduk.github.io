@@ -3,6 +3,8 @@ export type Locale = (typeof locales)[number];
 
 const ko = {
   'nav.work': '작업',
+  'brand.tagline': '데이터를 아름답게 만드는 일',
+  'brand.since': 'since 2009~',
   'nav.skip': '본문으로 건너뛰기',
   'nav.home': '홈',
   'nav.primary': '주요 메뉴',
@@ -25,6 +27,7 @@ const ko = {
   'work.period': '기간',
   'work.role': '역할',
   'work.tags': '분류',
+  'work.back': '작업 목록',
   'work.prev': '이전 작업',
   'work.next': '다음 작업',
   'work.nav': '다른 작업',
@@ -37,6 +40,8 @@ export type UiKey = keyof typeof ko;
 
 const en: Record<UiKey, string> = {
   'nav.work': 'Work',
+  'brand.tagline': 'Making data beautiful',
+  'brand.since': 'since 2009~',
   'nav.skip': 'Skip to content',
   'nav.home': 'Home',
   'nav.primary': 'Primary',
@@ -59,6 +64,7 @@ const en: Record<UiKey, string> = {
   'work.period': 'Period',
   'work.role': 'Role',
   'work.tags': 'Category',
+  'work.back': 'All work',
   'work.prev': 'Previous project',
   'work.next': 'Next project',
   'work.nav': 'More work',

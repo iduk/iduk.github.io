@@ -24,6 +24,10 @@ const labels = {
   <a class="logo" href={localizedPath(locale, '/')} aria-label={`iduk, ${t(locale, 'nav.home')}`}>
     <Fragment set:html={mark} />
   </a>
+  <p class="tagline">
+    <span>{t(locale, 'brand.tagline')}</span>
+    <span class="since">{t(locale, 'brand.since')}</span>
+  </p>
   <nav class="nav" aria-label={t(locale, 'nav.primary')}>
     <button
       type="button"
@@ -104,17 +108,20 @@ const labels = {
     letter-spacing: var(--ls-sub);
     text-decoration: none;
   }
-  /* 로고는 화면 높이에 비례한다(letsby는 8vh). 모바일은 세로가 길어 상한을 낮게, 데스크톱은 크게, 폭이 좁은 태블릿 세로는 폭 기준(7vw)으로 줄인다. */
-  .logo :global(.logo-mark) {
-    display: block;
-    width: clamp(2.5rem, 6vh, 3rem);
-    height: clamp(2.5rem, 6vh, 3rem);
+  /* 로고는 화면 높이에 비례한다(letsby는 8vh). 모바일은 세로가 길어 상한을 낮게, 데스크톱은 크게, 폭이 좁은 태블릿 세로는 폭 기준(7vw)으로 줄인다.
+     옆의 두 줄 문구가 이 높이에 맞도록 크기를 변수로 공유한다. */
+  .site-header {
+    --logo: clamp(2.5rem, 6vh, 3rem);
   }
   @media (min-width: 48rem) {
-    .logo :global(.logo-mark) {
-      width: clamp(3.5rem, min(8vh, 7vw), 6rem);
-      height: clamp(3.5rem, min(8vh, 7vw), 6rem);
+    .site-header {
+      --logo: clamp(3.5rem, min(8vh, 7vw), 6rem);
     }
+  }
+  .logo :global(.logo-mark) {
+    display: block;
+    width: var(--logo);
+    height: var(--logo);
   }
   /* 눈 깜빡임. 모션 줄임 설정이면 멈춘다. */
   .logo :global(.logo-mark .b) {
@@ -135,6 +142,26 @@ const labels = {
     .logo :global(.logo-mark .b) {
       animation: none;
     }
+  }
+  /* 캐릭터 옆 두 줄 문구. 두 줄의 높이가 로고 높이와 같다. */
+  .tagline {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    height: var(--logo);
+    font-size: clamp(0.8125rem, calc(var(--logo) * 0.25), 1.25rem);
+    font-weight: var(--fw-meta);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .tagline span {
+    white-space: nowrap;
+  }
+  .tagline .since {
+    color: var(--color-muted);
+    font-weight: 400;
   }
   .nav {
     display: flex;

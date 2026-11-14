@@ -175,20 +175,29 @@ test.describe('LongShot 영역', () => {
     expect(w).toBeGreaterThan(FRAME_MAX - 4);
   });
 
-  test('틀 끝에서 휠을 굴리면 페이지가 이어서 스크롤된다', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto(SAMPLE);
-    const r = region(page);
-    await r.scrollIntoViewIfNeeded();
-    await r.evaluate((el) => {
-      el.scrollTop = el.scrollHeight;
+  // 이미지 높이가 소수면 틀이 끝에서 휠을 소비해 페이지가 안 내려가는 문제가 있었다. 한 폭에서만 보면 우연히 통과하므로
+  // 소수 부분이 다르게 나오는 여러 폭을 본다.
+  for (const width of [1100, 1140, 1180, 1220, 1280, 1340, 1380, 1420, 1500]) {
+    test(`틀 끝에서 휠을 굴리면 페이지가 이어서 스크롤된다 (${width}px)`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto(SAMPLE);
+      const r = region(page);
+      await r.scrollIntoViewIfNeeded();
+      await r.evaluate((el) => {
+        el.scrollTop = el.scrollHeight;
+      });
+      const box = (await r.boundingBox()) as {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      };
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      const y0 = await page.evaluate(() => window.scrollY);
+      await page.mouse.wheel(0, 400);
+      await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(y0);
     });
-    const box = (await r.boundingBox()) as { x: number; y: number; width: number; height: number };
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-    const y0 = await page.evaluate(() => window.scrollY);
-    await page.mouse.wheel(0, 400);
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(y0);
-  });
+  }
 
   test('링크는 틀의 오른쪽 가장자리에 맞춰진다', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });

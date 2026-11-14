@@ -27,7 +27,7 @@ const cover = project.cover;
       withPreview ? (
         <>
           <span class="name reveal" data-work-title>
-            {project.title[locale]}
+            <span class="hl">{project.title[locale]}</span>
           </span>
           <span class="tags reveal">{tags}</span>
           <span class="preview" aria-hidden="true">
@@ -96,11 +96,7 @@ const cover = project.cover;
     display: block;
     overflow-wrap: anywhere;
   }
-  .link:hover .name,
-  .link:focus-visible .name {
-    color: var(--color-accent);
-  }
-
+  
   /* 큰 이미지 행(홈) */
   .big .cover {
     display: block;
@@ -142,12 +138,15 @@ const cover = project.cover;
     display: none;
   }
   @media (min-width: 48rem) {
+    /* 태그는 한 줄로 두고 열을 내용 폭에 맞춘다. 제목 열이 남은 폭을 쓴다(제목은 줄바꿈 가능). */
     .compact .link {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 14rem);
+      grid-template-columns: minmax(0, 1fr) max-content;
+      gap: 0 clamp(1rem, 0.5rem + 2vw, 2.5rem);
       align-items: baseline;
     }
     .compact .tags {
       text-align: right;
+      white-space: nowrap;
     }
   }
   /* 호버 미리보기는 부가 장식이다. 정보는 모두 글자 행에 있다. */
@@ -156,7 +155,7 @@ const cover = project.cover;
       position: absolute;
       z-index: 10;
       top: 50%;
-      right: 16rem;
+      right: calc(var(--tags-col, 16rem) + 2rem);
       width: 26rem;
       max-height: 24rem;
       overflow: hidden;
@@ -167,6 +166,10 @@ const cover = project.cover;
     .link:hover .preview,
     .link:focus-visible .preview {
       display: block;
+    }
+    /* 태그 열 폭(미리보기가 이 열을 가리지 않도록): 한국어 16rem, 영어 25rem */
+    :global(:lang(en)) .compact .link {
+      --tags-col: 25rem;
     }
     .frame {
       display: block;

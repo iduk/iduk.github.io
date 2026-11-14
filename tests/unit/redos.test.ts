@@ -22,7 +22,9 @@ import { readPdfMetadata, shownText, withoutStreams } from '../../scripts/lib/pd
 import { sanitizeDemoText, scanDemoText, scanText } from '../../scripts/lib/privacy';
 
 const N = 2_000_000;
-const LIMIT_MS = 1000;
+// 정상 처리는 한가할 때 0.65~0.8초, 부하가 있으면 1.0~1.2초다. 정규식이 폭발하면(ReDoS) 2MB에서 분~시간이 걸리므로
+// 한도는 부하 변동의 2배 이상으로 넉넉히 잡아도 검출력이 같다(1초는 마진이 없어 간헐 실패했다).
+const LIMIT_MS = 3000;
 const rep = (unit: string, total = N) =>
   unit.repeat(Math.ceil(total / unit.length)).slice(0, total);
 const ws = (n = N) => ' '.repeat(n);

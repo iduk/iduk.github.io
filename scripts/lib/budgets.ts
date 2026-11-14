@@ -243,7 +243,11 @@ export function analyzePage(html: string, pagePath: string, read: ReadDist): Pag
     css += text;
     cssGzip += gz(text);
   }
-  const needed = neededFontUrls(parseFontFaces(css), codepointsOf(c.text));
+  // 연도용 픽셀 숫자 글꼴은 font-family가 .year 요소에만 걸려 있어, 그 요소가 있는 페이지에서만 내려받는다.
+  const usesPixelDigits = /\bclass="[^"]*\byear\b[^"]*"/.test(html);
+  const needed = neededFontUrls(parseFontFaces(css), codepointsOf(c.text)).filter(
+    (u) => usesPixelDigits || !u.includes('Galmuri11.digits'),
+  );
   const fontPaths = new Set([
     ...needed.map((u) => pathOf(u, pagePath)),
     ...c.preloadFonts.map((u) => pathOf(u, pagePath)),

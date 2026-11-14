@@ -18,6 +18,20 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_FONT = os.path.join(ROOT, 'public/fonts/PretendardVariable.site.woff2')
 OUT_CSS = os.path.join(ROOT, 'src/styles/fonts.css')
 
+# 픽셀 글꼴(고정 파일, 이 스크립트가 다시 만들지 않는다). 만드는 법:
+#   npm pack galmuri@2.40.3 && tar xzf galmuri-2.40.3.tgz
+#   pyftsubset package/dist/Galmuri11.ttf --unicodes=U+0030-0039 --flavor=woff2 --layout-features= \
+#     --no-hinting --desubroutinize --output-file=public/fonts/Galmuri11.digits.woff2
+PIXEL_FACE = """@font-face {
+	font-family: 'Galmuri11 Digits';
+	font-style: normal;
+	font-display: swap;
+	font-weight: 400;
+	src: url(/fonts/Galmuri11.digits.woff2) format('woff2');
+	unicode-range: U+30-39;
+}
+"""
+
 
 def used_chars():
     cs = set()
@@ -59,7 +73,9 @@ def main(src):
 Pretendard Variable (c) 2021 Kil Hyung-jin, with Reserved Font Name Pretendard. SIL OFL 1.1 (/fonts/Pretendard-OFL-LICENSE.txt).
 원본: npm pretendard@1.3.9. 사이트가 쓰는 {len(chars)}자만 담은 굵기 400~800 부분 글꼴 하나다.
 목록에 없는 글자는 대체 글꼴(tokens.css의 --font-sans)로 그려진다. 새 글자를 쓰면 tests/unit/site-font.test.ts가
-빌드 뒤 실패하므로 이 스크립트를 다시 돌려야 배포된다. */
+빌드 뒤 실패하므로 이 스크립트를 다시 돌려야 배포된다.
+Galmuri11 (c) 2019-2025 Lee Minseo, SIL OFL 1.1 (/fonts/Galmuri-OFL-LICENSE.txt). 원본: npm galmuri@2.40.3의 Galmuri11.ttf를
+숫자 0-9만 남긴 916바이트 글꼴(연도 표시용 픽셀 숫자). 만드는 법은 make-site-font.py의 PIXEL_FACE 주석을 보라. */
 @font-face {{
 	font-family: 'Pretendard Variable';
 	font-style: normal;
@@ -68,7 +84,7 @@ Pretendard Variable (c) 2021 Kil Hyung-jin, with Reserved Font Name Pretendard. 
 	src: url(/fonts/PretendardVariable.site.woff2) format('woff2-variations');
 	unicode-range: {ranges(chars)};
 }}
-"""
+""" + PIXEL_FACE
     open(OUT_CSS, 'w', encoding='utf8').write(css)
     print(f'{len(chars)} chars, {os.path.getsize(OUT_FONT)} bytes')
 
